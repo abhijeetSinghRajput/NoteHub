@@ -10,6 +10,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@radix-ui/react-avatar";
 import { useAuthStore } from "@/stores/useAuthStore";
 import imageCompression from "browser-image-compression";
+import StreakCalender from "@/components/StreakCalender";
 
 const ProfilePage = () => {
   const { authUser, uploadUserAvatar } = useAuthStore();
@@ -98,6 +99,7 @@ const ProfilePage = () => {
 
 
           <div className="space-y-4">
+            <StreakCalender/>
             <div>
               <Label className="text-zinc-500 mb-2 inline-block">Username</Label>
               <div className="relative overflow-hidden rounded-lg select-none flex bg-sidebar border border-sidebar-border justify-between items-center px-4 py-3">
