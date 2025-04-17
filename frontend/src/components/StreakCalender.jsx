@@ -26,33 +26,29 @@ const StreakCalender = () => {
         <CardTitle>346 Contribution in last year</CardTitle>
       </CardHeader>
       <CardContent className="pb-2 w-full">
-        <div className="overflow-x-scroll flex gap-2 pb-2">
+        <div className="overflow-x-scroll flex gap-1 pb-2">
           <div className="space-y-1">
             {DAYS.map((day, i) => (
-              <div className="mt-4 weekday flex items-center justify-start h-[14px] text-xs font-semibold rounded">
+              <div className={`${(i%2==0) && 'opacity-0'}  mt-5 weekday flex items-center justify-start h-[10px] text-xs font-semibold rounded`}>
                 {day.slice(0, 3)}
               </div>
             ))}
           </div>
           <div>
-            <div className="flex text-xs font-semibold items-center gap-12">
+            <div className="flex mb-1 text-xs font-semibold items-center gap-12">
               {MONTHS.map((month) => (
                 <span>{month}</span>
               ))}
             </div>
-            <div className="flex space-x-1">
-              {Array(52)
+            <div className="calendar ">
+              {Array(53 * 7)
                 .fill(null)
-                .map((_, weekIndex) => (
-                  <div className="week space-y-1">
-                    {Array(7)
-                      .fill(null)
-                      .map((_, dayIndex) => (
-                        <TooltipWrapper message={`week ${weekIndex} : day ${dayIndex}`}>
-                          <div className="weekday flex items-center justify-center size-[14px] text-sm rounded bg-secondary"></div>
-                        </TooltipWrapper>
-                      ))}
-                  </div>
+                .map((_, dayIndex) => (
+                  <TooltipWrapper
+                    message={`day ${dayIndex}`}
+                  >
+                    <div className="bg-secondary rounded-[2px] aspect-square"></div>
+                  </TooltipWrapper>
                 ))}
             </div>
           </div>

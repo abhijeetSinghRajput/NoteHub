@@ -565,7 +565,6 @@
     --input: 215 27.9% 16.9%;
     --ring: 263.4 70% 50.4%;
   }
-
 }
 
 .hide-scrollbar::-webkit-scrollbar {
@@ -585,13 +584,19 @@
     /* @apply font-semibold; */
     font-family: "Audiowide";
   }
+  .calendar {
+    display: grid;
+    grid-gap: 3px;
+    grid-template-columns: repeat(53, minmax(10px, 1fr));
+    grid-template-rows: repeat(7, minmax(10px, 1fr));
+  }
 }
 
-.button{
+.button {
   @apply inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 bg-primary text-primary-foreground shadow hover:bg-primary/90 h-9 px-4 py-2;
 }
 
-.button.disabled{
+.button.disabled {
   @apply opacity-50 pointer-events-none;
 }
 
