@@ -1,6 +1,6 @@
 import { cn } from "@/lib/utils";
 
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { DrawerDialog } from "../components/EditProfile";
 import { Button } from '@/components/ui/button';
 import { Camera, Pencil } from 'lucide-react';
@@ -11,6 +11,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@radix-ui/react-avatar";
 import { useAuthStore } from "@/stores/useAuthStore";
 import imageCompression from "browser-image-compression";
 import StreakCalender from "@/components/StreakCalender";
+import { useContributionStore } from "@/stores/useContributionStore";
 
 const ProfilePage = () => {
   const { authUser, uploadUserAvatar } = useAuthStore();

@@ -1,5 +1,6 @@
 import mongoose from "mongoose";
 import Note from "../model/note.model.js";
+import { addContribution } from "../utils/contribution.util.js";
 
 export const createNote = async (req, res) => {
     const { name, collectionId } = req.body;
@@ -78,10 +79,12 @@ export const getNotes = async (req, res) => {
 
 export const updateContent = async (req, res) => {
     const { content, noteId } = req.body;
+    const { user } = req;
     try {
         const note = await Note.findById(noteId);
         note.content = content;
         await note.save();
+        addContribution(user._id);
         res.status(200).json({ message: "Notes updated successfully.", note })
     } catch (error) {
         console.log("Error in updateContent controller.\n", error);

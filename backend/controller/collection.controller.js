@@ -1,6 +1,7 @@
 import mongoose from "mongoose";
 import Collection from "../model/collection.model.js";
 import Note from "../model/note.model.js";
+import { addContribution } from "../utils/contribution.util.js";
 
 export const createCollection = async (req, res) => {
     const { name } = req.body;
@@ -14,6 +15,8 @@ export const createCollection = async (req, res) => {
     }
     try {
         const collection = await Collection.create({ name, userId: user._id });
+        addContribution(user._id);
+        
         res.status(201).json({ 
             message: "Collection created successfully", 
             collection: {...collection._doc, notes: []}
