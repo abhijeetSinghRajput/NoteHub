@@ -13,6 +13,14 @@ export default {
   			sm: 'calc(var(--radius) - 4px)'
   		},
   		colors: {
+			contributionLevel:{
+				'0': 'hsl(var(--secondary))',
+				'1': "#0e4429",
+				'2': "#006b32",
+				'3': "#26a642",
+				'4': "#3ad454",
+			},
+
   			background: 'hsl(var(--background))',
   			foreground: 'hsl(var(--foreground))',
   			card: {

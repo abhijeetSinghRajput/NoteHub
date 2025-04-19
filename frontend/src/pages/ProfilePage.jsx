@@ -50,7 +50,7 @@ const ProfilePage = () => {
   return (
     <div className="p-4 overflow-auto">
       <Card className="max-w-screen-md mx-auto overflow-hidden">
-        <div className="h-52 overflow-hidden bg-muted/50 relative">
+        <div className="h-48 overflow-hidden bg-muted/50 relative">
         <Avatar>
           <AvatarImage 
             className="w-full h-full object-cover"
@@ -65,7 +65,7 @@ const ProfilePage = () => {
         </Avatar>
         </div>
         <CardContent>
-          <div className="border-b pb-8 mb-8 flex items-center space-x-4">
+          <div className="mb-8 flex items-center space-x-4">
             <Avatar className="relative shadow-md size-48 shrink-0 border-8 border-background -mt-14 rounded-full">
               <AvatarImage
                 className="w-full h-full object-cover rounded-full bg-background"

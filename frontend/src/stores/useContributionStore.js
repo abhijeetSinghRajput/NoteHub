@@ -5,18 +5,23 @@ import { toast } from "sonner";
 export const useContributionStore = create((set, get) => ({
   contributionCalendar: null,
   fetchingCalendar: false,
+  totalContribution: 0,
 
   getContributionCalendar: async () => {
     set({ fetchingCalendar: true });
     try {
         const res = await axiosInstance.get('/contribution');
-        console.log(res);
-        set({contributionCalendar: res.data});
-        console.log(contributionCalendar);
-        return true;
+        const {weeks, totalContribution} = res.data;
+
+        set({contributionCalendar: weeks});
+        set({totalContribution: totalContribution})
+        
+        res.statusText === "OK"
     } catch (error) {
         const message = error?.response?.data?.message || 'Failed to fetch calendar';
         set({contributionCalendar: null});
+        set({totalContribution: 0})
+
         console.log(message);
         console.log(error);
         toast.error(message);
