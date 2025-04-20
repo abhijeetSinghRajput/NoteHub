@@ -1,11 +1,9 @@
 import React, { useEffect, useRef, useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
 import TooltipWrapper from "./TooltipWrapper";
-import { Skeleton } from "./ui/skeleton";
 import { useContributionStore } from "@/stores/useContributionStore";
 import { getContributionMessage } from "@/lib/getContributionMessage";
 import CalendarSkeleton from "./sekeletons/CalendarSkeleton";
-import { Checkbox } from "./ui/checkbox";
 import { Flame } from "lucide-react";
 import { useAuthStore } from "@/stores/useAuthStore";
 
@@ -38,16 +36,28 @@ const StreakCalender = () => {
   const [cellRowCol, setCellRowCol] = useState();
   const [monthsSpan, setMonthsSpan] = useState('repeat(13, 1fr)')
   const [calendarMonths, setCalendarMonths] = useState([]);
-  useEffect(() => {
-    getContributionCalendar();
+  const [hasContributedToday, setHasContributedToday] = useState(false);
+  const scrollToEnd = ()=>{
     if (scrollRef.current) {
       scrollRef.current.scrollLeft = scrollRef.current.scrollWidth;
     }
+  }
+  useEffect(() => {
+    getContributionCalendar();
+    scrollToEnd();
+    window.addEventListener('resize', scrollToEnd);
   }, []);
 
   useEffect(() => {
     if(!Array.isArray(contributionCalendar)) return;
     setGrid(contributionCalendar.flat());
+
+    const todayBlock = grid[grid.length-1];
+    const today = new Date().toISOString().slice(0, 10);
+    setHasContributedToday(
+      todayBlock?.contributionCount > 0 
+      && todayBlock?.date === today
+    );
 
     const cellCordinate = [];
     let months = [];
@@ -74,7 +84,6 @@ const StreakCalender = () => {
 
   }, [contributionCalendar]);
 
-
   return (
     <Card>
       <CardHeader className="flex justify-between">
@@ -82,9 +91,9 @@ const StreakCalender = () => {
           <div>{totalContribution} Contribution in last year</div>
           <div className="flex gap-1 items-center">
             <div className="size-5">
-              {(true)?
-                <Flame className="w-full h-full"/>:
-                <img src="./flame-active.svg" className="w-full h-full"/>
+              {(hasContributedToday)?
+                <img src="./flame-active.svg" className="w-full h-full"/>:
+                <Flame className="w-full h-full"/>
               }
             </div>
             <span>{authUser.currentStreak}</span>
@@ -122,9 +131,8 @@ const StreakCalender = () => {
                   <div className="calendar">
                     {
                       grid.map(({date, contributionCount}, index)=>(
-                        <TooltipWrapper message={getContributionMessage(date, contributionCount)}>
+                        <TooltipWrapper key={index} message={getContributionMessage(date, contributionCount)}>
                           <div 
-                            key={index}
                             className={`${getColorLabel(contributionCount)} aspect-square rounded-[2px]`}
                             style={{
                               gridRow: `${cellRowCol[index][0]}`,

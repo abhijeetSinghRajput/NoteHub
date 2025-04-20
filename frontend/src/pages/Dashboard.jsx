@@ -90,7 +90,10 @@ const DashboardContent = () => {
               </Button>
               </TooltipWrapper>
             </a>
-            <ModeToggle />
+
+            <TooltipWrapper message="Toggle Theme">
+              <ModeToggle />
+            </TooltipWrapper>
 
             <TooltipWrapper message={authUser.fullName || "user"}>
               <Link

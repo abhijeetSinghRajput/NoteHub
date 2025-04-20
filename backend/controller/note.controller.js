@@ -82,6 +82,9 @@ export const updateContent = async (req, res) => {
     const { user } = req;
     try {
         const note = await Note.findById(noteId);
+        if (!note) {
+            return res.status(404).json({ message: "Note not found." });
+        }        
         note.content = content;
         await note.save();
         addContribution(user._id);

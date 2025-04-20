@@ -21,7 +21,6 @@ const sanitizeUserForSharing = (user) => {
 
         currentStreak: user.currentStreak,
         maxStreak: user.maxStreak,
-        lastContributionDate: user.lastContributionDate,
     }
 }
 
