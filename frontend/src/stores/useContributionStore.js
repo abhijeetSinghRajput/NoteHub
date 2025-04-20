@@ -6,6 +6,7 @@ export const useContributionStore = create((set, get) => ({
   contributionCalendar: null,
   fetchingCalendar: false,
   totalContribution: 0,
+  maxStreak: 0,
 
   getContributionCalendar: async () => {
     set({ fetchingCalendar: true });

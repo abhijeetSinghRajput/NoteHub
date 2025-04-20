@@ -3,16 +3,19 @@ import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
 import TooltipWrapper from "./TooltipWrapper";
 import { Skeleton } from "./ui/skeleton";
 import { useContributionStore } from "@/stores/useContributionStore";
-import { ConciergeBell } from "lucide-react";
+import { getContributionMessage } from "@/lib/getContributionMessage";
+import CalendarSkeleton from "./sekeletons/CalendarSkeleton";
+import { Checkbox } from "./ui/checkbox";
+import { Flame } from "lucide-react";
+import { useAuthStore } from "@/stores/useAuthStore";
 
-const MONTHS = [ 
+const MONTHS_STR = [ 
   "Jan", "Feb", "Mar", "Apr", 
   "May", "Jun", "Jul", "Aug",
   "Sep", "Oct", "Nov", "Dec",
 ];
 
 const DAYS = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
-const colorLabel = ["#0e4429", "#006b32", "#26a642", "#3ad454"];
 const getColorLabel = (contributionCount) => {
   if (contributionCount >= 7) return "bg-contributionLevel-4";
   if (contributionCount >= 4) return "bg-contributionLevel-3";
@@ -28,9 +31,13 @@ const StreakCalender = () => {
     fetchingCalendar,
     totalContribution,
   } = useContributionStore();
+  const {authUser} = useAuthStore();
+
   const scrollRef = useRef(null);
   const [grid, setGrid] = useState([]);
-
+  const [cellRowCol, setCellRowCol] = useState();
+  const [monthsSpan, setMonthsSpan] = useState('repeat(13, 1fr)')
+  const [calendarMonths, setCalendarMonths] = useState([]);
   useEffect(() => {
     getContributionCalendar();
     if (scrollRef.current) {
@@ -40,82 +47,107 @@ const StreakCalender = () => {
 
   useEffect(() => {
     if(!Array.isArray(contributionCalendar)) return;
-    const arr = [];
-    for (let i = 0; i < 7; ++i) {
-      for (let j = 0; j < 53; ++j) {
-        if (!contributionCalendar[j][i]) continue;
-        arr.push(contributionCalendar[j][i]);
+    setGrid(contributionCalendar.flat());
+
+    const cellCordinate = [];
+    let months = [];
+    contributionCalendar.forEach((week, i)=>{
+      months.push(+(week[0].date.split('-')[1]));
+      week.forEach((weekday, j)=>{
+        cellCordinate.push([j + 1, i + 1]);
+      })
+    })
+
+    setCellRowCol(cellCordinate);
+    let span = '';
+    let count = 0;
+    for(let i = 0; i<months.length; ++i){
+      count++;
+      if(months[i] !== months[i+1]){
+        span += count + 'fr ';
+        count = 0;
       }
     }
+    setMonthsSpan(span);
+    months = months.filter((e, i)=> e !== months[i+1]);
+    setCalendarMonths(months);
 
-    setGrid(arr);
   }, [contributionCalendar]);
 
 
   return (
     <Card>
-      <CardHeader>
-        <CardTitle>{totalContribution} Contribution in last year</CardTitle>
+      <CardHeader className="flex justify-between">
+        <div className="flex justify-between items-center font-semibold leading-none tracking-tight">
+          <div>{totalContribution} Contribution in last year</div>
+          <div className="flex gap-1 items-center">
+            <div className="size-5">
+              {(true)?
+                <Flame className="w-full h-full"/>:
+                <img src="./flame-active.svg" className="w-full h-full"/>
+              }
+            </div>
+            <span>{authUser.currentStreak}</span>
+          </div>
+        </div>
       </CardHeader>
       <CardContent className="pb-2 w-full">
         <div ref={scrollRef} className="overflow-x-scroll flex gap-1 pb-[6px]">
-          <div className="space-y-1">
+          <div className="space-y-[3px]">
             {DAYS.map((day, i) => (
               <div
                 key={i}
                 className={`${
-                  i % 2 == 0 && "opacity-0"
-                }  mt-5 weekday flex items-center justify-start h-[10px] text-xs font-semibold rounded`}
+                  i % 2 == 0 && "opacity-0" 
+                }  mt-5 weekday flex items-center justify-start h-[10px] text-xs font-semibold`}
               >
                 {day.slice(0, 3)}
               </div>
             ))}
           </div>
           <div>
-            <div className="flex mb-1 text-xs font-semibold items-center gap-12">
-              {MONTHS.map((month, i) =>
-                fetchingCalendar ? (
-                  <Skeleton
-                    key={i}
-                    className="h-3 w-6 rounded-[2px] aspect-square"
-                  />
-                ) : (
-                  <span key={i}>{month}</span>
-                )
-              )}
-            </div>
-            <div className="calendar">
-              {grid.map(({ date, contributionCount }, index) =>
-                fetchingCalendar  ? (
-                  <Skeleton
-                    key={index}
-                    className="bg-secondary rounded-[2px] aspect-square w-3"
-                  />
-                ) : (
-                  <TooltipWrapper
-                    key={index}
-                    message={`${date}: ${contributionCount} contributions`}
+            { (fetchingCalendar)?
+              <CalendarSkeleton/>:
+              <div>
+                  <div 
+                    className="grid justify-between mb-2"
+                    style={{gridTemplateColumns : monthsSpan}}
                   >
-                    <div
-                      className={`aspect-square w-3 ${getColorLabel(
-                        contributionCount
-                      )} rounded-[2px]`}
-                    ></div>
-                  </TooltipWrapper>
-                )
-              )}
-            </div>
+                    {
+                      calendarMonths.map((m, i)=>(
+                        <div key={i} className="text-xs h-3 font-semibold">{MONTHS_STR[m - 1]}</div>
+                      ))
+                    }
+                  </div>
+                  <div className="calendar">
+                    {
+                      grid.map(({date, contributionCount}, index)=>(
+                        <TooltipWrapper message={getContributionMessage(date, contributionCount)}>
+                          <div 
+                            key={index}
+                            className={`${getColorLabel(contributionCount)} aspect-square rounded-[2px]`}
+                            style={{
+                              gridRow: `${cellRowCol[index][0]}`,
+                              gridColumn: `${cellRowCol[index][1]}`,
+                            }}
+                          />
+                        </TooltipWrapper>
+                      ))
+                    }
+                  </div>
+              </div>
+            }
           </div>
         </div>
         
         <div className="flex items-center gap-2 my-2">
           <span className="text-muted-foreground/50 text-xs font-semibold">Less</span>
           <div className="flex gap-[3px]">
-            <div className="aspect-square size-3 rounded-[2px] bg-contributionLevel-0"></div>
-            <div className="aspect-square size-3 rounded-[2px] bg-contributionLevel-1"></div>
-            <div className="aspect-square size-3 rounded-[2px] bg-contributionLevel-2"></div>
-            <div className="aspect-square size-3 rounded-[2px] bg-contributionLevel-3"></div>
-            <div className="aspect-square size-3 rounded-[2px] bg-contributionLevel-4"></div>
+            <div className="aspect-square size-[10px] rounded-[2px] bg-contributionLevel-0"></div>
+            <div className="aspect-square size-[10px] rounded-[2px] bg-contributionLevel-1"></div>
+            <div className="aspect-square size-[10px] rounded-[2px] bg-contributionLevel-2"></div>
+            <div className="aspect-square size-[10px] rounded-[2px] bg-contributionLevel-3"></div>
+            <div className="aspect-square size-[10px] rounded-[2px] bg-contributionLevel-4"></div>
           </div>
           <span className="text-muted-foreground/50 text-xs font-semibold">More</span>
         </div>
@@ -124,5 +156,7 @@ const StreakCalender = () => {
     </Card>
   );
 };
+
+
 
 export default StreakCalender;

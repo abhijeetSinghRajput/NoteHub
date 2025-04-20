@@ -42,10 +42,18 @@ const userSchema = new mongoose.Schema({
     verificationPurpose: {
         type: String, // password_reset || email_verification
     },
-    streak: {
+    currentStreak: {
         type: Number,
         default: 0,
-    }
+    },
+    maxStreak: {
+        type: Number,
+        default: 0,
+    },
+    lastContributionDate: {
+        type: Date,
+        default: null,
+    },
 })
 
 const User = mongoose.model('user', userSchema);

@@ -9,14 +9,19 @@ import { verifyEmailTemplate } from "../utils/mailTemplates.js";
 const sanitizeUserForSharing = (user) => {
     return {
         _id: user._id,
+        fullName: user.fullName,
+        userName: user.userName,
+        email: user.email,
+
         avatarUrl: user.avatarUrl,
         coverUrl: user.coverUrl,
-        email: user.email,
-        fullName: user.fullName,
         imageUrls: user.imageUrls,
+        
         isEmailVerified: user.isEmailVerified,
-        streak: user.streak,
-        userName: user.userName,
+
+        currentStreak: user.currentStreak,
+        maxStreak: user.maxStreak,
+        lastContributionDate: user.lastContributionDate,
     }
 }
 

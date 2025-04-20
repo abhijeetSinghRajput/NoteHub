@@ -84,9 +84,11 @@ const DashboardContent = () => {
             />
 
             <a href="https://github.com/abhijeetSinghRajput/notehub">
+              <TooltipWrapper message="Source Code">
               <Button className="size-8" variant="ghost">
                 <Github />
               </Button>
+              </TooltipWrapper>
             </a>
             <ModeToggle />
 
