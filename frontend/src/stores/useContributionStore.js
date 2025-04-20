@@ -10,8 +10,9 @@ export const useContributionStore = create((set, get) => ({
 
   getContributionCalendar: async () => {
     set({ fetchingCalendar: true });
-    try {
-        const res = await axiosInstance.get('/contribution');
+    try { 
+        const offsetMinutes = new Date().getTimezoneOffset() * -1;
+        const res = await axiosInstance.get('/contribution', {params: {offsetMinutes}});
         const {weeks, totalContribution} = res.data;
 
         set({contributionCalendar: weeks});
