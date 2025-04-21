@@ -13,12 +13,14 @@ export const useAuthStore = create((set, get) => ({
   isUploadingCover: false,
   isRemovingAvatar: false,
   isRemovingCover: false,
+  
 
   checkAuth: async () => {
     set({ isCheckingAuth: true });
     try {
       const res = await axiosInstance.get("/user/check/auth");
       set({ authUser: res.data });
+      console.log(res.data);
     } catch (error) {
       set({ authUser: null });
     } finally {

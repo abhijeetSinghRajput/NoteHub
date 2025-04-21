@@ -65,7 +65,9 @@ export const useNoteStore = create((set, get) => ({
   updateContent: async (data) => {
     set({ isContentUploading: true });
     try {
-      const res = await axiosInstance.put('/note/', data);
+      const offsetMinutes = new Date().getTimezoneOffset() * -1;
+      const res = await axiosInstance.put('/note/', {...data, offsetMinutes});
+      
       const { note, message } = res.data;
       set(state => ({
         notesContent: {
@@ -126,7 +128,8 @@ export const useNoteStore = create((set, get) => ({
   createCollection: async (data) => {
     set({ isCreatingCollection: true });
     try {
-      const res = await axiosInstance.post('/collection', data);
+      const offsetMinutes = new Date().getTimezoneOffset() * -1;
+      const res = await axiosInstance.post('/collection', {...data, offsetMinutes});
       const { collection, message } = res.data;
       set((state) => ({
         collections: [...state.collections, collection],

@@ -6,6 +6,8 @@ import { addContribution } from "../utils/contribution.util.js";
 export const createCollection = async (req, res) => {
     const { name } = req.body;
     const { user } = req;
+    const { offsetMinutes = 0 } = req.body;
+
 
     if (!user) {
         return res.status(401).json({ message: "Unauthorized: user not found." });
@@ -15,7 +17,7 @@ export const createCollection = async (req, res) => {
     }
     try {
         const collection = await Collection.create({ name, userId: user._id });
-        addContribution(user._id);
+        addContribution(user._id, offsetMinutes);
         
         res.status(201).json({ 
             message: "Collection created successfully", 

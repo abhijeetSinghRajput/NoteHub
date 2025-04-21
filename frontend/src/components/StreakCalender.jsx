@@ -26,6 +26,7 @@ const StreakCalender = () => {
   const {
     getContributionCalendar,
     contributionCalendar,
+    hasContributedToday,
     fetchingCalendar,
     totalContribution,
   } = useContributionStore();
@@ -36,7 +37,6 @@ const StreakCalender = () => {
   const [cellRowCol, setCellRowCol] = useState();
   const [monthsSpan, setMonthsSpan] = useState('repeat(13, 1fr)')
   const [calendarMonths, setCalendarMonths] = useState([]);
-  const [hasContributedToday, setHasContributedToday] = useState(false);
   const scrollToEnd = ()=>{
     if (scrollRef.current) {
       scrollRef.current.scrollLeft = scrollRef.current.scrollWidth;
@@ -54,10 +54,7 @@ const StreakCalender = () => {
 
     const todayBlock = grid[grid.length-1];
     const today = new Date().toISOString().slice(0, 10);
-    setHasContributedToday(
-      todayBlock?.contributionCount > 0 
-      && todayBlock?.date === today
-    );
+    console.log(todayBlock, today);
 
     const cellCordinate = [];
     let months = [];

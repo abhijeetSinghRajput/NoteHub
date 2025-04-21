@@ -22,11 +22,12 @@ import { Link, Outlet } from "react-router-dom";
 import { useRouteStore } from "@/stores/useRouteStore";
 import React from "react";
 import { Button } from "@/components/ui/button";
-import { Github, Plus } from "lucide-react";
+import { Flame, Github, Plus } from "lucide-react";
 import AddNoteDialog from "@/components/AddNoteDialog";
 import TooltipWrapper from "@/components/TooltipWrapper";
 import { Avatar, AvatarFallback, AvatarImage } from "@radix-ui/react-avatar";
 import { useAuthStore } from "@/stores/useAuthStore";
+import { useContributionStore } from "@/stores/useContributionStore";
 
 const Dashboard = () => {
   return (
@@ -40,6 +41,7 @@ const DashboardContent = () => {
   const { routes } = useRouteStore();
   const { authUser } = useAuthStore();
   const { isSidebarOpen } = useSidebar();
+  const {hasContributedToday} = useContributionStore();
 
   return (
     <>
@@ -94,6 +96,14 @@ const DashboardContent = () => {
             <TooltipWrapper message="Toggle Theme">
               <ModeToggle />
             </TooltipWrapper>
+
+            <Button variant="secondary" className={`${!hasContributedToday? 'text-muted-foreground' : 'text-[#ff8828]'} h-8 p-2 gap-1`}>
+              {(hasContributedToday)?
+                <img className="size-4" src="./flame-active.svg" alt="" />:
+                <Flame/>
+              }
+              {authUser.currentStreak}
+            </Button>
 
             <TooltipWrapper message={authUser.fullName || "user"}>
               <Link

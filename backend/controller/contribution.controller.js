@@ -34,14 +34,19 @@ export const getOneYearContribution = async (req, res) => {
     // 🧠 Format contributions to map
     const map = new Map();
     for (const { date, contributionCount } of raw) {
-      const key = new Date(date).toISOString().slice(0, 10);
+      const localDate = new Date(new Date(date).getTime() + offsetMinutes * 60000);
+      const key = localDate.toISOString().slice(0, 10); // Local date string
       map.set(key, contributionCount);
     }
+
+    const todayKey = userNow.toISOString().slice(0, 10);
+    const hasContributedToday = map.has(todayKey);
 
     const grid = buildContributionGrid(oneYearAgo, userNow, map);
     res.status(200).json({
       totalContribution,
       weeks: grid,
+      hasContributedToday,
     });
   } catch (error) {
     console.error("Error in getOneYearContribution:", error);

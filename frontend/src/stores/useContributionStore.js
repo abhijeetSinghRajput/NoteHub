@@ -7,17 +7,18 @@ export const useContributionStore = create((set, get) => ({
   fetchingCalendar: false,
   totalContribution: 0,
   maxStreak: 0,
+  hasContributedToday: false,
 
   getContributionCalendar: async () => {
     set({ fetchingCalendar: true });
     try { 
         const offsetMinutes = new Date().getTimezoneOffset() * -1;
         const res = await axiosInstance.get('/contribution', {params: {offsetMinutes}});
-        const {weeks, totalContribution} = res.data;
+        const {weeks, totalContribution, hasContributedToday} = res.data;
 
         set({contributionCalendar: weeks});
-        set({totalContribution: totalContribution})
-        
+        set({totalContribution})
+        set({hasContributedToday});
         res.statusText === "OK"
     } catch (error) {
         const message = error?.response?.data?.message || 'Failed to fetch calendar';

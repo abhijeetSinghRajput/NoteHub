@@ -1,14 +1,15 @@
 import Contribution from "../model/contribution.model.js";
 import User from "../model/user.model.js";
 
-export const addContribution = async (userId) => {
+export const addContribution = async (userId, offsetMinutes = 0) => {
   try {
-    const today = new Date();
-    today.setUTCHours(0, 0, 0, 0);
+    const now = new Date();
+    const localNow = new Date(now.getTime() + offsetMinutes * 60000);
+    localNow.setUTCHours(0, 0, 0, 0); // Normalize to start of local day
 
-    // 📌 Update Contribution
+    // 📌 Update Contribution using local day
     await Contribution.updateOne(
-      { userId, date: today },
+      { userId, date: localNow },
       { $inc: { contributionCount: 1 } },
       { upsert: true }
     );
@@ -16,23 +17,24 @@ export const addContribution = async (userId) => {
     // 📈 Streak Logic
     const user = await User.findById(userId);
     const lastDate = user.lastContributionDate;
-    const yesterday = new Date(today);
-    yesterday.setUTCDate(today.getUTCDate() - 1);
+
+    const yesterday = new Date(localNow);
+    yesterday.setUTCDate(localNow.getUTCDate() - 1);
 
     if (
       !lastDate ||
       new Date(lastDate).toISOString().slice(0, 10) <
         yesterday.toISOString().slice(0, 10)
     ) {
-      user.currentStreak = 1; // Reset streak
+      user.currentStreak = 1;
     } else if (
       new Date(lastDate).toISOString().slice(0, 10) ===
       yesterday.toISOString().slice(0, 10)
     ) {
-      user.currentStreak += 1; // Continue streak
-    } // else: same day update, don't touch currentStreak
+      user.currentStreak += 1;
+    }
 
-    user.lastContributionDate = today;
+    user.lastContributionDate = localNow;
     if (user.currentStreak > user.maxStreak) {
       user.maxStreak = user.currentStreak;
     }
@@ -44,6 +46,7 @@ export const addContribution = async (userId) => {
     return false;
   }
 };
+
 
 export const buildContributionGrid = (startDate, endDate, contributionMap) => {
   const result = [];
