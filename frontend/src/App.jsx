@@ -27,10 +27,20 @@ import PersonalDetails from "./pages/Settings/PersonalDetails";
 import Personalization from "./pages/Settings/Personalization";
 import Security from "./pages/Settings/Security";
 import PhotoAndCover from "./pages/Settings/PhotoAndCover";
+import { useContributionStore } from "./stores/useContributionStore";
 
 function App() {
   const { authUser, checkAuth, isCheckingAuth } = useAuthStore();
+  const {getContributionCalendar} = useContributionStore();
   const { theme } = useLocalStorage();
+  const { setRoutes } = useRouteStore();
+  const { getNoteName, collections, isCollectionsLoading, setselectedNote } =
+    useNoteStore();
+  const location = useLocation();
+
+  useEffect(()=>{
+    getContributionCalendar();
+  }, []);
 
   useEffect(() => {
     checkAuth();
@@ -39,11 +49,6 @@ function App() {
     document.documentElement.setAttribute("data-theme", theme);
     document.documentElement.style.setProperty("--radius", `${radius}rem`);
   }, [checkAuth]);
-
-  const { setRoutes } = useRouteStore();
-  const { getNoteName, collections, isCollectionsLoading, setselectedNote } =
-    useNoteStore();
-  const location = useLocation();
 
   useEffect(() => {
     let path = "/";

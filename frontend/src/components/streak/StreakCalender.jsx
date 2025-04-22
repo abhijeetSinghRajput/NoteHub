@@ -1,9 +1,9 @@
 import React, { useEffect, useRef, useState } from "react";
-import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
-import TooltipWrapper from "./TooltipWrapper";
+import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
+import TooltipWrapper from "../TooltipWrapper";
 import { useContributionStore } from "@/stores/useContributionStore";
 import { getContributionMessage } from "@/lib/getContributionMessage";
-import CalendarSkeleton from "./sekeletons/CalendarSkeleton";
+import CalendarSkeleton from "../sekeletons/CalendarSkeleton";
 import { Flame } from "lucide-react";
 import { useAuthStore } from "@/stores/useAuthStore";
 
@@ -24,7 +24,6 @@ const getColorLabel = (contributionCount) => {
 
 const StreakCalender = () => {
   const {
-    getContributionCalendar,
     contributionCalendar,
     hasContributedToday,
     fetchingCalendar,
@@ -43,7 +42,6 @@ const StreakCalender = () => {
     }
   }
   useEffect(() => {
-    getContributionCalendar();
     scrollToEnd();
     window.addEventListener('resize', scrollToEnd);
   }, []);

@@ -20,7 +20,7 @@ import {
 } from "@/components/ui/sidebar";
 import { Link, Outlet } from "react-router-dom";
 import { useRouteStore } from "@/stores/useRouteStore";
-import React from "react";
+import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Flame, Github, Plus } from "lucide-react";
 import AddNoteDialog from "@/components/AddNoteDialog";
@@ -28,6 +28,12 @@ import TooltipWrapper from "@/components/TooltipWrapper";
 import { Avatar, AvatarFallback, AvatarImage } from "@radix-ui/react-avatar";
 import { useAuthStore } from "@/stores/useAuthStore";
 import { useContributionStore } from "@/stores/useContributionStore";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@radix-ui/react-popover";
+import DateCalendar from "@/components/streak/DateCalendar";
 
 const Dashboard = () => {
   return (
@@ -41,7 +47,8 @@ const DashboardContent = () => {
   const { routes } = useRouteStore();
   const { authUser } = useAuthStore();
   const { isSidebarOpen } = useSidebar();
-  const {hasContributedToday} = useContributionStore();
+  const { hasContributedToday } = useContributionStore();
+  const [date, setDate] = useState(new Date());
 
   return (
     <>
@@ -87,9 +94,9 @@ const DashboardContent = () => {
 
             <a href="https://github.com/abhijeetSinghRajput/notehub">
               <TooltipWrapper message="Source Code">
-              <Button className="size-8" variant="ghost">
-                <Github />
-              </Button>
+                <Button className="size-8" variant="ghost">
+                  <Github />
+                </Button>
               </TooltipWrapper>
             </a>
 
@@ -97,13 +104,31 @@ const DashboardContent = () => {
               <ModeToggle />
             </TooltipWrapper>
 
-            <Button variant="secondary" className={`${!hasContributedToday? 'text-muted-foreground' : 'text-[#ff8828]'} h-8 p-2 gap-1`}>
-              {(hasContributedToday)?
-                <img className="size-4" src="./flame-active.svg" alt="" />:
-                <Flame/>
-              }
-              {authUser.currentStreak}
-            </Button>
+            <Popover>
+              <PopoverTrigger>
+                <div
+                  className={`rounded-md hover:bg-accent flex items-center h-8 p-2 gap-1 ${
+                    hasContributedToday
+                      ? "text-[#ff8828]"
+                      : "text-muted-foreground"
+                  }`}
+                >
+                  {hasContributedToday ? (
+                    <img
+                      className="size-4"
+                      src="./flame-active.svg"
+                      alt="Active Streak"
+                    />
+                  ) : (
+                    <Flame className="size-4" />
+                  )}
+                  {authUser?.currentStreak ?? 0}
+                </div>
+              </PopoverTrigger>
+              <PopoverContent>
+                <DateCalendar/>
+              </PopoverContent>
+            </Popover>
 
             <TooltipWrapper message={authUser.fullName || "user"}>
               <Link

@@ -10,7 +10,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@radix-ui/react-avatar";
 import { useAuthStore } from "@/stores/useAuthStore";
 import imageCompression from "browser-image-compression";
-import StreakCalender from "@/components/StreakCalender";
+import StreakCalender from "@/components/streak/StreakCalender";
 import { useContributionStore } from "@/stores/useContributionStore";
 
 const ProfilePage = () => {
