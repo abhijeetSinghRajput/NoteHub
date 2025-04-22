@@ -72,9 +72,8 @@ const DateCalendar = () => {
   };
 
   const weeks = getWeeksOfMonth(currentMonth);
-
   return (
-    <div className="bg-background border p-3 rounded-lg">
+    <div className="select-none bg-background border p-3 rounded-lg">
       <div className="flex gap-4 items-center justify-between mb-2">
         <Button
           variant="secondary"
@@ -128,8 +127,7 @@ const DateCalendar = () => {
                 const isToday = date.toDateString() === today.toDateString();
                 const dateStr = getLocalDateString(date);
                 const isContributed = contributionSet.has(dateStr);
-                if (isContributed) console.log(dateStr, date.getDate());
-
+                if(isContributed) console.log(date.getDate(), dateStr);
                 return (
                   <td
                     key={j}
@@ -141,7 +139,7 @@ const DateCalendar = () => {
                   >
                     <Button
                       variant={isToday ? "secondary" : "ghost"}
-                      className={`relative size-8 p-0 font-normal`}
+                      className={`${(isContributed && isToday) && 'bg-green-400/20'} relative size-8 p-0 font-normal`}
                     >
                       {isContributed?
                         <CheckCircle className="text-green-500 size-3" />:

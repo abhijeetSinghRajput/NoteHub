@@ -19,6 +19,7 @@ const sanitizeUserForSharing = (user) => {
         
         isEmailVerified: user.isEmailVerified,
 
+        
         currentStreak: user.currentStreak,
         maxStreak: user.maxStreak,
     }

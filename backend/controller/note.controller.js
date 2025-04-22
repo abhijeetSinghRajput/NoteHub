@@ -10,7 +10,8 @@ export const createNote = async (req, res) => {
   }
 
   try {
-    const note = await Note.create({ name, collectionId, userId: user._id });
+    const content = `<h1>${name}</h1><p></p>`;
+    const note = await Note.create({ name, collectionId, content, userId: user._id });
     res.status(201).json({ message: "note created successfully", note });
   } catch (error) {
     console.log("Error in createNote controller\n", error);

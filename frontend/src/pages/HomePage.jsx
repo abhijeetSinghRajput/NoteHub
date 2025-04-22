@@ -57,7 +57,6 @@ const NoteCard = ({ note, collectionName }) => {
   const inputRef = useRef(null);
   const [isRenaming, setIsRenaming] = useState(false);
   const { renameNote } = useNoteStore();
-  const navigate = useNavigate();
 
   const handleRenameStart = () => {
     setIsRenaming(true);
@@ -66,7 +65,7 @@ const NoteCard = ({ note, collectionName }) => {
         inputRef.current.focus();
         inputRef.current.select();
       }
-    }, 0);
+    }, 200);
   };
 
   const handleSaveRename = () => {
@@ -120,13 +119,7 @@ const NoteCard = ({ note, collectionName }) => {
           <div className="opacity-1 group-hover/notecard:opacity-100 transition-opacity">
             <NotesOption
               trigger={
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  className="h-6 w-6"
-                >
-                  <EllipsisVertical className="size-4" />
-                </Button>
+                <EllipsisVertical className="size-4" />
               }
               note={note}
               onRenameStart={handleRenameStart}

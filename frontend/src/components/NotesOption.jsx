@@ -6,6 +6,7 @@ import { useIsMobile } from '@/hooks/use-mobile';
 import { EllipsisVertical, Folder, FolderOutput, Pencil, Trash2 } from 'lucide-react';
 import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from './ui/command';
 import { useNoteStore } from '@/stores/useNoteStore';
+import DeleteConfirmation from './DeleteConfirmation';
 
 const NotesOption = ({ trigger, note, onRenameStart }) => {
     const { isMobile } = useIsMobile();
@@ -33,7 +34,7 @@ const NotesOption = ({ trigger, note, onRenameStart }) => {
     }, [onRenameStart]);
 
     return (
-        <Popover open={open} onOpenChange={setOpen}>
+        <Popover modal={true} open={open} onOpenChange={setOpen}>
             <PopoverTrigger asChild>
                 <Button 
                     variant="ghost" 
@@ -97,15 +98,7 @@ const NotesOption = ({ trigger, note, onRenameStart }) => {
                 </Popover>
 
                 <Separator orientation="horizontal" className="my-1" />
-
-                <Button
-                    variant="ghost"
-                    className="font-normal p-2 h-auto w-full justify-start gap-2 text-red-500 hover:bg-red-400/20 hover:text-red-500"
-                    onClick={handleDelete}
-                >
-                    <Trash2 className="size-4" />
-                    <span>Delete Note</span>
-                </Button>
+                <DeleteConfirmation onDelete={handleDelete}/>
             </PopoverContent>
         </Popover>
     );

@@ -5,22 +5,18 @@ export const getOneYearContribution = async (req, res) => {
   try {
     const userId = req.user._id;
 
-    // ⏳ Read timezone offset in minutes (e.g. IST = -330)
     const offsetMinutes = parseInt(req.query.offsetMinutes || "0");
 
-    // 🕐 Adjust current UTC date to user's local current time
     const now = new Date();
     const userNow = new Date(now.getTime() + offsetMinutes * 60000);
 
-    // 📆 Calculate how many days to go back: 52 weeks + current weekday
-    const weekdayOffset = userNow.getUTCDay();
+    const weekdayOffset = userNow.getDay(); // use local weekday
     const daysToGoBack = 7 * 52 + weekdayOffset;
 
     const oneYearAgo = new Date(userNow);
-    oneYearAgo.setUTCDate(oneYearAgo.getUTCDate() - daysToGoBack);
-    oneYearAgo.setUTCHours(0, 0, 0, 0); // ⏪ Start of day a year ago
+    oneYearAgo.setDate(oneYearAgo.getDate() - daysToGoBack);
+    oneYearAgo.setHours(0, 0, 0, 0); // ✅ local start of day
 
-    // 🔍 Fetch all contributions between oneYearAgo and current local time
     const raw = await Contribution.find({
       userId,
       date: { $gte: oneYearAgo, $lte: userNow },
@@ -31,11 +27,12 @@ export const getOneYearContribution = async (req, res) => {
       0
     );
 
-    // 🧠 Format contributions to map
     const map = new Map();
     for (const { date, contributionCount } of raw) {
-      const localDate = new Date(new Date(date).getTime() + offsetMinutes * 60000);
-      const key = localDate.toISOString().slice(0, 10); // Local date string
+      const localDate = new Date(
+        new Date(date).getTime() + offsetMinutes * 60000
+      );
+      const key = localDate.toISOString().slice(0, 10);
       map.set(key, contributionCount);
     }
 

@@ -5,21 +5,19 @@ export const addContribution = async (userId, offsetMinutes = 0) => {
   try {
     const now = new Date();
     const localNow = new Date(now.getTime() + offsetMinutes * 60000);
-    localNow.setUTCHours(0, 0, 0, 0); // Normalize to start of local day
+    localNow.setHours(0, 0, 0, 0); // ✅ local start of day
 
-    // 📌 Update Contribution using local day
     await Contribution.updateOne(
       { userId, date: localNow },
       { $inc: { contributionCount: 1 } },
       { upsert: true }
     );
 
-    // 📈 Streak Logic
     const user = await User.findById(userId);
     const lastDate = user.lastContributionDate;
 
     const yesterday = new Date(localNow);
-    yesterday.setUTCDate(localNow.getUTCDate() - 1);
+    yesterday.setDate(localNow.getDate() - 1);
 
     if (
       !lastDate ||
@@ -46,7 +44,6 @@ export const addContribution = async (userId, offsetMinutes = 0) => {
     return false;
   }
 };
-
 
 export const buildContributionGrid = (startDate, endDate, contributionMap) => {
   const result = [];

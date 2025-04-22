@@ -34,8 +34,9 @@ import {
   PopoverTrigger,
 } from "@radix-ui/react-popover";
 import DateCalendar from "@/components/streak/DateCalendar";
+import { useTheme } from "@/components/theme-provider";
 
-const Dashboard = () => {
+const Dashboard = () => {  
   return (
     <SidebarProvider>
       <DashboardContent />
@@ -44,6 +45,7 @@ const Dashboard = () => {
 };
 
 const DashboardContent = () => {
+  const { theme } = useTheme();
   const { routes } = useRouteStore();
   const { authUser } = useAuthStore();
   const { isSidebarOpen } = useSidebar();
@@ -94,8 +96,13 @@ const DashboardContent = () => {
 
             <a href="https://github.com/abhijeetSinghRajput/notehub">
               <TooltipWrapper message="Source Code">
-                <Button className="size-8" variant="ghost">
-                  <Github />
+                <Button className="size-8 p-0" variant="ghost">
+                  <img
+                    className="size-5"
+                    src={`./github-mark${theme === 'dark' ? '-white' : ''}.svg`}
+                    alt="GitHub icon"
+                  />
+
                 </Button>
               </TooltipWrapper>
             </a>
@@ -104,7 +111,7 @@ const DashboardContent = () => {
               <ModeToggle />
             </TooltipWrapper>
 
-            <Popover>
+            <Popover className="z-10">
               <PopoverTrigger>
                 <div
                   className={`rounded-md hover:bg-accent flex items-center h-8 p-2 gap-1 ${
@@ -116,7 +123,7 @@ const DashboardContent = () => {
                   {hasContributedToday ? (
                     <img
                       className="size-4"
-                      src="./flame-active.svg"
+                      src="/flame-active.svg"
                       alt="Active Streak"
                     />
                   ) : (

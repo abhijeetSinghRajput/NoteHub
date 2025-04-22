@@ -8,6 +8,7 @@ import { Input } from './ui/input'
 import { useNoteStore } from '@/stores/useNoteStore'
 import { Separator } from './ui/separator'
 import { useNavigate } from 'react-router-dom'
+import DeleteConfirmation from './DeleteConfirmation'
 
 const CollectionsOption = ({
     trigger,
@@ -164,15 +165,9 @@ const CollectionsOption = ({
                 </Button>
 
                 <Separator orientation="horizontal" className="my-1" />
-
-                <Button
-                    variant="ghost"
-                    className="font-normal p-2 h-auto w-full justify-start gap-2 text-red-500 hover:bg-red-400/20 hover:text-red-500"
-                    onClick={handleDelete}
-                >
-                    <Trash2 className="size-4" />
-                    <span>Delete Collection</span>
-                </Button>
+                
+                <DeleteConfirmation onDelete={handleDelete}/>
+                
             </PopoverContent>
         </Popover>
     )
