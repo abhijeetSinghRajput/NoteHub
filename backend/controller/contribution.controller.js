@@ -14,7 +14,7 @@ export const getOneYearContribution = async (req, res) => {
     const daysToGoBack = 7 * 52 + weekdayOffset;
 
     const oneYearAgo = new Date(userNow);
-    oneYearAgo.setDate(oneYearAgo.getDate() - daysToGoBack);
+    oneYearAgo.setDate(oneYearAgo.getDate() - daysToGoBack + 1);
     oneYearAgo.setHours(0, 0, 0, 0); // ✅ local start of day
 
     const raw = await Contribution.find({

@@ -21,7 +21,6 @@ const getColorLabel = (contributionCount) => {
   if (contributionCount >= 1) return "bg-contributionLevel-1";
   return "bg-contributionLevel-0";
 };
-
 const StreakCalender = ({username}) => {
   const {
     contributionCalendar,
