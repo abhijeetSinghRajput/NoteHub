@@ -22,7 +22,7 @@ const getColorLabel = (contributionCount) => {
   return "bg-contributionLevel-0";
 };
 
-const StreakCalender = () => {
+const StreakCalender = ({username}) => {
   const {
     contributionCalendar,
     hasContributedToday,

@@ -1,11 +1,11 @@
 import { cn } from "@/lib/utils";
 
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState } from "react";
 import { DrawerDialog } from "../components/EditProfile";
-import { Button } from '@/components/ui/button';
-import { Camera, Pencil } from 'lucide-react';
+import { Button } from "@/components/ui/button";
+import { Camera, Pencil } from "lucide-react";
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label"
+import { Label } from "@/components/ui/label";
 import { Card, CardContent } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@radix-ui/react-avatar";
 import { useAuthStore } from "@/stores/useAuthStore";
@@ -16,15 +16,15 @@ import { useContributionStore } from "@/stores/useContributionStore";
 const ProfilePage = () => {
   const { authUser, uploadUserAvatar } = useAuthStore();
   const [previewUrl, setPreviewUrl] = useState(null);
-  
-  const handleUploadAvatar = async(e)=>{
+
+  const handleUploadAvatar = async (e) => {
     const file = e.target.files[0];
-    if(!file) return;
+    if (!file) return;
     const option = {
       maxSizeMB: 0.2,
       maxWidthOrheight: 1920,
       useWebWorker: true,
-    }
+    };
     try {
       // Show a preview while compressing the image
       const previewUrl = URL.createObjectURL(file);
@@ -36,33 +36,34 @@ const ProfilePage = () => {
       // Converting to base64 string
       const reader = new FileReader();
       reader.readAsDataURL(compressedFile);
-      reader.onloadend = async ()=>{
+      reader.onloadend = async () => {
         const imageBase64 = reader.result;
-        await uploadUserAvatar({imageBase64});
-      }
+        await uploadUserAvatar({ imageBase64 });
+      };
     } catch (error) {
-      console.error('Error compressing or uploading avatar:\n', error);
-    } finally{
+      console.error("Error compressing or uploading avatar:\n", error);
+    } finally {
       e.target.value = null;
     }
-  }
+  };
 
   return (
     <div className="p-4 overflow-auto">
       <Card className="max-w-screen-md mx-auto overflow-hidden">
         <div className="h-48 overflow-hidden bg-muted/50 relative">
-        <Avatar>
-          <AvatarImage 
-            className="w-full h-full object-cover"
-            src={authUser?.coverUrl} />
-          <AvatarFallback>
-            <img
-              className="object-cover w-full h-full dark:brightness-[0.2]"
-              src="https://ui.shadcn.com/placeholder.svg"
-              alt="" 
+          <Avatar>
+            <AvatarImage
+              className="w-full h-full object-cover"
+              src={authUser?.coverUrl}
             />
-          </AvatarFallback>
-        </Avatar>
+            <AvatarFallback>
+              <img
+                className="object-cover w-full h-full dark:brightness-[0.2]"
+                src="https://ui.shadcn.com/placeholder.svg"
+                alt=""
+              />
+            </AvatarFallback>
+          </Avatar>
         </div>
         <CardContent>
           <div className="mb-8 flex items-center space-x-4">
@@ -79,8 +80,15 @@ const ProfilePage = () => {
                   alt="shadcn"
                 />
               </AvatarFallback>
-              <Button variant="secondary" size="icon" className="p-0 absolute bottom-2 right-2 z-10 pointer">
-                <label htmlFor="upload-photo" className="p-4 flex items-center space-x-2 cursor-pointer">
+              <Button
+                variant="secondary"
+                size="icon"
+                className="p-0 absolute bottom-2 right-2 z-10 pointer"
+              >
+                <label
+                  htmlFor="upload-photo"
+                  className="p-4 flex items-center space-x-2 cursor-pointer"
+                >
                   <Camera />
                   <input
                     type="file"
@@ -98,17 +106,20 @@ const ProfilePage = () => {
             </div>
           </div>
 
-
           <div className="space-y-4">
-            <StreakCalender/>
+            <StreakCalender />
             <div>
-              <Label className="text-zinc-500 mb-2 inline-block">Username</Label>
+              <Label className="text-zinc-500 mb-2 inline-block">
+                Username
+              </Label>
               <div className="relative overflow-hidden rounded-lg select-none flex bg-sidebar border border-sidebar-border justify-between items-center px-4 py-3">
                 {authUser?.userName}
                 <DrawerDialog
                   triggerButton={
                     <Button
-                      className="border-l absolute h-full rounded-none top-0 right-0" variant="ghost">
+                      className="border-l absolute h-full rounded-none top-0 right-0"
+                      variant="ghost"
+                    >
                       <Pencil />
                     </Button>
                   }
@@ -124,13 +135,17 @@ const ProfilePage = () => {
             </div>
 
             <div>
-              <Label className="text-zinc-500 mb-2 inline-block">Full Name</Label>
+              <Label className="text-zinc-500 mb-2 inline-block">
+                Full Name
+              </Label>
               <div className="relative overflow-hidden rounded-lg select-none bg-sidebar border border-sidebar-border flex justify-between items-center px-4 py-3">
                 {authUser?.fullName}
                 <DrawerDialog
                   triggerButton={
                     <Button
-                      className="border-l absolute h-full rounded-none top-0 right-0" variant="ghost">
+                      className="border-l absolute h-full rounded-none top-0 right-0"
+                      variant="ghost"
+                    >
                       <Pencil />
                     </Button>
                   }
@@ -152,7 +167,9 @@ const ProfilePage = () => {
                 <DrawerDialog
                   triggerButton={
                     <Button
-                      className="border-l absolute h-full rounded-none top-0 right-0" variant="ghost">
+                      className="border-l absolute h-full rounded-none top-0 right-0"
+                      variant="ghost"
+                    >
                       <Pencil />
                     </Button>
                   }
@@ -166,7 +183,6 @@ const ProfilePage = () => {
                 </DrawerDialog>
               </div>
             </div>
-
           </div>
         </CardContent>
       </Card>
@@ -179,11 +195,14 @@ function ProfileForm({ className, field, defaultValue, apiEndPoint, dataKey }) {
   const { updateUserField } = useAuthStore();
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const data = { [dataKey]: value }
+    const data = { [dataKey]: value };
     await updateUserField(apiEndPoint, data);
-  }
+  };
   return (
-    <form onSubmit={handleSubmit} className={cn("grid items-start gap-4", className)}>
+    <form
+      onSubmit={handleSubmit}
+      className={cn("grid items-start gap-4", className)}
+    >
       <div className="grid gap-2">
         <Label htmlFor={field}>{field}</Label>
         <Input

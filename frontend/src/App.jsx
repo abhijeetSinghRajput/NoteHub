@@ -28,6 +28,7 @@ import Personalization from "./pages/Settings/Personalization";
 import Security from "./pages/Settings/Security";
 import PhotoAndCover from "./pages/Settings/PhotoAndCover";
 import { useContributionStore } from "./stores/useContributionStore";
+import UserPage from "./pages/UserPage";
 
 function App() {
   const { authUser, checkAuth, isCheckingAuth } = useAuthStore();
@@ -121,6 +122,7 @@ function App() {
               <Route path="note/:id" element={<NotePage />} />
               <Route path="note/:id/editor" element={<Tiptap />} />
               <Route path="profile" element={<ProfilePage />} />
+              <Route path="user/:username" element={<UserPage />} />
 
               <Route path="settings" element={<SettingsPage />}>
                 <Route index element={<Personalization />} />

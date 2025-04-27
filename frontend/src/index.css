@@ -1,4 +1,5 @@
 @import url("https://fonts.googleapis.com/css2?family=Audiowide&display=swap");
+@import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100..900;1,100..900&display=swap');
 
 @tailwind base;
 @tailwind components;
@@ -574,6 +575,8 @@
 @layer base {
   * {
     @apply border-border;
+    font-family: "Roboto", sans-serif;
+    font-optical-sizing: auto;
   }
 
   body {
@@ -727,9 +730,10 @@ div:has(> .tiptap.ProseMirror) {
   h6 {
     @apply text-sm font-bold mb-4;
   }
-
+  
+  > p,
   div > p {
-    @apply my-6;
+    @apply my-2;
   }
 
   a {

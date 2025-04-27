@@ -163,7 +163,16 @@ export const getUser = async (req, res) => {
         if (!user) {
             return res.status(404).json({ message: `User not found` });
         }
-        res.status(200).json(sanitizeUserForSharing(user))
+        res.status(200).json({
+            _id : user._id, 
+            fullName : user.fullName, 
+            userName : user.userName, 
+            email : user.email, 
+            avatarUrl : user.avatarUrl, 
+            coverUrl : user.coverUrl, 
+            currentStreak : user.currentStreak, 
+            maxStreak : user.maxStreak, 
+        })
     } catch (error) {
         console.error('Error in getUser controller: ', error);
         res.status(500).json({ message: "Internal server error" });

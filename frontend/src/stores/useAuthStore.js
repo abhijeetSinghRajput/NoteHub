@@ -13,6 +13,7 @@ export const useAuthStore = create((set, get) => ({
   isUploadingCover: false,
   isRemovingAvatar: false,
   isRemovingCover: false,
+  isGettingUser: false,
   
 
   checkAuth: async () => {
@@ -24,6 +25,19 @@ export const useAuthStore = create((set, get) => ({
       set({ authUser: null });
     } finally {
       set({ isCheckingAuth: false });
+    }
+  },
+
+  getUser: async (userName) => {
+    set({isGettingUser : true});
+    try {
+      const res = await axiosInstance.get(`/user/${userName}`);
+      return res.data;
+    } catch (error) {
+      console.error(error);
+      throw error;
+    } finally{
+      set({isGettingUser : true});
     }
   },
 

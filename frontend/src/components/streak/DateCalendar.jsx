@@ -22,6 +22,8 @@ const DateCalendar = () => {
   const { contributionCalendar } = useContributionStore();
 
   const contributionSet = useMemo(() => {
+    if(!Array.isArray(contributionCalendar)) return new Set();
+    
     const flat = contributionCalendar.flat();
     return new Set(
       flat
