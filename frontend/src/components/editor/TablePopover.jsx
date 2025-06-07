@@ -10,7 +10,7 @@ export const TablePopover = ({ editor, controllers, triggerIcon }) => {
                     {triggerIcon}
                 </Button>
             </PopoverTrigger>
-            <PopoverContent className="p-1 w-min" align="start">
+            <PopoverContent className="bg-popover border border-input rounded-lg  p-1 w-min" align="start">
                 {
                     controllers.map((controller, index) => (
                         <Button

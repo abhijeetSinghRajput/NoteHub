@@ -565,7 +565,6 @@
     --input: 215 27.9% 16.9%;
     --ring: 263.4 70% 50.4%;
   }
-
 }
 
 .hide-scrollbar::-webkit-scrollbar {
@@ -585,13 +584,19 @@
     /* @apply font-semibold; */
     font-family: "Audiowide";
   }
+  .calendar {
+    display: grid;
+    grid-template-columns: repeat(53, minmax(10px, 1fr));
+    grid-template-rows: repeat(7, minmax(10px, 1fr));
+    gap: 3px;
+  }
 }
 
-.button{
+.button {
   @apply inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 bg-primary text-primary-foreground shadow hover:bg-primary/90 h-9 px-4 py-2;
 }
 
-.button.disabled{
+.button.disabled {
   @apply opacity-50 pointer-events-none;
 }
 
@@ -700,31 +705,31 @@ div:has(> .tiptap.ProseMirror) {
   }
 
   h1 {
-    @apply text-3xl font-bold mb-4;
+    @apply text-4xl font-bold mb-8;
   }
 
   h2 {
-    @apply text-2xl font-bold mb-4;
+    @apply text-2xl font-semibold mt-8 mb-4;
   }
 
   h3 {
-    @apply text-xl font-bold mb-4;
+    @apply text-xl font-semibold mt-4 mb-2;
   }
 
   h4 {
-    @apply text-lg font-bold mb-4;
+    @apply text-base font-semibold mt-4 mb-2;
   }
 
   h5 {
-    @apply text-base font-bold mb-4;
+    @apply text-base font-semibold m-0;
   }
 
   h6 {
-    @apply text-sm font-bold mb-4;
+    @apply text-base font-semibold m-0;
   }
 
-  div > p {
-    @apply my-6;
+  p {
+    @apply my-2;
   }
 
   a {
@@ -732,15 +737,26 @@ div:has(> .tiptap.ProseMirror) {
   }
 
   ul {
-    @apply list-disc px-8 my-8;
+    @apply list-disc;
+  }
+  ol {
+    @apply list-decimal;
+  }
+  li::marker {
+    @apply font-bold;
   }
 
-  ol {
-    @apply list-decimal px-8 my-8;
+  ol,
+  ul {
+    @apply mb-4 pl-[26px];
+  }
+
+  p + :where(ol, ul) {
+    @apply mt-0;
   }
 
   code {
-    @apply bg-accent p-0.5 px-1 rounded whitespace-pre-wrap;
+    @apply bg-accent text-sm py-[2.4px] px-[4.8px] rounded whitespace-pre-wrap;
   }
   pre {
     @apply bg-[#171717] text-[#e6edf3] dark:text-primary border-input border rounded-md my-12 p-2 pt-16 overflow-x-auto;
@@ -807,76 +823,70 @@ div:has(> .tiptap.ProseMirror) {
   }
 
   blockquote {
-    @apply border-l-4 border-input pl-4 italic  text-muted-foreground my-6;
+    @apply border-l-4 border-input py-2 pl-6 italic  text-muted-foreground;
   }
 
   hr {
-    @apply border-t border-input my-6;
-  }
-
-  table {
-    @apply w-full mb-6 border-collapse rounded-lg overflow-hidden;
-  }
-
-  th,
-  td {
-    @apply border border-input p-2;
-  }
-
-  th {
-    @apply bg-gray-800 font-bold;
-  }
-
-  td {
-    @apply bg-gray-900;
+    @apply border border-input my-12;
   }
 
   /* Table-specific styling */
   table {
+    @apply w-auto mb-6 border-collapse rounded-lg overflow-hidden;
+
+    /* let it auto-expand */
+    table-layout: auto;
     border-collapse: collapse;
     margin: 0;
-    width: max-content !important;
-    table-layout: fixed;
-    width: 100%;
 
-    td,
-    th {
-      @apply border border-input bg-background whitespace-nowrap;
-      /* min-width: 1em;
-      padding: 6px 8px;
-      position: relative;
-      vertical-align: top; */
+    /* allow natural growth based on content */
+    width: auto !important;
+  }
 
-      > * {
-        margin-bottom: 0;
-      }
+  td,
+  th {
+    @apply border border-input p-2;
+    @apply whitespace-nowrap; /* prevent line-break */
+    position: relative;
+
+    > * {
+      margin-bottom: 0;
     }
+  }
 
-    th {
-      @apply bg-accent/70 font-semibold text-left;
-    }
+  th {
+    @apply bg-accent/70 font-semibold text-left;
+  }
 
-    .selectedCell:after {
-      background: var(--gray-2);
-      content: "";
-      left: 0;
-      right: 0;
-      top: 0;
-      bottom: 0;
-      pointer-events: none;
-      position: absolute;
-      z-index: 2;
-    }
+  td {
+    @apply bg-background;
+  }
 
-    .column-resize-handle {
-      background-color: var(--purple);
-      bottom: -2px;
-      pointer-events: none;
-      position: absolute;
-      right: -2px;
-      top: 0;
-      width: 4px;
-    }
+  .selectedCell:after {
+    background: var(--gray-2);
+    content: "";
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    pointer-events: none;
+    position: absolute;
+    z-index: 2;
+  }
+
+  .column-resize-handle {
+    background-color: var(--purple);
+    bottom: -2px;
+    pointer-events: none;
+    position: absolute;
+    right: -2px;
+    top: 0;
+    width: 4px;
+  }
+
+  .tableWrapper {
+    margin: 1.5rem 0;
+    overflow-x: auto;
   }
 
   .tableWrapper {

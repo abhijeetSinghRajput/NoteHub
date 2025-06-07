@@ -27,7 +27,7 @@ import {
     Undo,
 } from 'lucide-react'
 
-export const COLORS = ['#fb7185', '#fdba74', '#d9f99d', '#a7f3d0', '#a5f3fc', '#a5b4fc'];
+export const COLORS = ['#fb7185', '#fdba74', '#d9f99d', '#a7f3d0', '#a5f3fc', '#a5b4fc', '#808080'];
 
 export const FORMATTING_BUTTONS = [
     {

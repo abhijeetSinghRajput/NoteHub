@@ -10,6 +10,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@radix-ui/react-avatar";
 import { useAuthStore } from "@/stores/useAuthStore";
 import imageCompression from "browser-image-compression";
+import Calendar from "@/components/contributionCalendar/calendar";
 
 const ProfilePage = () => {
   const { authUser, uploadUserAvatar } = useAuthStore();
@@ -96,75 +97,8 @@ const ProfilePage = () => {
             </div>
           </div>
 
+          <Calendar username={authUser?.userName}/>
 
-          <div className="space-y-4">
-            <div>
-              <Label className="text-zinc-500 mb-2 inline-block">Username</Label>
-              <div className="relative overflow-hidden rounded-lg select-none flex bg-sidebar border border-sidebar-border justify-between items-center px-4 py-3">
-                {authUser?.userName}
-                <DrawerDialog
-                  triggerButton={
-                    <Button
-                      className="border-l absolute h-full rounded-none top-0 right-0" variant="ghost">
-                      <Pencil />
-                    </Button>
-                  }
-                >
-                  <ProfileForm
-                    apiEndPoint="user/update-username"
-                    dataKey="userName"
-                    field="Username"
-                    defaultValue={authUser?.userName}
-                  />
-                </DrawerDialog>
-              </div>
-            </div>
-
-            <div>
-              <Label className="text-zinc-500 mb-2 inline-block">Full Name</Label>
-              <div className="relative overflow-hidden rounded-lg select-none bg-sidebar border border-sidebar-border flex justify-between items-center px-4 py-3">
-                {authUser?.fullName}
-                <DrawerDialog
-                  triggerButton={
-                    <Button
-                      className="border-l absolute h-full rounded-none top-0 right-0" variant="ghost">
-                      <Pencil />
-                    </Button>
-                  }
-                >
-                  <ProfileForm
-                    apiEndPoint="user/update-fullname"
-                    dataKey="fullName"
-                    field="Full Name"
-                    defaultValue={authUser?.fullName}
-                  />
-                </DrawerDialog>
-              </div>
-            </div>
-
-            <div>
-              <Label className="text-zinc-500 mb-2 inline-block">Email</Label>
-              <div className="relative overflow-hidden rounded-lg select-none bg-sidebar border border-sidebar-border flex justify-between items-center px-4 py-3">
-                {authUser?.email}
-                <DrawerDialog
-                  triggerButton={
-                    <Button
-                      className="border-l absolute h-full rounded-none top-0 right-0" variant="ghost">
-                      <Pencil />
-                    </Button>
-                  }
-                >
-                  <ProfileForm
-                    apiEndPoint="email/update"
-                    dataKey="newEmail"
-                    field="Email"
-                    defaultValue={authUser?.email}
-                  />
-                </DrawerDialog>
-              </div>
-            </div>
-
-          </div>
         </CardContent>
       </Card>
     </div>

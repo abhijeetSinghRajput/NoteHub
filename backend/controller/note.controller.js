@@ -1,5 +1,6 @@
 import mongoose from "mongoose";
 import Note from "../model/note.model.js";
+import { addContribution } from "../services/contribution.service.js";
 
 export const createNote = async (req, res) => {
     const { name, collectionId } = req.body;
@@ -77,17 +78,23 @@ export const getNotes = async (req, res) => {
 }
 
 export const updateContent = async (req, res) => {
-    const { content, noteId } = req.body;
+    const { content, noteId, userLocalDateTime, offsetMinutes } = req.body;
+    const { user } = req;
+    console.log(req.body);
     try {
         const note = await Note.findById(noteId);
+        if(!note) return res.status(404).json({ message: `note not found with id ${noteId}` });
         note.content = content;
         await note.save();
-        res.status(200).json({ message: "Notes updated successfully.", note })
+        const result = await addContribution(user.userName, userLocalDateTime, offsetMinutes);
+        console.log(result);
+        res.status(200).json({ message: "Notes updated successfully.", note });
     } catch (error) {
         console.log("Error in updateContent controller.\n", error);
         res.status(500).json({ message: "Internal server error" });
     }
-}
+};
+
 
 
 export const renameNote = async (req, res) => {
