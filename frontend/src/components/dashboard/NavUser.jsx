@@ -20,7 +20,6 @@ import {
     DropdownMenuContent,
     DropdownMenuGroup,
     DropdownMenuItem,
-    DropdownMenuLabel,
     DropdownMenuSeparator,
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
@@ -37,7 +36,7 @@ const NavUser = () => {
     const { isMobile } = useSidebar();
     const { authUser } = useAuthStore();
     const { logout } = useAuthStore();
-    
+    console.log("Auth User:", authUser);
     return (
         <SidebarMenu>
             <SidebarMenuItem>

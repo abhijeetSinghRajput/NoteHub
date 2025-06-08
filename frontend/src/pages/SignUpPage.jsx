@@ -1,183 +1,352 @@
-import { cn } from "@/lib/utils"
-import { Button } from "@/components/ui/button"
-import { Card, CardContent } from "@/components/ui/card"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
+import { cn } from "@/lib/utils";
+import { Button } from "@/components/ui/button";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Link } from "react-router-dom";
+import { Eye, EyeClosed, Hash, Loader2, Lock, Mail, User2 } from "lucide-react";
+import { useEffect, useState } from "react";
+import { useAuthStore } from "@/stores/useAuthStore";
+import GoogleLoginButton from "@/components/GoogleLoginButton";
+import {
+  InputOTP,
+  InputOTPGroup,
+  InputOTPSeparator,
+  InputOTPSlot,
+} from "@/components/ui/input-otp";
+import { REGEXP_ONLY_DIGITS } from "input-otp";
 
-import { Link, useNavigate } from "react-router-dom";
-import { useState } from "react"
-import { useAuthStore } from "@/stores/useAuthStore"
+const SignupPage = () => {
+  const { isSigningUp, signup, sendSignupOtp, isSendingOtp } = useAuthStore();
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [cooldown, setCooldown] = useState(0);
 
-import { z } from 'zod';
-import { Loader2 } from "lucide-react"
-
-const signUpSchema = z.object({
-  fullName: z.string().min(1, 'Full Name is required').transform((name) => name.trim().replace(/\s+/g, ' ')),
-  userName: z.string().min(1, 'Username is required'),
-  email: z.string().email('Invalid email address'),
-  password: z.string().min(6, 'Password must be at least 6 characters long'),
-  confirmPassword: z.string().min(6, 'Confirm Password must be at least 6 characters long'),
-}).refine((data) => data.password === data.confirmPassword, {
-  message: 'Passwords do not match', path: ['confirmPassword'],
-});
-
-const SignUpPage = ({ className, ...props }) => {
-  const { isSigningUp, signup } = useAuthStore();
-  const navigate = useNavigate();
-  const [errors, setErrors] = useState({});
   const [formData, setFormData] = useState({
-    fullName: '',
-    userName: '',
-    email: '',
-    password: '',
-    confirmPassword: '',
+    fullName: "",
+    email: "",
+    password: "",
+    confirmPassword: "",
+    otp: "",
+  });
+  const [errors, setErrors] = useState({
+    name: "",
+    email: "",
+    password: "",
+    confirmPassword: "",
+    otp: "",
   });
 
-  const handleFormSubmit = async (e) => {
-    e.preventDefault();
+  useEffect(() => {
+    let interval;
+    if (cooldown > 0) {
+      interval = setInterval(() => {
+        setCooldown((prev) => prev - 1);
+      }, 1000);
+    }
+    return () => clearInterval(interval);
+  }, [cooldown]);
+
+  const handleChange = (e) => {
+    const { id, value } = e.target;
+
+    setFormData((prev) => ({ ...prev, [id]: value }));
+    setErrors((prev) => ({ ...prev, [id]: "" }));
+  };
+
+  const handleSendotp = async () => {
+    if (!formData.email || !isValidEmail(formData.email)) {
+      setErrors((prev) => ({
+        ...prev,
+        email: !formData.email
+          ? "Email is required before sending otp."
+          : "Invalid email format.",
+      }));
+      return;
+    }
+
     try {
-      signUpSchema.parse(formData);
-      const { fullName, userName, email, password } = formData;
-      const res = await signup({ fullName, userName, email, password });
-      if(res.success){
-        navigate('/verify-email');
+      const result = await sendSignupOtp(formData.email);
+      if (result?.status >= 200) {
+        setCooldown(60);
       }
     } catch (error) {
-      if (error instanceof z.ZodError) {
-        const fieldErrors = error.errors.reduce((acc, curr) => {
-          acc[curr.path[0]] = curr.message;
-          return acc;
-        }, {});
-        setErrors(fieldErrors);
-      }
+      // handle error if needed
     }
-  }
-  const handleChange = (e) => {
-    setFormData({
-      ...formData,
-      [e.target.id]: e.target.value,
-    })
-  }
+  };
+
+  const isValidEmail = (email) => {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(email);
+  };
+
+  const isValid = (data) => {
+    let valid = true;
+    let newErrors = {
+      name: "",
+      email: "",
+      password: "",
+      confirmPassword: "",
+      otp: "",
+    };
+
+    if (!data.fullName || data.fullName.trim().length < 3) {
+      newErrors.name = "Name must be at least 3 characters.";
+      valid = false;
+    }
+
+    if (!data.email) {
+      newErrors.email = "Email is required.";
+      valid = false;
+    } else if (!isValidEmail(data.email)) {
+      newErrors.email = "Invalid email format.";
+      valid = false;
+    }
+
+    if (!data.password) {
+      newErrors.password = "Password is required.";
+      valid = false;
+    } else if (data.password.length < 6) {
+      newErrors.password = "Password must be at least 6 characters.";
+      valid = false;
+    }
+
+    if (!data.confirmPassword) {
+      newErrors.confirmPassword = "Confirm your password.";
+      valid = false;
+    } else if (data.password !== data.confirmPassword) {
+      newErrors.confirmPassword = "Passwords do not match.";
+      valid = false;
+    }
+
+    if (!data.otp) {
+      newErrors.otp = "OTP is required.";
+      valid = false;
+    } else if (!/^\d{6}$/.test(data.otp)) {
+      newErrors.otp = "OTP must be 6 digits.";
+      valid = false;
+    }
+
+    setErrors(newErrors);
+    return valid;
+  };
+
+  const handleFormSubmit = (e) => {
+    e.preventDefault();
+    console.log("Form submitted with data:", formData);
+    if (!isValid(formData)) return;
+    signup(formData);
+  };
 
   return (
-    <div className="flex min-h-svh flex-col items-center justify-center bg-muted p-6 md:p-10">
-      <div className="w-full max-w-sm md:max-w-3xl">
-
-        <div className={cn("flex flex-col gap-6", className)} {...props}>
-          <Card className="overflow-hidden">
-            <CardContent className="grid p-0 md:grid-cols-2">
-              <form className="p-6 md:p-8" onSubmit={handleFormSubmit}>
-                <div className="flex flex-col gap-4">
-                  <div className="flex flex-col items-center text-center">
-                    <h1 className="logo text-lg">NoteHub</h1>
-                    <p className="text-balance text-muted-foreground">
-                      Create your NoteHub account
-                    </p>
-                  </div>
-
-                  <div className="grid gap-2">
-                    <Label htmlFor="email">Full Name</Label>
+    <div className="flex pt-8 items-center justify-center h-screen bg-background">
+      <div className={cn("flex flex-col gap-2 max-w-[440px] w-full m-auto")}>
+        <Card>
+          <CardHeader>
+            <CardTitle className="text-2xl">Signup</CardTitle>
+            <CardDescription>
+              Fill this form to create an account
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <form onSubmit={handleFormSubmit}>
+              <div className="flex flex-col gap-4">
+                {/* Name Field */}
+                <div className="flex flex-col gap-1 relative">
+                  <div className="flex gap-2 relative">
+                    <User2 className="absolute top-[50%] translate-y-[-50%] left-2 text-muted-foreground size-4" />
                     <Input
+                      className={cn(
+                        "pl-8",
+                        errors.name && "ring-2 ring-red-500"
+                      )}
                       id="fullName"
-                      placeholder="Full Name"
-                      required
+                      type="text"
+                      placeholder="Full name"
                       value={formData.fullName}
                       onChange={handleChange}
+                      disabled={isSigningUp}
                     />
-                    {errors.fullName && <p className="text-red-500">{errors.fullName}</p>}
-                  </div>
-
-                  <div className="grid gap-2">
-                    <Label htmlFor="email">Username</Label>
-                    <Input
-                      id="userName"
-                      placeholder="username"
-                      required
-                      value={formData.userName}
-                      onChange={handleChange}
-                    />
-                    {errors.userName && <p className="text-red-500">{errors.userName}</p>}
-                  </div>
-
-                  <div className="grid gap-2">
-                    <Label htmlFor="email">Email</Label>
-                    <Input
-                      id="email"
-                      type="email"
-                      placeholder="abhi@example.com"
-                      required
-                      value={formData.email}
-                      onChange={handleChange}
-                    />
-                    {errors.email && <p className="text-red-500">{errors.email}</p>}
-                  </div>
-                  <div className="grid gap-2">
-                    <div className="flex items-center">
-                      <Label htmlFor="password">Password</Label>
-                    </div>
-                    <Input
-                      id="password"
-                      type="password"
-                      required
-                      autoComplete="password"
-                      value={formData.password}
-                      onChange={handleChange}
-                    />
-                    {errors.password && <p className="text-red-500">{errors.password}</p>}
-                  </div>
-
-                  <div className="grid gap-2">
-                    <div className="flex items-center">
-                      <Label htmlFor="confirm-password">Confirm Password</Label>
-                    </div>
-                    <Input
-                      id="confirmPassword"
-                      type="password"
-                      required
-                      value={formData.confirmPassword}
-                      autoComplete="password"
-                      onChange={handleChange}
-                    />
-                    {errors.confirmPassword && <p className="text-red-500">{errors.confirmPassword}</p>}
-                  </div>
-
-                  <Button disabled={isSigningUp}>
-                    {
-                      isSigningUp ?
-                        <>
-                          <Loader2 className="animate-spin" />
-                          Please wait
-                        </>
-                        :
-                        "Create Account"
-                    }
-                  </Button>
-
-                  <div className="text-center text-sm">
-                    Don&apos;t have an account?{" "}
-                    <Link to="/login" className="hover:underline underline-offset-4">
-                      Login
-                    </Link>
+                    {errors.name && (
+                      <p className="text-xs absolute left-0 -bottom-4 text-red-500">
+                        {errors.name}
+                      </p>
+                    )}
                   </div>
                 </div>
-              </form>
-              <div className="relative hidden bg-muted md:block">
-                <img
-                  src="https://ui.shadcn.com/placeholder.svg"
-                  alt="Image"
-                  className="absolute inset-0 h-full w-full object-cover dark:brightness-[0.2] dark:grayscale"
-                />
+
+                {/* Email Field */}
+                <div className="flex flex-col gap-1 relative">
+                  <div className="flex gap-2 relative">
+                    <Mail className="absolute top-[50%] translate-y-[-50%] left-2 text-muted-foreground size-4" />
+                    <Input
+                      className={cn(
+                        "pl-8",
+                        errors.email && "ring-2 ring-red-500"
+                      )}
+                      id="email"
+                      type="email"
+                      placeholder="Email address"
+                      value={formData.email}
+                      onChange={handleChange}
+                      disabled={isSigningUp}
+                    />
+                    {errors.email && (
+                      <p className="text-xs absolute left-0 -bottom-4 text-red-500">
+                        {errors.email}
+                      </p>
+                    )}
+                  </div>
+                </div>
+
+                {/* Password Field */}
+                <div className="flex flex-col gap-1 relative">
+                  <div className="flex gap-2 relative">
+                    <Lock className="absolute top-[50%] translate-y-[-50%] left-2 text-muted-foreground size-4" />
+                    <Input
+                      className={cn(
+                        "pl-8",
+                        errors.password && "ring-2 ring-red-500"
+                      )}
+                      id="password"
+                      placeholder="Password"
+                      type={showPassword ? "text" : "password"}
+                      value={formData.password}
+                      onChange={handleChange}
+                      disabled={isSigningUp}
+                    />
+                    <Button
+                      type="button"
+                      variant="ghost"
+                      className="p-1 h-min absolute top-[50%] translate-y-[-50%] right-2"
+                      onClick={() => setShowPassword(!showPassword)}
+                      tabIndex={-1}
+                    >
+                      {showPassword ? (
+                        <Eye className="text-muted-foreground size-4" />
+                      ) : (
+                        <EyeClosed className="text-muted-foreground size-4" />
+                      )}
+                    </Button>
+                    {errors.password && (
+                      <p className="text-xs absolute left-0 -bottom-4 text-red-500">
+                        {errors.password}
+                      </p>
+                    )}
+                  </div>
+                </div>
+
+                {/* Confirm Password Field */}
+                <div className="flex flex-col gap-1 relative">
+                  <div className="flex gap-2 relative">
+                    <Lock className="absolute top-[50%] translate-y-[-50%] left-2 text-muted-foreground size-4" />
+                    <Input
+                      className={cn(
+                        "pl-8",
+                        errors.confirmPassword && "ring-2 ring-red-500"
+                      )}
+                      id="confirmPassword"
+                      placeholder="Confirm Password"
+                      type={showConfirmPassword ? "text" : "password"}
+                      value={formData.confirmPassword}
+                      onChange={handleChange}
+                      disabled={isSigningUp}
+                    />
+                    <Button
+                      type="button"
+                      variant="ghost"
+                      className="p-1 h-min absolute top-[50%] translate-y-[-50%] right-2"
+                      onClick={() =>
+                        setShowConfirmPassword(!showConfirmPassword)
+                      }
+                      tabIndex={-1}
+                    >
+                      {showConfirmPassword ? (
+                        <Eye className="text-muted-foreground size-4" />
+                      ) : (
+                        <EyeClosed className="text-muted-foreground size-4" />
+                      )}
+                    </Button>
+                    {errors.confirmPassword && (
+                      <p className="text-xs absolute left-0 -bottom-4 text-red-500">
+                        {errors.confirmPassword}
+                      </p>
+                    )}
+                  </div>
+                </div>
+
+                {/* OTP Input with Hash Icon */}
+                <div className="flex flex-col gap-1">
+                  <div
+                    className="grid relative gap-2"
+                    style={{ gridTemplateColumns: "2fr 1fr" }}
+                  >
+                    <InputOTP
+                      maxLength={6}
+                      id="otp"
+                      value={formData.otp}
+                      onChange={(value) => setFormData((prev) => ({ ...prev, otp: value }))}
+                      pattern={REGEXP_ONLY_DIGITS}
+                      disabled={false}
+                    >
+
+                      <InputOTPGroup>
+                        <InputOTPSlot index={0} />
+                        <InputOTPSlot index={1} />
+                        <InputOTPSlot index={2} />
+                      </InputOTPGroup>
+                      <InputOTPSeparator />
+                      <InputOTPGroup>
+                        <InputOTPSlot index={3} />
+                        <InputOTPSlot index={4} />
+                        <InputOTPSlot index={5} />
+                      </InputOTPGroup>
+                    </InputOTP>
+                    <Button
+                      className="w-full"
+                      variant="outline"
+                      type="button"
+                      onClick={handleSendotp}
+                      disabled={cooldown > 0 || isSendingOtp}
+                    >
+                      {isSendingOtp ? (
+                        <>
+                          <Loader2 className="animate-spin ml-2" />
+                        </>
+                      ) : cooldown > 0 ? (
+                        `${cooldown}s`
+                      ) : (
+                        "Send otp"
+                      )}
+                    </Button>
+                    {errors.otp && (
+                      <p className="text-xs absolute left-0 -bottom-4 text-red-500">
+                        {errors.otp}
+                      </p>
+                    )}
+                  </div>
+                </div>
+
+                <Button type="submit" className="w-full" disabled={isSigningUp}>
+                  {isSigningUp ? "Creating..." : "Create Account"}
+                  {isSigningUp && <Loader2 className="animate-spin ml-2" />}
+                </Button>
               </div>
-            </CardContent>
-          </Card>
-          <div className="text-balance text-center text-xs text-muted-foreground [&_a]:underline [&_a]:underline-offset-4 hover:[&_a]:text-primary">
-            By clicking continue, you agree to our <Link to="#">Terms of Service</Link>{" "}
-            and <Link to="#">Privacy Policy</Link>.
-          </div>
-        </div>
+            </form>
+            <GoogleLoginButton className={"mt-4"} />
+            <div className="mt-4 text-center text-sm text-muted-foreground">
+              Already have an account? <Link to={"/login"} className="underline font-semibold text-foreground">Login</Link>
+            </div>
+          </CardContent>
+        </Card>
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default SignUpPage;
+export default SignupPage;

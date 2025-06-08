@@ -12,6 +12,7 @@ import {
     updateEmail,
     uploadCover,
     removeCover,
+    sendSignupOtp,
 } from "../controller/user.controller.js"
 import { protectRoute } from "../middleware/protectRoute.middleware.js";
 import { signupLimiter, loginLimiter } from "../middleware/rateLimiter.middleware.js";
@@ -19,6 +20,7 @@ import { signupLimiter, loginLimiter } from "../middleware/rateLimiter.middlewar
 const router = express.Router();
 
 router.post('/signup', signup);//signupLimiter todo
+router.post('/send-signup-otp', sendSignupOtp);
 router.post('/login', login);//loginLimiter todo
 router.post('/logout', logout);
 
@@ -32,7 +34,7 @@ router.put('/update-fullname', protectRoute, updateFullName);
 router.put('/update-username', protectRoute, updateUserName);
 router.put('/update-email', protectRoute, updateEmail);
 
-router.get('/check/auth', protectRoute, checkAuth);
+router.get('/me', protectRoute, checkAuth);
 router.get('/:userName', getUser);
 
 export default router;

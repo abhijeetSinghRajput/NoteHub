@@ -8,22 +8,17 @@ const userSchema = new mongoose.Schema({
         type: String,
         required: true,
     },
-    isEmailVerified: {
-        type: Boolean,
-        default: false,
-    },
     userName: {
         type: String,
         required: true,
         unique: true,
     },
-    imageUrls: {
-        type: Array,
-        default: [],
-    },
     avatarUrl: {
         type: String,
         default: '',
+    },
+    googleId: {
+        type: String
     },
     coverUrl: {
         type: String,
@@ -31,16 +26,6 @@ const userSchema = new mongoose.Schema({
     },
     password: {
         type: String,
-        required: true,
-    },
-    verificationCode: {
-        type: String,
-    },
-    verificationCodeExpiration: {
-        type: Date,
-    },
-    verificationPurpose: {
-        type: String, // password_reset || email_verification
     },
     streak: {
         type: Number,

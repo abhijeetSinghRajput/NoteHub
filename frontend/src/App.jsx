@@ -27,6 +27,7 @@ import PersonalDetails from "./pages/Settings/PersonalDetails";
 import Personalization from "./pages/Settings/Personalization";
 import Security from "./pages/Settings/Security";
 import PhotoAndCover from "./pages/Settings/PhotoAndCover";
+import OAuthCallback from "./pages/OAuthCallback";
 
 function App() {
   const { authUser, checkAuth, isCheckingAuth } = useAuthStore();
@@ -106,7 +107,8 @@ function App() {
               element={!authUser ? <LoginPage /> : <Navigate to="/" />}
             />
             <Route path="/forget-password" element={<ForgetPasswordPage />} />
-
+            <Route path="/oauth/callback" element={<OAuthCallback />} />
+            k
             {/* Nested routes inside Dashboard */}
             <Route
               path="/"
@@ -119,7 +121,7 @@ function App() {
 
               <Route path="settings" element={<SettingsPage />}>
                 <Route index element={<Personalization />} />
-                
+
                 <Route path="personal-details" element={<PersonalDetails />} />
                 <Route path="personalization" element={<Personalization />} />
                 <Route path="security" element={<Security />} />

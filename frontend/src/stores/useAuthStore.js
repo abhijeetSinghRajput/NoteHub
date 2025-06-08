@@ -13,11 +13,12 @@ export const useAuthStore = create((set, get) => ({
   isUploadingCover: false,
   isRemovingAvatar: false,
   isRemovingCover: false,
+  isSendingOtp: false,
 
   checkAuth: async () => {
     set({ isCheckingAuth: true });
     try {
-      const res = await axiosInstance.get("/user/check/auth");
+      const res = await axiosInstance.get("/user/me");
       set({ authUser: res.data });
     } catch (error) {
       set({ authUser: null });
@@ -30,7 +31,8 @@ export const useAuthStore = create((set, get) => ({
     set({ isSigningUp: true });
     try {
       const res = await axiosInstance.post("/user/signup", data);
-      const { message } = res.data;
+      const { message, user } = res.data;
+      set({ authUser: user });
       toast.success(message);
       return { success: true };
     } catch (error) {
@@ -38,6 +40,25 @@ export const useAuthStore = create((set, get) => ({
       return { success: false };
     } finally {
       set({ isSigningUp: false });
+    }
+  },
+
+  sendSignupOtp: async (email) => {
+    set({ isSendingOtp: true });
+    try {
+      const response = await axiosInstance.post("/user/send-signup-otp", { email });
+      toast.success(response.data.message || "OTP sent successfully!");
+      return response.data;
+    } catch (error) {
+      if(error.status === 429){
+        toast.error("Too many requests. Please try again later.");
+        return null;
+      }
+      toast.error("Failed to send OTP. Please try again.");
+      console.error("Send OTP error:", error);
+      return null;
+    } finally {
+      set({ isSendingOtp: false });
     }
   },
 
@@ -54,6 +75,8 @@ export const useAuthStore = create((set, get) => ({
       set({ isLoggingIn: false });
     }
   },
+
+  googleLogin: async (data) => {},
 
   logout: async () => {
     try {

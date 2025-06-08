@@ -1,10 +1,8 @@
 import User from "../model/user.model.js";
 import { generateVerificationCode } from "../utils/generateVerificationCode.js";
-import { sendMail } from "../utils/sendMail.js";
 import bcrypt from "bcryptjs"
 import { validateVerificationCode } from "../utils/validateVerificationCode.js";
 import { generateResetPasswordToken } from "../utils/jwt.js";
-import { verifyEmailTemplate } from "../utils/mailTemplates.js";
 import jwt from "jsonwebtoken";
 
 export const forgetPassword = async (req, res) => {

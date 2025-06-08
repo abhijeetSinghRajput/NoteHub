@@ -24,6 +24,7 @@
     "@radix-ui/react-slider": "^1.2.3",
     "@radix-ui/react-slot": "^1.1.2",
     "@radix-ui/react-tooltip": "^1.1.7",
+    "@react-oauth/google": "^0.12.2",
     "@tiptap/extension-code-block-lowlight": "^2.11.3",
     "@tiptap/extension-color": "^2.11.3",
     "@tiptap/extension-heading": "^2.11.3",
