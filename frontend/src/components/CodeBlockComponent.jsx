@@ -33,7 +33,7 @@ export default ({ node: { attrs: { language: defaultLanguage } }, updateAttribut
 
   return (
     <NodeViewWrapper className="code-block">
-      <header className='bg-[#09090b] rounded-t-md absolute left-0 top-0 w-full flex items-center justify-between p-2 border border-b-[#27272a]'>
+      <header className='bg-[#09090b] rounded-t-2xl absolute left-0 top-0 w-full flex items-center justify-between py-2 px-4 border border-b-[#27272a]'>
         <Popover open={open} onOpenChange={setOpen}>
           <PopoverTrigger asChild>
             <Button
@@ -81,8 +81,9 @@ export default ({ node: { attrs: { language: defaultLanguage } }, updateAttribut
         </Popover>
 
         <div className='flex gap-2'>
-          <Button variant="ghost" size="icon" disabled={copied} onClick={handleCopy}>
+          <Button variant="ghost" size="sm" disabled={copied} onClick={handleCopy}>
             {copied ? <CopyCheck/>  : <Copy/>}
+            <span>Copy</span>
           </Button>
         </div>
 

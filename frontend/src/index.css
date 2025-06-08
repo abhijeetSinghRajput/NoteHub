@@ -705,15 +705,15 @@ div:has(> .tiptap.ProseMirror) {
   }
 
   h1 {
-    @apply text-4xl font-bold mb-8;
+    @apply text-4xl font-bold mb-8 leading-relaxed;
   }
 
   h2 {
-    @apply text-2xl font-semibold mt-8 mb-4;
+    @apply text-2xl font-semibold mt-8 mb-4 leading-relaxed;
   }
 
   h3 {
-    @apply text-xl font-semibold mt-4 mb-2;
+    @apply text-xl font-semibold mt-6 mb-2 leading-relaxed;
   }
 
   h4 {
@@ -729,7 +729,10 @@ div:has(> .tiptap.ProseMirror) {
   }
 
   p {
-    @apply my-2;
+    @apply mb-2 leading-[1.75];
+  }
+  p:not(:first-child){
+    @apply mt-2;
   }
 
   a {
@@ -759,7 +762,11 @@ div:has(> .tiptap.ProseMirror) {
     @apply bg-accent text-sm py-[2.4px] px-[4.8px] rounded whitespace-pre-wrap;
   }
   pre {
-    @apply bg-[#171717] text-[#e6edf3] dark:text-primary border-input border rounded-md my-12 p-2 pt-16 overflow-x-auto;
+    @apply bg-[#171717] text-[#e6edf3] dark:text-primary border-input border rounded-2xl my-2 p-2 pt-16 overflow-x-auto;
+
+    header{
+      @apply rounded-t-2xl py-2 px-4;
+    }
 
     code {
       @apply bg-[#171717]   whitespace-nowrap p-0;
@@ -827,12 +834,12 @@ div:has(> .tiptap.ProseMirror) {
   }
 
   hr {
-    @apply border border-input my-12;
+    @apply border border-input/50 my-12;
   }
 
   /* Table-specific styling */
   table {
-    @apply w-auto mb-6 border-collapse rounded-lg overflow-hidden;
+    @apply w-full mb-6 border-collapse overflow-hidden;
 
     /* let it auto-expand */
     table-layout: auto;
@@ -840,12 +847,15 @@ div:has(> .tiptap.ProseMirror) {
     margin: 0;
 
     /* allow natural growth based on content */
-    width: auto !important;
+    /* width: auto !important; */
+  }
+  tr:not(:last-child){
+    @apply border-b border-input/50;
   }
 
   td,
   th {
-    @apply border border-input p-2;
+    @apply p-2;
     @apply whitespace-nowrap; /* prevent line-break */
     position: relative;
 
