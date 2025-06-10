@@ -762,7 +762,7 @@ div:has(> .tiptap.ProseMirror) {
     @apply bg-accent text-sm py-[2.4px] px-[4.8px] rounded whitespace-pre-wrap;
   }
   pre {
-    @apply bg-[#171717] text-[#e6edf3] dark:text-primary border-input border rounded-2xl my-2 p-2 pt-16 overflow-x-auto;
+    @apply bg-[#171717] text-[#e6edf3] dark:text-primary border rounded-2xl my-2 p-4 pt-16 overflow-x-auto;
 
     header{
       @apply rounded-t-2xl py-2 px-4;
@@ -830,11 +830,11 @@ div:has(> .tiptap.ProseMirror) {
   }
 
   blockquote {
-    @apply border-l-4 border-input py-2 pl-6 italic  text-muted-foreground;
+    @apply border-l-4 border py-2 pl-6 italic  text-muted-foreground;
   }
 
   hr {
-    @apply border border-input/50 my-12;
+    @apply border my-12;
   }
 
   /* Table-specific styling */
@@ -850,7 +850,7 @@ div:has(> .tiptap.ProseMirror) {
     /* width: auto !important; */
   }
   tr:not(:last-child){
-    @apply border-b border-input/50;
+    @apply border-b;
   }
 
   td,
@@ -885,13 +885,7 @@ div:has(> .tiptap.ProseMirror) {
   }
 
   .column-resize-handle {
-    background-color: var(--purple);
-    bottom: -2px;
-    pointer-events: none;
-    position: absolute;
-    right: -2px;
-    top: 0;
-    width: 4px;
+    @apply bg-accent -bottom-[2px] -right-[2px] top-0 absolute w-1 z-10;
   }
 
   .tableWrapper {

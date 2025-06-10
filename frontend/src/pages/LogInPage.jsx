@@ -87,7 +87,7 @@ const LoginPage = ({ className, ...props }) => {
                     />
                     <Link
                       to="/forget-password"
-                      className="mb-4 text-sm underline-offset-2 hover:underline"
+                      className="mb-4 text-sm underline-offset-2 hover:underline w-min whitespace-nowrap"
                     >
                       Forgot your password?
                     </Link>

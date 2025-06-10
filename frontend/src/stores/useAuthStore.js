@@ -14,7 +14,53 @@ export const useAuthStore = create((set, get) => ({
   isRemovingAvatar: false,
   isRemovingCover: false,
   isSendingOtp: false,
+  isResettingPassword: false,
 
+  requestResetPasswordOtp: async (identifier) => {
+    set({ isSendingOtp: true });
+    try {
+      const response = await axiosInstance.post(
+        "/password/request-reset-password-otp",
+        {
+          identifier,
+        }
+      );
+      toast.success(response.data.message || "OTP sent successfully!");
+      return response.data;
+    } catch (error) {
+      toast.error(error.response?.data?.message || "Failed to send OTP");
+      console.error("Request reset password OTP error:", error);
+      return null;
+    } finally {
+      set({ isSendingOtp: false });
+    }
+  },
+  resetPassword: async ({ identifier, newPassword, otp }) => {
+    set({ isResettingPassword: true });
+    try {
+      const response = await axiosInstance.post("/password/reset-password", {
+        identifier,
+        newPassword,
+        otp,
+      });
+      toast.success(response.data.message || "Password reset successfully!");
+      return response.data;
+    } catch (error) {
+      toast.error(error.response?.data?.message || "Failed to reset password");
+      console.error("Reset password error:", error);
+      return null;
+    } finally {
+      set({ isResettingPassword: false });
+    }
+  },
+  getUser: async (identifier) => {
+    try {
+      const response = await axiosInstance.get(`/user/${identifier}`);
+      return response.data;
+    } catch (error) {
+      return null;
+    }
+  },
   checkAuth: async () => {
     set({ isCheckingAuth: true });
     try {
@@ -46,11 +92,13 @@ export const useAuthStore = create((set, get) => ({
   sendSignupOtp: async (email) => {
     set({ isSendingOtp: true });
     try {
-      const response = await axiosInstance.post("/user/send-signup-otp", { email });
+      const response = await axiosInstance.post("/user/send-signup-otp", {
+        email,
+      });
       toast.success(response.data.message || "OTP sent successfully!");
       return response.data;
     } catch (error) {
-      if(error.status === 429){
+      if (error.status === 429) {
         toast.error("Too many requests. Please try again later.");
         return null;
       }

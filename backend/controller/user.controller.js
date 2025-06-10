@@ -137,18 +137,24 @@ export const checkAuth = async (req, res) => {
 };
 
 export const getUser = async (req, res) => {
-  const { userName } = req.params;
+  const { identifier } = req.params;
   try {
-    const user = await User.findOne({ userName });
+    const user = await User.findOne({
+      $or: [{ userName: identifier }, { email: identifier }]
+    });
+
     if (!user) {
-      return res.status(404).json({ message: `User not found` });
+      return res.status(404).json({ message: "User not found" });
     }
+    console.log({user});
+
     res.status(200).json(sanitizeUserForSharing(user));
   } catch (error) {
     console.error("Error in getUser controller: ", error);
     res.status(500).json({ message: "Internal server error" });
   }
-};
+}
+
 
 export const uploadAvatar = async (req, res) => {
   const { user } = req;

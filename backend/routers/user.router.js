@@ -35,6 +35,6 @@ router.put('/update-username', protectRoute, updateUserName);
 router.put('/update-email', protectRoute, updateEmail);
 
 router.get('/me', protectRoute, checkAuth);
-router.get('/:userName', getUser);
+router.get('/:identifier', getUser);
 
 export default router;

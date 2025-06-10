@@ -31,7 +31,7 @@ app.get('/', (req, res)=>{
 
 //ROUTES
 app.use('/api/user', userRoutes);
-// app.use('/api/password', passwordRoutes);
+app.use('/api/password', passwordRoutes);
 app.use('/api/collection', collectionRouter);
 app.use('/api/note', noteRouter);
 app.use('/api', rootRouter);
