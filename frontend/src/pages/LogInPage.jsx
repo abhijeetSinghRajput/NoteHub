@@ -1,36 +1,41 @@
-import { cn } from "@/lib/utils"
-import { Button } from "@/components/ui/button"
-import { Card, CardContent } from "@/components/ui/card"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-
+import { cn } from "@/lib/utils";
+import { Button } from "@/components/ui/button";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
 import { Link } from "react-router-dom";
-import { Loader2, Eye, EyeClosed } from "lucide-react"
-import { useAuthStore } from "@/stores/useAuthStore"
-import { useState } from "react"
-import { z } from 'zod';
+import { Eye, EyeClosed, Loader2, Lock, User2 } from "lucide-react";
+import { useState } from "react";
+import { useAuthStore } from "@/stores/useAuthStore";
+import GoogleLoginButton from "@/components/GoogleLoginButton";
+import { z } from "zod";
 
 const loginSchema = z.object({
-  userName: z.string().min(1, 'userName is required'),
-  password: z.string().min(1, 'password is required')
-})
+  userName: z.string().min(1, "Username is required"),
+  password: z.string().min(1, "Password is required"),
+});
 
-const LoginPage = ({ className, ...props }) => {
+const LoginPage = () => {
   const { isLoggingIn, login } = useAuthStore();
+  const [showPassword, setShowPassword] = useState(false);
   const [formData, setFormData] = useState({
-    userName: '',
-    password: '',
+    userName: "",
+    password: "",
   });
   const [errors, setErrors] = useState({});
 
   const handleChange = (e) => {
-    setFormData({
-      ...formData,
-      [e.target.id]: e.target.value,
-    })
-  }
+    const { id, value } = e.target;
+    setFormData((prev) => ({ ...prev, [id]: value }));
+    setErrors((prev) => ({ ...prev, [id]: "" }));
+  };
 
-  const handFormSubmit = (e) => {
+  const handleFormSubmit = (e) => {
     e.preventDefault();
     try {
       loginSchema.parse(formData);
@@ -44,91 +49,112 @@ const LoginPage = ({ className, ...props }) => {
         setErrors(fieldErrors);
       }
     }
-  }
+  };
 
   return (
-    <div className="flex min-h-svh flex-col items-center justify-center bg-muted p-6 md:p-10">
-      <div className="w-full max-w-sm md:max-w-3xl">
-        <div className={cn("flex flex-col gap-6", className)} {...props}>
-          <Card className="overflow-hidden">
-            <CardContent className="grid p-0 md:grid-cols-2">
-              <form onSubmit={handFormSubmit} className="p-6 md:p-8">
-                <div className="flex flex-col gap-4">
-                  <div className="flex flex-col items-center text-center">
-                    <h1 className="logo text-lg">NoteHub</h1>
-                    <p className="text-balance text-muted-foreground">
-                      Login to your NoteHub account
-                    </p>
-                  </div>
-
-                  <div className="grid gap-2">
-                    <Label htmlFor="email">Username</Label>
+    <div className="flex pt-8 items-center justify-center h-screen bg-background">
+      <div className={cn("flex flex-col gap-2 max-w-[440px] w-full m-auto")}>
+        <Card>
+          <CardHeader>
+            <CardTitle className="text-2xl">Login</CardTitle>
+            <CardDescription>
+              Enter your credentials to access your account
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <form onSubmit={handleFormSubmit}>
+              <div className="flex flex-col gap-5">
+                {/* Username Field */}
+                <div className="flex flex-col gap-1 relative">
+                  <div className="flex gap-2 relative">
+                    <User2 className="absolute top-[50%] translate-y-[-50%] left-2 text-muted-foreground size-4" />
                     <Input
+                      className={cn(
+                        "pl-8",
+                        errors.userName && "ring-2 ring-red-500"
+                      )}
                       id="userName"
-                      placeholder="username"
+                      type="text"
+                      placeholder="Username"
                       value={formData.userName}
-                      autoComplete="username"
-                      required
                       onChange={handleChange}
+                      disabled={isLoggingIn}
                     />
-                    {errors.userName && <p className="text-red-500">{errors.userName}</p>}
-                  </div>
-                  <div className="grid gap-2">
-                    <div className="flex items-center">
-                      <Label htmlFor="password">Password</Label>
-                    </div>
-                    <Input
-                      id="password"
-                      type="password"
-                      autoComplete="password"
-                      required
-                      value={formData.password}
-                      onChange={handleChange}
-                    />
-                    <Link
-                      to="/forget-password"
-                      className="mb-4 text-sm underline-offset-2 hover:underline w-min whitespace-nowrap"
-                    >
-                      Forgot your password?
-                    </Link>
-                  </div>
-                  <Button type="submit" disabled={isLoggingIn}>
-                    {
-                      isLoggingIn ?
-                        <>
-                          <Loader2 className="animate-spin" />
-                          Please wait
-                        </>
-                        :
-                        "Log in"
-                    }
-                  </Button>
-
-                  <div className="text-center text-sm">
-                    Don&apos;t have an account?{" "}
-                    <Link to="/signup" className="hover:underline underline-offset-4">
-                      Sign up
-                    </Link>
+                    {errors.userName && (
+                      <p className="text-xs absolute left-2 px-1 bg-background -translate-y-1/2 -bottom-4 text-red-500">
+                        {errors.userName}
+                      </p>
+                    )}
                   </div>
                 </div>
-              </form>
-              <div className="relative hidden bg-muted md:block">
-                <img
-                  src="https://ui.shadcn.com/placeholder.svg"
-                  alt="Image"
-                  className="absolute inset-0 h-full w-full object-cover dark:brightness-[0.2] dark:grayscale"
-                />
+
+                {/* Password Field */}
+                <div className="flex flex-col gap-2 relative">
+                  <div className="flex gap-2 relative">
+                    <Lock className="absolute top-[50%] translate-y-[-50%] left-2 text-muted-foreground size-4" />
+                    <Input
+                      className={cn(
+                        "pl-8",
+                        errors.password && "ring-2 ring-red-500"
+                      )}
+                      id="password"
+                      placeholder="Password"
+                      type={showPassword ? "text" : "password"}
+                      value={formData.password}
+                      onChange={handleChange}
+                      disabled={isLoggingIn}
+                    />
+                    <Button
+                      type="button"
+                      variant="ghost"
+                      className="p-1 h-min absolute top-[50%] translate-y-[-50%] right-2"
+                      onClick={() => setShowPassword(!showPassword)}
+                      tabIndex={-1}
+                    >
+                      {showPassword ? (
+                        <Eye className="text-muted-foreground size-4" />
+                      ) : (
+                        <EyeClosed className="text-muted-foreground size-4" />
+                      )}
+                    </Button>
+                    {errors.password && (
+                      <p className="text-xs absolute left-2 px-1 bg-background -translate-y-1/2 -bottom-4 text-red-500">
+                        {errors.password}
+                      </p>
+                    )}
+                  </div>
+                  <Link
+                    to="/forget-password"
+                    className="text-xs underline-offset-2 hover:underline w-min whitespace-nowrap"
+                  >
+                    Forgot your password?
+                  </Link>
+                </div>
+
+                <Button type="submit" className="w-full" disabled={isLoggingIn}>
+                  {isLoggingIn ? (
+                    <>
+                      <Loader2 className="animate-spin mr-2" />
+                      Logging in...
+                    </>
+                  ) : (
+                    "Login"
+                  )}
+                </Button>
               </div>
-            </CardContent>
-          </Card>
-          <div className="text-balance text-center text-xs text-muted-foreground [&_a]:underline [&_a]:underline-offset-4 hover:[&_a]:text-primary">
-            By clicking continue, you agree to our <Link to="#">Terms of Service</Link>{" "}
-            and <Link to="#">Privacy Policy</Link>.
-          </div>
-        </div>
+            </form>
+            <GoogleLoginButton className={"mt-4"} />
+            <div className="mt-4 text-center text-sm text-muted-foreground">
+              Don't have an account?{" "}
+              <Link to="/signup" className="underline font-semibold text-foreground">
+                Sign up
+              </Link>
+            </div>
+          </CardContent>
+        </Card>
       </div>
     </div>
-  )
-}
+  );
+};
 
 export default LoginPage;

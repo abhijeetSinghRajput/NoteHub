@@ -155,7 +155,7 @@ const SignupPage = () => {
           </CardHeader>
           <CardContent>
             <form onSubmit={handleFormSubmit}>
-              <div className="flex flex-col gap-4">
+              <div className="flex flex-col gap-5">
                 {/* Name Field */}
                 <div className="flex flex-col gap-1 relative">
                   <div className="flex gap-2 relative">
@@ -173,7 +173,7 @@ const SignupPage = () => {
                       disabled={isSigningUp}
                     />
                     {errors.name && (
-                      <p className="text-xs absolute left-0 -bottom-4 text-red-500">
+                      <p className="text-xs absolute left-2 px-1 bg-background -translate-y-1/2 -bottom-4 text-red-500">
                         {errors.name}
                       </p>
                     )}
@@ -197,7 +197,7 @@ const SignupPage = () => {
                       disabled={isSigningUp}
                     />
                     {errors.email && (
-                      <p className="text-xs absolute left-0 -bottom-4 text-red-500">
+                      <p className="text-xs absolute left-2 px-1 bg-background -translate-y-1/2 -bottom-4 text-red-500">
                         {errors.email}
                       </p>
                     )}
@@ -234,7 +234,7 @@ const SignupPage = () => {
                       )}
                     </Button>
                     {errors.password && (
-                      <p className="text-xs absolute left-0 -bottom-4 text-red-500">
+                      <p className="text-xs absolute left-2 px-1 bg-background -translate-y-1/2 -bottom-4 text-red-500">
                         {errors.password}
                       </p>
                     )}
@@ -273,7 +273,7 @@ const SignupPage = () => {
                       )}
                     </Button>
                     {errors.confirmPassword && (
-                      <p className="text-xs absolute left-0 -bottom-4 text-red-500">
+                      <p className="text-xs absolute left-2 px-1 bg-background -translate-y-1/2 -bottom-4 text-red-500">
                         {errors.confirmPassword}
                       </p>
                     )}
