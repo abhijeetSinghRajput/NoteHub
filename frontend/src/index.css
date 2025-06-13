@@ -1,5 +1,5 @@
 @import url("https://fonts.googleapis.com/css2?family=Audiowide&display=swap");
-@import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100..900;1,100..900&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100..900;1,100..900&display=swap");
 
 @tailwind base;
 @tailwind components;
@@ -76,16 +76,6 @@
     --sidebar-ring: 217.2 91.2% 59.8%;
   }
 
-  input:-webkit-autofill,
-  input:-webkit-autofill:hover, 
-  input:-webkit-autofill:focus, 
-  input:-webkit-autofill:active {
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: hsl(var(--foreground));
-    caret-color: hsl(var(--foreground)); 
-    transition: background-color 5000s ease-in-out 0s;
-    box-shadow: inset 0 0 20px 20px hsl(var(--background));
-  }
 
   [data-theme="slate"] {
     --background: 0 0% 100%;
@@ -744,7 +734,7 @@ div:has(> .tiptap.ProseMirror) {
   p {
     @apply mb-2 leading-[1.75];
   }
-  p:not(:first-child){
+  p:not(:first-child) {
     @apply mt-2;
   }
 
@@ -777,7 +767,7 @@ div:has(> .tiptap.ProseMirror) {
   pre {
     @apply bg-[#171717] text-[#e6edf3] dark:text-primary border rounded-2xl my-2 p-4 pt-16 overflow-x-auto;
 
-    header{
+    header {
       @apply rounded-t-2xl py-2 px-4;
     }
 
@@ -862,7 +852,7 @@ div:has(> .tiptap.ProseMirror) {
     /* allow natural growth based on content */
     /* width: auto !important; */
   }
-  tr:not(:last-child){
+  tr:not(:last-child) {
     @apply border-b;
   }
 

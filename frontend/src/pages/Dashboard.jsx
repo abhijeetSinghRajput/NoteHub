@@ -27,6 +27,7 @@ import AddNoteDialog from "@/components/AddNoteDialog";
 import TooltipWrapper from "@/components/TooltipWrapper";
 import { Avatar, AvatarFallback, AvatarImage } from "@radix-ui/react-avatar";
 import { useAuthStore } from "@/stores/useAuthStore";
+import { useTheme } from "@/components/theme-provider";
 
 const Dashboard = () => {
   return (
@@ -40,6 +41,7 @@ const DashboardContent = () => {
   const { routes } = useRouteStore();
   const { authUser } = useAuthStore();
   const { isSidebarOpen } = useSidebar();
+  const {theme} = useTheme();
 
   return (
     <>
@@ -84,10 +86,15 @@ const DashboardContent = () => {
             />
 
             <a href="https://github.com/abhijeetSinghRajput/notehub">
-              <Button className="size-8" variant="ghost">
-                <Github />
+              <Button className="size-8 p-0" variant="ghost">
+                <img 
+                  src={theme === "dark" ? "./github-mark-white.svg" : "./github-mark.svg"}
+                  alt="github logo"
+                  className="size-5 object-contain"
+                />
               </Button>
             </a>
+            
             <ModeToggle />
 
             <TooltipWrapper message={authUser.fullName || "user"}>
