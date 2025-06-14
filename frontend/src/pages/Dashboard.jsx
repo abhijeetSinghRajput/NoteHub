@@ -88,7 +88,7 @@ const DashboardContent = () => {
             <a href="https://github.com/abhijeetSinghRajput/notehub">
               <Button className="size-8 p-0" variant="ghost">
                 <img 
-                  src={theme === "dark" ? "./github-mark-white.svg" : "./github-mark.svg"}
+                  src={theme === "dark" ? "/github-mark-white.svg" : "/github-mark.svg"}
                   alt="github logo"
                   className="size-5 object-contain"
                 />
