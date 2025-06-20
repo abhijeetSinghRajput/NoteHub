@@ -98,6 +98,7 @@ export const useNoteStore = create((set, get) => ({
 
   insertNoteInCollection: (collectionId, note) => {
     console.log(get().collections);
+    
     set((state) => ({
       collections: state.collections.map((collection) =>
         collection._id === collectionId

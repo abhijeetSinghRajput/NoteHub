@@ -8,8 +8,9 @@ import userRoutes from "./routers/user.router.js";
 import passwordRoutes from "./routers/password.router.js";
 import collectionRouter from './routers/collection.router.js';
 import noteRouter from './routers/note.router.js';
-import rootRouter from './routers/root.router.js';
 import contributionRouter from './routers/contribution.router.js'
+import ImageRouter from './routers/Image.router.js';
+import './model/Image.model.js';
 
 config();
 const app = express();
@@ -34,8 +35,8 @@ app.use('/api/user', userRoutes);
 app.use('/api/password', passwordRoutes);
 app.use('/api/collection', collectionRouter);
 app.use('/api/note', noteRouter);
-app.use('/api', rootRouter);
-app.use('/api/contribution', contributionRouter);
+app.use('/api/contribution', contributionRouter); 
+app.use('/api/images', ImageRouter); 
 
 const PORT = process.env.PORT;
 app.listen(PORT, ()=>{

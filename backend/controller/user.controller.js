@@ -1,36 +1,32 @@
 import User from "../model/user.model.js";
 import bcrypt from "bcryptjs";
 import { generateToken } from "../utils/jwt.js";
-import { cloudinary, removeCloudinaryImage } from "../utils/cloudinary.js";
 import { sendOtp, validateOtp } from "../services/otp.service.js";
-
-const sanitizeUserForSharing = (user) => {
-  return {
-    _id: user._id,
-    avatarUrl: user.avatarUrl,
-    coverUrl: user.coverUrl,
-    email: user.email,
-    fullName: user.fullName,
-    imageUrls: user.imageUrls,
-    isEmailVerified: user.isEmailVerified,
-    streak: user.streak,
-    userName: user.userName,
-  };
-};
+import { deleteImage, uploadStream } from "../services/cloudinary.service.js";
+import validator from "validator";
+import { OAuth2Client } from "google-auth-library";
 
 export const sendSignupOtp = async (req, res) => {
   const { email } = req.body;
   try {
+    if (!email?.trim()) {
+      return res.status(400).json({ message: "Email is required" });
+    }
+
+    if (!validator.isEmail(email)) {
+      return res.status(400).json({ message: "Invalid email format" });
+    }
+
     const existingUser = await User.findOne({ email });
     if (existingUser) {
-        return res.status(400).json({ message: "User already exists" });
+      return res.status(400).json({ message: "User already exists" });
     }
 
     const result = await sendOtp({
-      email,
+      email: validator.normalizeEmail(email),
       purpose: "signup",
     });
-    res.status(result.status).json({ message: result.message});
+    res.status(result.status).json({ message: result.message });
   } catch (err) {
     res.status(err.status || 500).json({ message: "Internal server error" });
     console.log("error in sendSignupOtp\n", err);
@@ -38,74 +34,199 @@ export const sendSignupOtp = async (req, res) => {
 };
 
 export const signup = async (req, res) => {
-  const { fullName, email, password: inputPassword, otp } = req.body;
+  let { fullName, email, password: inputPassword, otp } = req.body;
+  fullName = fullName.trim();
+  email = email.trim();
+  inputPassword = inputPassword.trim();
+  otp = otp.trim();
+
   if (!fullName || !email || !inputPassword || !otp) {
     return res.status(400).json({ message: "All fields required." });
   }
 
-  // validating the credentials
-  if (inputPassword.length < 6) {
-    return res
-      .status(400)
-      .json({ message: "Password must contain at least 6 characters." });
+  // Validate email format
+  if (!validator.isEmail(email)) {
+    return res.status(400).json({ message: "Invalid email format" });
   }
 
-  if (!/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(email)) {
-    return res.status(400).json({ message: "Invalid email format." });
+  // Validate password strength
+  if (!validator.isLength(inputPassword, { min: 6 })) {
+    return res.status(400).json({
+      message: "Password must contain at least 6 characters.",
+    });
   }
 
   try {
-    const existingUser = await User.findOne({ email });
+    const normalizedEmail = validator.normalizeEmail(email);
+    const existingUser = await User.findOne({ email: normalizedEmail });
     if (existingUser) {
       return res.status(400).json({ message: "User already exists" });
     }
 
-    const otpValidation = await validateOtp({ email, purpose: "signup", otp });
+    const otpValidation = await validateOtp({
+      email: normalizedEmail,
+      purpose: "signup",
+      otp,
+    });
     if (otpValidation.status !== 200) {
-      return res.status(otpValidation.status).json({ message: otpValidation.message });
+      return res
+        .status(otpValidation.status)
+        .json({ message: otpValidation.message });
     }
 
-    // password and verfication code hashing
+    // password hashing
     const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(inputPassword, salt);
 
-    // creating the user and setting verification code expiration of 15 min
+    // creating the user with temporary username
     const newUser = await User.create({
-      fullName,
-      email,
-      userName: "user" + new Date().getTime(),
+      fullName: validator.escape(fullName),
+      email: normalizedEmail,
       password: hashedPassword,
     });
 
     generateToken(newUser._id, res);
-    const { password, ...safeUser } = newUser._doc;
-    res.status(201).json({ user: safeUser, message: "Registered successfully." });
+    const { password, ...userWithoutPassword } = newUser.toObject();
+    res.status(201).json({
+      user: userWithoutPassword,
+      message: "Registered successfully.",
+    });
   } catch (error) {
     console.error("error in signup controller: \n", error);
     res.status(500).json({ message: "Internal server error." });
   }
 };
 
-export const login = async (req, res) => {
-  const { userName, password } = req.body;
-  if (!userName || !password) {
+// Initialize without redirect URI
+const client = new OAuth2Client(
+  process.env.GOOGLE_CLIENT_ID,
+  process.env.GOOGLE_CLIENT_SECRET
+);
+
+export const googleLogin = async (req, res) => {
+  const { code, codeVerifier, redirectUri } = req.body;
+  // Input validation and trimming
+  if (!code?.trim() || !codeVerifier?.trim() || !redirectUri?.trim()) {
     return res.status(400).json({ message: "All fields required." });
   }
+
+  if (redirectUri !== process.env.GOOGLE_REDIRECT_URI) {
+    return res.status(400).json({ 
+      message: "Redirect URI mismatch",
+    });
+  }
+
   try {
-    const user = await User.findOne({ userName });
+    // Create token endpoint URL with all parameters
+    const tokenEndpoint = `https://oauth2.googleapis.com/token`;
+    const params = new URLSearchParams();
+    params.append('code', code);
+    params.append('client_id', process.env.GOOGLE_CLIENT_ID);
+    params.append('client_secret', process.env.GOOGLE_CLIENT_SECRET);
+    params.append('redirect_uri', redirectUri);
+    params.append('grant_type', 'authorization_code');
+    params.append('code_verifier', codeVerifier);
+
+    // Make direct HTTP request to token endpoint
+    const tokenResponse = await fetch(tokenEndpoint, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded'
+      },
+      body: params
+    });
+
+    const tokens = await tokenResponse.json();
+
+    if (!tokenResponse.ok) {
+      console.error('Google token exchange error:', tokens);
+      return res.status(400).json({ message: "Invalid authorization code." });
+    }
+
+    // Verify ID token using the library
+    const ticket = await client.verifyIdToken({
+      idToken: tokens.id_token,
+      audience: process.env.GOOGLE_CLIENT_ID
+    });
+
+    const payload = ticket.getPayload();
+    if (!payload?.email_verified) {
+      return res.status(403).json({
+        message: 'Google email not verified. Please verify your email with Google first.'
+      });
+    }
+
+    const { email, sub: googleId, name: fullName, picture } = payload;
+    const avatar = picture.replace(/=s96-c$/, '=s400-c');
+    const normalizedEmail = validator.normalizeEmail(email);
+
+    // Find or create user (aligned with your signup flow)
+    let user = await User.findOne({ email: normalizedEmail });
+    
     if (!user) {
-      return res.status(400).json({ message: "Invalid credential provided." });
+      // Create new user (like in signup)
+      user = await User.create({
+        fullName: validator.escape(fullName || ''),
+        email: normalizedEmail,
+        googleId,
+        avatar,
+        password: null,
+        hasGoogleAuth: true,
+      });
+    } else {
+      // Add Google auth to existing account
+      if (!user.googleId) {
+        user.googleId = googleId;
+        user.hasGoogleAuth = true;
+      }
+      if (!user.avatar) user.avatar = avatar;
+      await user.save();
+    }
+
+    // Generate token and send response (aligned with login/signup)
+    generateToken(user._id, res);
+    const { password, ...userWithoutPassword } = user.toObject();
+    
+    res.status(200).json({
+      user: userWithoutPassword,
+      message: "Google authentication successful.",
+    });
+    
+  } catch (error) {
+    console.error("Error in Google login controller: ", error);
+    res.status(500).json({ message: "Internal server error." });
+  }
+};
+
+export const login = async (req, res) => {
+  try {
+    const { identifier, password } = req.body;
+    if (!identifier?.trim() || !password?.trim()) {
+      return res.status(400).json({ message: "All fields required." });
+    }
+
+    const user = await User.findOne({
+      $or: [
+        { email: identifier.toLowerCase() }, // emails are case-insensitive
+        {
+          userName: identifier,
+        },
+      ],
+    }).select("+password");
+
+    // null password means it's a oauth user with no password
+    if (!user || !user.password) { 
+      return res.status(400).json({ message: "Invalid credentials provided." });
     }
 
     const isMatched = await bcrypt.compare(password, user.password);
-
     if (!isMatched) {
-      return res.status(400).json({ message: "Invalid credential provided." });
+      return res.status(400).json({ message: "Invalid credentials provided." });
     }
 
     generateToken(user._id, res);
-
-    res.status(200).json(sanitizeUserForSharing(user));
+    const { password: _, ...userWithoutPassword } = user.toObject();
+    res.status(200).json(userWithoutPassword);
   } catch (error) {
     console.error("error in login controller: ", error);
     res.status(500).json({ message: "Internal server error" });
@@ -122,14 +243,50 @@ export const logout = (req, res) => {
   }
 };
 
+export const isEmailAvailable = async (req, res) => {
+  try {
+    const { email } = req.params;
+    if (!email) {
+      return res.status(400).json({
+        success: false,
+        message: "Email is required",
+      });
+    }
+
+    if (!validator.isEmail(email)) {
+      return res.status(400).json({
+        success: false,
+        message: "Please provide a valid email address",
+      });
+    }
+
+    const normalizedEmail = validator.normalizeEmail(email);
+    const existingUser = await User.findOne({ email: normalizedEmail });
+
+    res.status(200).json({
+      success: true,
+      available: !existingUser,
+      message: existingUser
+        ? "Email is already registered"
+        : "Email is available",
+    });
+  } catch (error) {
+    console.error("Error in isEmailAvailable:", error);
+    res.status(500).json({
+      success: false,
+      message: "Server error while checking email availability",
+    });
+  }
+};
+
 export const checkAuth = async (req, res) => {
   try {
     if (!req.user) {
-      return res.status(400).json({ message: "user not found" });
+      return res.status(400).json({ message: "User not found" });
     }
     const user = req.user;
-
-    res.status(200).json(sanitizeUserForSharing(user));
+    const { password, ...userWithoutPassword } = user.toObject();
+    res.status(200).json(userWithoutPassword);
   } catch (error) {
     console.error("Error in checkAuth controller: ", error);
     res.status(500).json({ message: "Internal server error" });
@@ -140,114 +297,131 @@ export const getUser = async (req, res) => {
   const { identifier } = req.params;
   try {
     const user = await User.findOne({
-      $or: [{ userName: identifier }, { email: identifier }]
+      $or: [
+        { email: identifier },
+        { userName: { $regex: new RegExp(`^${identifier}$`, 'i') } }
+      ]
     });
-
+    
     if (!user) {
       return res.status(404).json({ message: "User not found" });
     }
-    console.log({user});
-
-    res.status(200).json(sanitizeUserForSharing(user));
+    const { password, ...userWithoutPassword } = user.toObject();
+    res.status(200).json(userWithoutPassword);
   } catch (error) {
     console.error("Error in getUser controller: ", error);
     res.status(500).json({ message: "Internal server error" });
   }
-}
-
+};
 
 export const uploadAvatar = async (req, res) => {
-  const { user } = req;
-  const { imageBase64: avatarBase64 } = req.body;
-  if (!user) {
-    return res.status(401).json({ message: "Unothorized: user not found" });
-  }
-  if (!avatarBase64) {
-    return res.status(400).json({ message: "Avatar must required." });
-  }
   try {
-    const publicId = `user_${user._id}_avatar`;
-    const result = await cloudinary.uploader.upload(avatarBase64, {
-      public_id: `avatar/${publicId}`,
-      overwrite: true,
-      resource_type: "image",
-    });
+    const { user } = req;
+    const file = req.file;
 
-    user.avatarUrl = result.secure_url;
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+    if (!file) {
+      return res.status(400).json({ message: "No file uploaded" });
+    }
+
+    // Remove old avatar if exists
+    if (user.avatar) {
+      await deleteImage(user.avatar);
+    }
+
+    // Upload new avatar
+    const folder = `user_profiles/${user._id}`;
+    const { secure_url } = await uploadStream(file.buffer, folder);
+
+    user.avatar = secure_url;
     await user.save();
 
-    res.status(200).json({
-      user: sanitizeUserForSharing(user),
-      message: "Avatar uploaded successfully",
+    const { password, ...userWithoutPassword } = user.toObject();
+    return res.status(200).json({
+      user: userWithoutPassword,
+      message: "Profile picture updated successfully",
     });
   } catch (error) {
-    console.error("Error in uploadAvatar controller: ", error);
-    res.status(500).json({ message: "Internal server error" });
+    console.error("Upload avatar error:", error);
+    return res.status(500).json({ message: "Internal server error" });
   }
 };
 
 export const removeAvatar = async (req, res) => {
   const { user } = req;
   try {
-    const { success, status, message } = await removeCloudinaryImage(
-      user.avatarUrl,
-      "avatar/"
-    );
-    if (success) {
-      user.avatarUrl = "";
-      user.save();
+    if (!user.avatar) {
+      return res.status(400).json({ message: "No avatar to remove." });
     }
-    res.status(status).json({ user, message });
+
+    await deleteImage(user.avatar);
+    user.avatar = null;
+    await user.save();
+
+    const { password, ...userWithoutPassword } = user.toObject();
+    res.status(200).json({
+      user: userWithoutPassword,
+      message: "Avatar removed successfully",
+    });
   } catch (error) {
-    console.error("Error in removeAvatar controller: ", error);
+    console.error("Error in removeAvatar controller:", error);
     res.status(500).json({ message: "Internal server error" });
   }
 };
 
 export const uploadCover = async (req, res) => {
-  const { user } = req;
-  const { imageBase64: coverBase64 } = req.body;
-  if (!user) {
-    return res.status(401).json({ message: "Unauthorized: user not found" });
-  }
-  if (!coverBase64) {
-    return res.status(400).json({ message: "Cover must be provided." });
-  }
   try {
-    const publicId = `user_${user._id}_cover`;
-    const result = await cloudinary.uploader.upload(coverBase64, {
-      public_id: `cover/${publicId}`,
-      overwrite: true,
-      resource_type: "image",
-    });
+    const { user } = req;
+    const file = req.file;
 
-    user.coverUrl = result.secure_url; // Update coverUrl field
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+    if (!file) {
+      return res.status(400).json({ message: "No file uploaded" });
+    }
+
+    if (user.cover) {
+      await deleteImage(user.cover);
+    }
+
+    const folder = `user_covers/${user._id}`;
+    const { secure_url } = await uploadStream(file.buffer, folder);
+
+    user.cover = secure_url;
     await user.save();
 
-    res.status(200).json({
-      user: sanitizeUserForSharing(user),
-      message: "Cover uploaded successfully",
+    const { password, ...userWithoutPassword } = user.toObject();
+    return res.status(200).json({
+      user: userWithoutPassword,
+      message: "Cover image updated successfully",
     });
   } catch (error) {
-    console.error("Error in uploadCover controller: ", error);
-    res.status(500).json({ message: "Internal server error" });
+    console.error("Upload cover error:", error);
+    return res.status(500).json({ message: "Internal server error" });
   }
 };
 
 export const removeCover = async (req, res) => {
   const { user } = req;
   try {
-    const { success, status, message } = await removeCloudinaryImage(
-      user.coverUrl,
-      "cover/"
-    );
-    if (success) {
-      user.coverUrl = ""; // Clear the coverUrl field
-      await user.save();
+    if (!user.cover) {
+      return res.status(400).json({ message: "No cover to remove." });
     }
-    res.status(status).json({ user, message });
+
+    await deleteImage(user.cover);
+    user.cover = null;
+    await user.save();
+
+    const { password, ...userWithoutPassword } = user.toObject();
+    res.status(200).json({
+      user: userWithoutPassword,
+      message: "Cover removed successfully",
+    });
   } catch (error) {
-    console.error("Error in removeCover controller: ", error);
+    console.error("Error in removeCover controller:", error);
     res.status(500).json({ message: "Internal server error" });
   }
 };
@@ -256,17 +430,18 @@ export const updateFullName = async (req, res) => {
   try {
     const { fullName } = req.body;
     const { user } = req;
-    if (!fullName) {
-      return res
-        .status(400)
-        .json({ message: "fullName required for updation." });
+
+    if (!fullName?.trim()) {
+      return res.status(400).json({ message: "Full name is required." });
     }
 
     user.fullName = fullName;
     await user.save();
+
+    const { password, ...userWithoutPassword } = user.toObject();
     res.status(200).json({
-      user: sanitizeUserForSharing(user),
-      message: "fullName updated successfully.",
+      user: userWithoutPassword,
+      message: "Name updated successfully.",
     });
   } catch (error) {
     console.log("Error in updateFullName controller\n", error);
@@ -279,26 +454,23 @@ export const updateUserName = async (req, res) => {
     const { userName } = req.body;
     const { user } = req;
 
-    if (!userName) {
-      return res
-        .status(400)
-        .json({ message: "userName required, for updation." });
-    }
-    if (!/^[a-zA-Z0-9._]{3,30}$/.test(userName)) {
-      return res.status(400).json({ message: "Invalid userName format." });
-    }
-    const existingUser = await User.findOne({ userName });
-    if (existingUser) {
-      return res.status(400).json({ message: "Username already exists." });
+    if (!userName?.trim()) {
+      return res.status(400).json({ message: "Username is required." });
     }
 
+    // The model's validation will handle case-insensitive checks
     user.userName = userName;
     await user.save();
+
+    const { password, ...userWithoutPassword } = user.toObject();
     res.status(200).json({
-      user: sanitizeUserForSharing(user),
-      message: "userName updated successfully.",
+      user: userWithoutPassword,
+      message: "Username updated successfully.",
     });
   } catch (error) {
+    if (error.message.includes("Username is already taken")) {
+      return res.status(400).json({ message: error.message });
+    }
     console.log("Error in updateUserName controller\n", error);
     res.status(500).json({ message: "Internal server error." });
   }
@@ -308,8 +480,30 @@ export const updateEmail = async (req, res) => {
   try {
     const { email } = req.body;
     const { user } = req;
-    user.fullName = email;
+
+    if (!email?.trim()) {
+      return res.status(400).json({ message: "Email is required." });
+    }
+
+    if (!validator.isEmail(email)) {
+      return res.status(400).json({ message: "Invalid email format" });
+    }
+
+    const normalizedEmail = validator.normalizeEmail(email);
+    const existingUser = await User.findOne({ email: normalizedEmail });
+
+    if (existingUser && existingUser._id.toString() !== user._id.toString()) {
+      return res.status(400).json({ message: "Email already in use." });
+    }
+
+    user.email = normalizedEmail;
     await user.save();
+
+    const { password, ...userWithoutPassword } = user.toObject();
+    res.status(200).json({
+      user: userWithoutPassword,
+      message: "Email updated successfully.",
+    });
   } catch (error) {
     console.log("Error in updateEmail controller\n", error);
     res.status(500).json({ message: "Internal server error." });

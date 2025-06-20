@@ -3,7 +3,7 @@ import { cn } from "@/lib/utils";
 import React, { useState } from 'react';
 import { DrawerDialog } from "../components/EditProfile";
 import { Button } from '@/components/ui/button';
-import { Camera, Pencil } from 'lucide-react';
+import { Camera, Loader2, Pencil } from 'lucide-react';
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label"
 import { Card, CardContent } from "@/components/ui/card";
@@ -13,7 +13,7 @@ import imageCompression from "browser-image-compression";
 import Calendar from "@/components/contributionCalendar/calendar";
 
 const ProfilePage = () => {
-  const { authUser, uploadUserAvatar } = useAuthStore();
+  const { authUser, uploadUserAvatar, isUploadingAvatar } = useAuthStore();
   const [previewUrl, setPreviewUrl] = useState(null);
   
   const handleUploadAvatar = async(e)=>{
@@ -31,14 +31,9 @@ const ProfilePage = () => {
 
       // Compressing the image
       const compressedFile = await imageCompression(file, option);
-
-      // Converting to base64 string
-      const reader = new FileReader();
-      reader.readAsDataURL(compressedFile);
-      reader.onloadend = async ()=>{
-        const imageBase64 = reader.result;
-        await uploadUserAvatar({imageBase64});
-      }
+      await uploadUserAvatar(compressedFile);
+      setPreviewUrl(null); 
+      URL.revokeObjectURL(previewUrl);
     } catch (error) {
       console.error('Error compressing or uploading avatar:\n', error);
     } finally{
@@ -53,7 +48,7 @@ const ProfilePage = () => {
         <Avatar>
           <AvatarImage 
             className="w-full h-full object-cover"
-            src={authUser?.coverUrl} />
+            src={authUser?.cover} />
           <AvatarFallback>
             <img
               className="object-cover w-full h-full dark:brightness-[0.2]"
@@ -68,7 +63,7 @@ const ProfilePage = () => {
             <Avatar className="relative shadow-md size-48 shrink-0 border-8 border-background -mt-14 rounded-full">
               <AvatarImage
                 className="w-full h-full object-cover rounded-full bg-background"
-                src={previewUrl || authUser?.avatarUrl}
+                src={previewUrl || authUser?.avatar}
                 alt={authUser?.fullName || "user profile"}
               />
               <AvatarFallback className="text-4xl">
@@ -80,12 +75,14 @@ const ProfilePage = () => {
               </AvatarFallback>
               <Button variant="secondary" size="icon" className="p-0 absolute bottom-2 right-2 z-10 pointer">
                 <label htmlFor="upload-photo" className="p-4 flex items-center space-x-2 cursor-pointer">
-                  <Camera />
+                  {isUploadingAvatar? <Loader2 className="animate-spin" /> : <Camera />}
+
                   <input
                     type="file"
                     hidden
                     id="upload-photo"
                     accept="image/*"
+                    disabled={isUploadingAvatar}
                     onChange={handleUploadAvatar}
                   />
                 </label>

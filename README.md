@@ -110,7 +110,7 @@ npm install
 
 ```bash
 # In /backend create .env file with:
-PORT=3000
+PORT=3001
 
 JWT_SECRET=your_jwt_secret_key
 MONGODB_URI=your_mongodb_connection_string

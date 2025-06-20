@@ -35,6 +35,17 @@ export const useAuthStore = create((set, get) => ({
       set({ isSendingOtp: false });
     }
   },
+
+  isEmailAvailable: async (email) => {
+    try {
+      const response = await axiosInstance.get(`/user/check-email/${email}`);
+      return response.data.available;
+    } catch (error) {
+      console.error("Email check failed:", error);
+      return false;
+    }
+  },
+
   resetPassword: async ({ identifier, newPassword, otp }) => {
     set({ isResettingPassword: true });
     try {
@@ -102,7 +113,7 @@ export const useAuthStore = create((set, get) => ({
         toast.error("Too many requests. Please try again later.");
         return null;
       }
-      toast.error("Failed to send OTP. Please try again.");
+      toast.error(error.response?.data?.message || "Failed to send email");
       console.error("Send OTP error:", error);
       return null;
     } finally {
@@ -115,16 +126,36 @@ export const useAuthStore = create((set, get) => ({
     try {
       const res = await axiosInstance.post("/user/login", data);
       set({ authUser: res.data });
-      toast.success("sign up successful");
+      toast.success("Log in successful");
     } catch (error) {
       set({ authUser: null });
-      toast.error(error.response.data.message);
+      toast.error(error.response.data.message || "error while logging in");
     } finally {
       set({ isLoggingIn: false });
     }
   },
 
-  googleLogin: async (data) => {},
+  // 📂 client/src/stores/useAuthStore.js
+  googleLogin: async ({ code, codeVerifier, redirectUri }) => {
+    set({ isLoggingIn: true });
+    try {
+      const res = await axiosInstance.post("user/google-login", {
+        code,
+        codeVerifier,
+        redirectUri,
+      });
+      set({ authUser: res.data.user });
+      console.log(res.data.user);
+      toast.success("Log in successful");
+      return true;
+    } catch (error) {
+      set({ authUser: null });
+      toast.error(error.response?.data?.message || "OAuth Login Failed");
+      return null;
+    } finally {
+      set({ isLoggingIn: false });
+    }
+  },
 
   logout: async () => {
     try {
@@ -182,10 +213,16 @@ export const useAuthStore = create((set, get) => ({
     }
   },
 
-  uploadUserAvatar: async (data) => {
+  uploadUserAvatar: async (file) => {
     set({ isUploadingAvatar: true });
+    const formData = new FormData();
+    formData.append("file", file);
     try {
-      const res = await axiosInstance.post("/user/upload-avatar", data);
+      const res = await axiosInstance.post("/user/upload-avatar", formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      });
       set({ authUser: res.data.user });
       toast.success(res.data.message);
       return true;
@@ -214,10 +251,17 @@ export const useAuthStore = create((set, get) => ({
     }
   },
 
-  uploadUserCover: async (data) => {
+  uploadUserCover: async (file) => {
     set({ isUploadingCover: true });
+    const formData = new FormData();
+    formData.append("file", file);
     try {
-      const res = await axiosInstance.post("/user/upload-cover", data);
+      const res = await axiosInstance.post("/user/upload-cover", formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      });
+      console.log(res.data.user);
       set({ authUser: res.data.user });
       toast.success(res.data.message);
       return true;

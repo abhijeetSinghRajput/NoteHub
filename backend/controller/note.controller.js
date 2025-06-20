@@ -80,7 +80,6 @@ export const getNotes = async (req, res) => {
 export const updateContent = async (req, res) => {
     const { content, noteId, userLocalDateTime, offsetMinutes } = req.body;
     const { user } = req;
-    console.log(req.body);
     try {
         const note = await Note.findById(noteId);
         if(!note) return res.status(404).json({ message: `note not found with id ${noteId}` });

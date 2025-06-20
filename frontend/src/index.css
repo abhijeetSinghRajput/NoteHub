@@ -640,7 +640,7 @@ div:has(> .tiptap.ProseMirror) {
   @apply relative w-full border-none outline-none mx-auto bg-background text-foreground font-sans leading-relaxed overflow-x-hidden p-4;
 
   img {
-    @apply max-h-[50vh] rounded-xl;
+    @apply max-h-[50vh] my-4 rounded-xl;
   }
   .code-block {
     @apply relative;
@@ -833,7 +833,7 @@ div:has(> .tiptap.ProseMirror) {
   }
 
   blockquote {
-    @apply border-l-4 border py-2 pl-6 italic  text-muted-foreground;
+    @apply border-l-4 my-4  py-2 pl-6 italic  text-muted-foreground bg-accent/30 ;
   }
 
   hr {

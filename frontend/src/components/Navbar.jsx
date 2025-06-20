@@ -39,7 +39,7 @@ const Navbar = () => {
           {(authUser &&
             <Link to='/profile'>
               <Avatar>
-                <AvatarImage src={authUser?.avatarUrl} alt={authUser?.userName} />
+                <AvatarImage src={authUser?.avatar} alt={authUser?.userName} />
                 <AvatarFallback>
                   {authUser?.fullName.split(/\s+/).map(w => w[0].toUpperCase()).join('').slice(0, 2)}
                 </AvatarFallback>

@@ -9,14 +9,14 @@ import {
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Link } from "react-router-dom";
-import { Eye, EyeClosed, Loader2, Lock, User2 } from "lucide-react";
+import { Eye, EyeOff, Loader2, Lock, User2 } from "lucide-react";
 import { useState } from "react";
 import { useAuthStore } from "@/stores/useAuthStore";
 import GoogleLoginButton from "@/components/GoogleLoginButton";
 import { z } from "zod";
 
 const loginSchema = z.object({
-  userName: z.string().min(1, "Username is required"),
+  identifier: z.string().min(1, "Username or Email is required"),
   password: z.string().min(1, "Password is required"),
 });
 
@@ -24,7 +24,7 @@ const LoginPage = () => {
   const { isLoggingIn, login } = useAuthStore();
   const [showPassword, setShowPassword] = useState(false);
   const [formData, setFormData] = useState({
-    userName: "",
+    identifier: "",
     password: "",
   });
   const [errors, setErrors] = useState({});
@@ -64,25 +64,25 @@ const LoginPage = () => {
           <CardContent>
             <form onSubmit={handleFormSubmit}>
               <div className="flex flex-col gap-5">
-                {/* Username Field */}
+                {/* Username/Email Field */}
                 <div className="flex flex-col gap-1 relative">
                   <div className="flex gap-2 relative">
                     <User2 className="absolute top-[50%] translate-y-[-50%] left-2 text-muted-foreground size-4" />
                     <Input
                       className={cn(
                         "pl-8",
-                        errors.userName && "ring-2 ring-red-500"
+                        errors.identifier && "ring-2 ring-red-500"
                       )}
-                      id="userName"
+                      id="identifier"
                       type="text"
-                      placeholder="Username"
-                      value={formData.userName}
+                      placeholder="Username or Email"
+                      value={formData.identifier}
                       onChange={handleChange}
                       disabled={isLoggingIn}
                     />
-                    {errors.userName && (
+                    {errors.identifier && (
                       <p className="text-xs absolute left-2 px-1 bg-background -translate-y-1/2 -bottom-4 text-red-500">
-                        {errors.userName}
+                        {errors.identifier}
                       </p>
                     )}
                   </div>
@@ -94,7 +94,7 @@ const LoginPage = () => {
                     <Lock className="absolute top-[50%] translate-y-[-50%] left-2 text-muted-foreground size-4" />
                     <Input
                       className={cn(
-                        "pl-8",
+                        "px-8",
                         errors.password && "ring-2 ring-red-500"
                       )}
                       id="password"
@@ -107,14 +107,14 @@ const LoginPage = () => {
                     <Button
                       type="button"
                       variant="ghost"
-                      className="p-1 h-min absolute top-[50%] translate-y-[-50%] right-2"
+                      className="p-1 text-muted-foreground hover:text-foreground h-full hover:bg-transparent aspect-square absolute top-[50%] translate-y-[-50%] right-0"
                       onClick={() => setShowPassword(!showPassword)}
                       tabIndex={-1}
                     >
                       {showPassword ? (
-                        <Eye className="text-muted-foreground size-4" />
+                        <Eye className="size-4" />
                       ) : (
-                        <EyeClosed className="text-muted-foreground size-4" />
+                        <EyeOff className="size-4" />
                       )}
                     </Button>
                     {errors.password && (
@@ -125,7 +125,7 @@ const LoginPage = () => {
                   </div>
                   <Link
                     to="/forget-password"
-                    className="text-xs underline-offset-2 hover:underline w-min whitespace-nowrap"
+                    className="text-sm underline-offset-2 hover:underline w-min whitespace-nowrap"
                   >
                     Forgot your password?
                   </Link>
@@ -146,7 +146,10 @@ const LoginPage = () => {
             <GoogleLoginButton className={"mt-4"} />
             <div className="mt-4 text-center text-sm text-muted-foreground">
               Don't have an account?{" "}
-              <Link to="/signup" className="underline font-semibold text-foreground">
+              <Link
+                to="/signup"
+                className="underline font-semibold text-foreground"
+              >
                 Sign up
               </Link>
             </div>

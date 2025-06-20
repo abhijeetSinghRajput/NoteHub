@@ -20,41 +20,36 @@ const PhotoAndCover = () => {
     removeUserCover,
   } = useAuthStore();
 
-
-  const [previewAvatarUrl, setPreviewAvatarUrl] = useState(null);
+  const [previewavatar, setPreviewavatar] = useState(null);
   const [previewCoverUrl, setPreviewCoverUrl] = useState(null);
 
   const handleUploadImage = async (e, setPreview, onUpload) => {
     const file = e.target.files[0];
     if (!file) return;
-  
+
     try {
-      setPreview(URL.createObjectURL(file));
-  
+      // Set image preview (optional)
+      const previewURL = URL.createObjectURL(file);
+      setPreview(previewURL);
+
       let finalFile = file;
-  
-      if (file.size > 1024 * 1024) { // If larger than 1MB
-        const option = {
-          maxSizeMB: 0.5, 
+
+      // 🗜️ Compress only if size > 1MB
+      if (file.size > 1024 * 1024) {
+        const options = {
+          maxSizeMB: 0.5,
           maxWidthOrHeight: 1920,
           useWebWorker: true,
         };
-        finalFile = await imageCompression(file, option);
+        finalFile = await imageCompression(file, options);
       }
-  
-      const reader = new FileReader();
-      reader.readAsDataURL(finalFile);
-      reader.onloadend = async () => {
-        const imageBase64 = reader.result;
-        await onUpload({ imageBase64 });
-      };
+      await onUpload(finalFile);
     } catch (error) {
       console.error("Error compressing or uploading:\n", error);
     } finally {
-      e.target.value = null;
+      e.target.value = null; // Reset file input
     }
   };
-  
 
   const handleRemoveAvatar = async (setPreview, onRemove) => {
     const result = await onRemove();
@@ -75,7 +70,7 @@ const PhotoAndCover = () => {
             <Avatar className="relative aspect-square shadow-md size-44 shrink-0 border-background rounded-full">
               <AvatarImage
                 className="w-full h-full object-cover rounded-full bg-background"
-                src={previewAvatarUrl || authUser?.avatarUrl}
+                src={previewavatar || authUser?.avatar}
                 alt={authUser?.fullName || "user profile"}
               />
               <AvatarFallback className="text-4xl">
@@ -105,7 +100,13 @@ const PhotoAndCover = () => {
                     accept="image/*"
                     className="hidden"
                     disabled={isUploadingAvatar}
-                    onChange={(e) => handleUploadImage(e, setPreviewAvatarUrl, uploadUserAvatar)}
+                    onChange={(e) =>
+                      handleUploadImage(
+                        e,
+                        setPreviewavatar,
+                        uploadUserAvatar
+                      )
+                    }
                   />
                   <div
                     className={`button w-32 cursor-pointer ${
@@ -123,9 +124,14 @@ const PhotoAndCover = () => {
                 </Label>
 
                 <Button
-                  onClick={()=>handleRemoveAvatar(setPreviewAvatarUrl, removeUserAvatar)}
+                  onClick={() =>
+                    handleRemoveAvatar(
+                      setPreviewavatar,
+                      removeUserAvatar
+                    )
+                  }
                   size="icon"
-                  disabled={isRemovingAvatar || !authUser?.avatarUrl}
+                  disabled={isRemovingAvatar || !authUser?.avatar}
                   variant="secondary"
                   className="relative overflow-hidden"
                 >
@@ -146,8 +152,8 @@ const PhotoAndCover = () => {
             <Avatar className="relative aspect-square shadow-md size-44 shrink-0 rounded-xl overflow-hidden border-background">
               <AvatarImage
                 className="w-full h-full object-cover bg-background"
-                src={previewCoverUrl || authUser?.coverUrl}
-                alt={'background-cover-image'}
+                src={previewCoverUrl || authUser?.cover}
+                alt={"background-cover-image"}
               />
               <AvatarFallback className="text-4xl">
                 <img
@@ -176,7 +182,9 @@ const PhotoAndCover = () => {
                     accept="image/*"
                     className="hidden"
                     disabled={isUploadingCover}
-                    onChange={(e) => handleUploadImage(e, setPreviewCoverUrl, uploadUserCover)}
+                    onChange={(e) =>
+                      handleUploadImage(e, setPreviewCoverUrl, uploadUserCover)
+                    }
                   />
                   <div
                     className={`button w-32 cursor-pointer ${
@@ -194,9 +202,11 @@ const PhotoAndCover = () => {
                 </Label>
 
                 <Button
-                  onClick={()=>handleRemoveAvatar(setPreviewCoverUrl, removeUserCover)}
+                  onClick={() =>
+                    handleRemoveAvatar(setPreviewCoverUrl, removeUserCover)
+                  }
                   size="icon"
-                  disabled={isRemovingCover || !authUser?.coverUrl}
+                  disabled={isRemovingCover || !authUser?.cover}
                   variant="secondary"
                   className="relative overflow-hidden"
                 >

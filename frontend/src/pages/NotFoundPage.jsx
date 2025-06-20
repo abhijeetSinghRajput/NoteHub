@@ -14,8 +14,8 @@ const NotFoundPage = () => {
                     <img src="/404-not-found.svg" alt="404 not found" />
                 </div>
                 <div className='grid grid-cols-2 w-52 gap-2 '>
-                    <Button variant="secondary" onclick={navigate('/login')}>Login</Button>
-                    <Button variant="secondary" onclick={navigate('/signup')}>Regester</Button>
+                    <Button variant="secondary" onClick={() => navigate('/login')}>Login</Button>
+                    <Button variant="secondary" onClick={() => navigate('/signup')}>Register</Button>
                 </div>
             </div>
         </div>

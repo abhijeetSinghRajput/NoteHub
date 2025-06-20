@@ -1,81 +1,105 @@
 import bcrypt from "bcryptjs";
+import validator from "validator";
 import User from "../model/user.model.js";
 import { sendOtp, validateOtp } from "../services/otp.service.js";
 
 export const requestResetPasswordOtp = async (req, res) => {
-  const { identifier } = req.body; // Changed from email to identifier
+  const { identifier } = req.body;
+  
   if (!identifier) {
-    return res.status(400).json({ message: "Username or email is required" });
+    return res.status(400).json({ 
+      success: false,
+      message: "Username or email is required" 
+    });
   }
 
   try {
-    // Look for user by either email or username
-    const user = await User.findOne({
-      $or: [{ email: identifier }, { userName: identifier }],
-    });
+    // Check if identifier is email or username
+    const isEmail = validator.isEmail(identifier);
+    const query = isEmail 
+      ? { email: validator.normalizeEmail(identifier) }
+      : { userName: identifier };
+
+    const user = await User.findOne(query);
 
     if (!user) {
-      return res
-        .status(404)
-        .json({ message: `User with this username or email not found` });
+      return res.status(404).json({ 
+        success: false,
+        message: "User not found" 
+      });
     }
 
     await sendOtp({
-      email: user.email, // Always send to email, even if they identified by username
+      email: user.email,
       purpose: "password_reset",
     });
 
     return res.status(200).json({
-      message: `OTP successfully sent to ${user.email}`,
-      email: user.email, // Return the email so frontend can display it
+      success: true,
+      message: `OTP sent to ${user.email}`,
+      email: user.email.replace(/(.{2})(.*)(@.*)/, (_, a, b, c) => a + b.replace(/./g, '*') + c) // Partially mask email
     });
   } catch (error) {
-    console.error("Error sending reset password OTP:", error);
-    return res.status(500).json({ message: "Internal Server Error" });
+    console.error("Password reset OTP error:", error);
+    return res.status(500).json({ 
+      success: false,
+      message: "Failed to send OTP" 
+    });
   }
 };
 
 export const resetPassword = async (req, res) => {
-  const { identifier, newPassword, otp } = req.body; // Changed from email to identifier
-  console.log({
-    identifier,
-    newPassword,
-    otp,
-  });
+  const { identifier, newPassword, otp } = req.body;
 
   if (!identifier || !newPassword || !otp) {
-    return res.status(400).json({ message: "All fields are required" });
+    return res.status(400).json({ 
+      success: false,
+      message: "All fields are required" 
+    });
+  }
+
+  if (!validator.isLength(inputPassword, { min: 6 })) {
+    return res.status(400).json({
+      success: false,
+      message: "Password must be at least 6 characters with uppercase, lowercase, number and symbol"
+    });
   }
 
   try {
-    // Find user by either email or username
-    const user = await User.findOne({
-      $or: [{ email: identifier }, { userName: identifier }],
-    });
+    const isEmail = validator.isEmail(identifier);
+    const user = await User.findOne(
+      isEmail 
+        ? { email: validator.normalizeEmail(identifier) } 
+        : { userName: identifier }
+    );
 
     if (!user) {
-      return res.status(404).json({ message: "User not found" });
+      return res.status(404).json({ 
+        success: false,
+        message: "User not found" 
+      });
     }
 
-    // Validate OTP against the user's email (OTP is always sent to email)
     await validateOtp({
       email: user.email,
       purpose: "password_reset",
       otp,
     });
 
-    // Update password
-    const hashedPassword = await bcrypt.hash(newPassword, 10);
+    const hashedPassword = await bcrypt.hash(newPassword, 12);
     user.password = hashedPassword;
     await user.save();
 
-    return res.status(200).json({
-      message: "Password reset successfully",
+    return res.status(200).json({ 
+      success: true,
+      message: "Password reset successfully" 
     });
   } catch (error) {
     console.error("Password reset error:", error);
-    return res.status(error.statusCode || 500).json({
-      message: error.message || "Internal Server Error",
+    const status = error.name === 'ValidationError' ? 400 : 500;
+    return res.status(status).json({
+      success: false,
+      message: error.message || "Password reset failed"
     });
   }
 };
@@ -85,32 +109,52 @@ export const updatePassword = async (req, res) => {
   const { user } = req;
 
   if (!oldPassword || !newPassword) {
-    return res.status(400).json({ message: "All fields must required." });
+    return res.status(400).json({ 
+      success: false,
+      message: "Both old and new passwords are required" 
+    });
+  }
+
+  if (oldPassword === newPassword) {
+    return res.status(400).json({
+      success: false,
+      message: "New password must be different from old password"
+    });
+  }
+
+  if (!validator.isLength(inputPassword, { min: 6 })) {
+    return res.status(400).json({
+      success: false,
+      message: "New password must contain at least 6 characters with uppercase, lowercase, number and symbol"
+    });
   }
 
   try {
-    const isMatched = await bcrypt.compare(oldPassword, user.password);
-    if (!isMatched)
-      return res.status(400).json({ message: "Invalid password." });
+    const isMatch = await bcrypt.compare(oldPassword, user.password);
+    if (!isMatch) {
+      return res.status(401).json({ 
+        success: false,
+        message: "Current password is incorrect" 
+      });
+    }
 
-    const salt = await bcrypt.genSalt(10);
-    const hashPassword = await bcrypt.hash(newPassword, salt);
-
-    user.password = hashPassword;
+    const hashedPassword = await bcrypt.hash(newPassword, 12);
+    user.password = hashedPassword;
     await user.save();
-    res.status(200).json({
-      user: {
-        fullName: user.fullName,
-        email: user.email,
-        isEmailVerified: user.isEmailVerified,
-        userName: user.userName,
-        avatarUrl: user.avatarUrl,
-        streak: user.streak,
-      },
-      message: "Password changed.",
+
+    // Return user data without sensitive information
+    const { password, ...safeUser } = user.toObject();
+    
+    return res.status(200).json({
+      success: true,
+      user: safeUser,
+      message: "Password updated successfully"
     });
   } catch (error) {
-    console.log("Error in updatePassword controller\n", error);
-    res.status(500).json({ message: "Internal Server Error." });
+    console.error("Password update error:", error);
+    return res.status(500).json({
+      success: false,
+      message: "Failed to update password"
+    });
   }
 };

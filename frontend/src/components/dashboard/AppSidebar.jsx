@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useEffect, useState, useCallback, useRef } from "react";
-import { FolderPlus, CopyMinus, Search, X, ArrowLeft } from "lucide-react";
+import { FolderPlus, CopyMinus, Search, X } from "lucide-react";
 
 import NavMain from "@/components/dashboard/NavMain";
 import NavUser from "@/components/dashboard/NavUser";
@@ -57,8 +57,7 @@ const AppSidebar = (props) => {
 
   return (
     <Sidebar {...props}>
-      <SidebarHeader className="pb-0">
-        <div className="py-[13px] h-14">
+      <SidebarHeader className="p-2 pl-4 h-16 justify-center">
           {showSearch ? (
             <div className="flex gap-2 items-center">
               <SidebarSearch
@@ -158,7 +157,6 @@ const AppSidebar = (props) => {
               </div>
             </div>
           )}
-        </div>
       </SidebarHeader>
 
       <SidebarContent>
@@ -172,7 +170,7 @@ const AppSidebar = (props) => {
         )}
       </SidebarContent>
 
-      <SidebarFooter>
+      <SidebarFooter className="border-t">
         <NavUser />
       </SidebarFooter>
       <SidebarRail />

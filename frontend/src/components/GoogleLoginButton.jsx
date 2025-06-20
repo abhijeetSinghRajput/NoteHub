@@ -1,25 +1,44 @@
 import React from "react";
-import { useAuthStore } from "@/stores/useAuthStore";
 import { Button } from "./ui/button";
+import { generatePKCE } from "@/lib/auth";
 
 const GoogleLoginButton = ({ className }) => {
-  const { googleLogin } = useAuthStore();
-
-  const handleGoogleLogin = () => {
-    const clientId = import.meta.env.VITE_OAUTH_CLIENT_ID;
-    const redirectUri = "https://yourwebsite.com/oauth/callback";
-    const scope = "email profile";
-    const authUrl = `https://accounts.google.com/o/oauth2/auth?client_id=${clientId}&redirect_uri=${redirectUri}&response_type=token&scope=${scope}`;
-
-    window.location.href = authUrl;
+  const handleGoogleLogin = async () => {
+    const clientId = import.meta.env.VITE_GOOGLE_CLIENT_ID;
+    const redirectUri = encodeURIComponent(import.meta.env.VITE_GOOGLE_REDIRECT_URI);
+    const scope = encodeURIComponent("openid profile email");
+    
+    try {
+      // Generate PKCE code verifier and challenge
+      const { codeVerifier, codeChallenge } = await generatePKCE();
+      
+      // Store the verifier in session storage
+      sessionStorage.setItem("code_verifier", codeVerifier);
+      
+      const authUrl = `https://accounts.google.com/o/oauth2/v2/auth?` +
+        `client_id=${clientId}&` +
+        `redirect_uri=${redirectUri}&` +
+        `response_type=code&` +
+        `scope=${scope}&` +
+        `code_challenge=${codeChallenge}&` +
+        `code_challenge_method=S256&` +
+        `access_type=offline&` +
+        `prompt=consent`;
+      
+      window.location.href = authUrl;
+    } catch (error) {
+      console.error("Error generating PKCE:", error);
+      // Handle error appropriately
+    }
   };
 
   return (
     <Button
       variant="outline"
       onClick={handleGoogleLogin}
-      className={`w-full  ${className}`}
+      className={`w-full ${className}`}
     >
+      {/* Google icon */}
       <svg
         xmlns="http://www.w3.org/2000/svg"
         viewBox="0 0 24 24"

@@ -3,10 +3,9 @@ import { ModeToggle } from "@/components/mode-toggle";
 
 import {
   Breadcrumb,
+  BreadcrumbEllipsis,
   BreadcrumbItem,
-  BreadcrumbLink,
   BreadcrumbList,
-  BreadcrumbPage,
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
 import { Separator } from "@/components/ui/separator";
@@ -28,6 +27,12 @@ import TooltipWrapper from "@/components/TooltipWrapper";
 import { Avatar, AvatarFallback, AvatarImage } from "@radix-ui/react-avatar";
 import { useAuthStore } from "@/stores/useAuthStore";
 import { useTheme } from "@/components/theme-provider";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@radix-ui/react-dropdown-menu";
 
 const Dashboard = () => {
   return (
@@ -41,14 +46,14 @@ const DashboardContent = () => {
   const { routes } = useRouteStore();
   const { authUser } = useAuthStore();
   const { isSidebarOpen } = useSidebar();
-  const {theme} = useTheme();
+  const { theme } = useTheme();
 
   return (
     <>
       <AppSidebar />
 
       <SidebarInset className="scrollbar-custom relative w-max h-svh overflow-hidden">
-        <header className="flex border border-b sticky top-0 z-10 bg-background justify-between h-16 shrink-0 items-center gap-2 transition-[width,height] ease-linear group-has-[[data-collapsible=icon]]/sidebar-wrapper:h-12">
+        <header className="z-50 flex border border-b sticky top-0 bg-background justify-between h-16 shrink-0 items-center gap-2 transition-[width,height] ease-linear group-has-[[data-collapsible=icon]]/sidebar-wrapper:h-12">
           <div className="flex items-center gap-2 px-4">
             {!isSidebarOpen && (
               <>
@@ -58,19 +63,49 @@ const DashboardContent = () => {
                 <Separator orientation="vertical" className="mr-2 h-4" />
               </>
             )}
-
             <Breadcrumb>
               <BreadcrumbList className="flex-nowrap">
-                {routes.map((route, index) => (
-                  <React.Fragment key={index}>
+                {routes.length > 1 ? (
+                  <>
                     <BreadcrumbItem>
-                      <Link to={route.path} className="text-foreground">
-                        {route.name}
-                      </Link>
+                      <DropdownMenu
+                        modal={true}
+                        className="z-50 transition-all"
+                      >
+                        <DropdownMenuTrigger className="flex items-center gap-1">
+                          <BreadcrumbEllipsis className="size-4" />
+                          <span className="sr-only">Toggle menu</span>
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent
+                          className="bg-popover w-32 max-w-52 p-1 border transition-all rounded-lg"
+                          align="start"
+                        >
+                          {routes.slice(0, -1).map((route, index) => (
+                            <DropdownMenuItem
+                              key={index}
+                              className="px-2 py-1 whitespace-nowrap overflow-hidden overflow-ellipsis cursor-pointer hover:bg-accent rounded-sm text-foreground"
+                            >
+                              <Link to={route.path}>{route.name}</Link>
+                            </DropdownMenuItem>
+                          ))}
+                        </DropdownMenuContent>
+                      </DropdownMenu>
                     </BreadcrumbItem>
                     <BreadcrumbSeparator />
-                  </React.Fragment>
-                ))}
+                  </>
+                ) : null}
+
+                {/* Always show the last route */}
+                {routes.length > 0 && (
+                  <BreadcrumbItem className="whitespace-nowrap overflow-hidden overflow-ellipsis">
+                    <Link
+                      to={routes[routes.length - 1].path}
+                      className="text-foreground"
+                    >
+                      {routes[routes.length - 1].name}
+                    </Link>
+                  </BreadcrumbItem>
+                )}
               </BreadcrumbList>
             </Breadcrumb>
           </div>
@@ -87,14 +122,18 @@ const DashboardContent = () => {
 
             <a href="https://github.com/abhijeetSinghRajput/notehub">
               <Button className="size-8 p-0" variant="ghost">
-                <img 
-                  src={theme === "dark" ? "/github-mark-white.svg" : "/github-mark.svg"}
+                <img
+                  src={
+                    theme === "dark"
+                      ? "/github-mark-white.svg"
+                      : "/github-mark.svg"
+                  }
                   alt="github logo"
                   className="size-5 object-contain"
                 />
               </Button>
             </a>
-            
+
             <ModeToggle />
 
             <TooltipWrapper message={authUser.fullName || "user"}>
@@ -104,8 +143,9 @@ const DashboardContent = () => {
               >
                 <Avatar>
                   <AvatarImage
-                    src={authUser?.avatarUrl}
+                    src={authUser?.avatar}
                     alt={authUser?.fullName}
+                    referrerPolicy="no-referrer"
                   />
                   <AvatarFallback className="rounded-lg">
                     {authUser

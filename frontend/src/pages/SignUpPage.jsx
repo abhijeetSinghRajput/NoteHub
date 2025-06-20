@@ -9,7 +9,7 @@ import {
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Link } from "react-router-dom";
-import { Eye, EyeClosed, Hash, Loader2, Lock, Mail, User2 } from "lucide-react";
+import { Check, Eye, EyeOff, Loader2, Lock, Mail, User2 } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useAuthStore } from "@/stores/useAuthStore";
 import GoogleLoginButton from "@/components/GoogleLoginButton";
@@ -20,27 +20,47 @@ import {
   InputOTPSlot,
 } from "@/components/ui/input-otp";
 import { REGEXP_ONLY_DIGITS } from "input-otp";
+import validator from "validator";
+
+function useDebounce(value, delay) {
+  const [debouncedValue, setDebouncedValue] = useState(value);
+
+  useEffect(() => {
+    const handler = setTimeout(() => {
+      setDebouncedValue(value);
+    }, delay);
+
+    return () => {
+      clearTimeout(handler);
+    };
+  }, [value, delay]);
+
+  return debouncedValue;
+}
 
 const SignupPage = () => {
-  const { isSigningUp, signup, sendSignupOtp, isSendingOtp } = useAuthStore();
+  const { isSigningUp, signup, sendSignupOtp, isSendingOtp, isEmailAvailable } =
+    useAuthStore();
   const [showPassword, setShowPassword] = useState(false);
-  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [cooldown, setCooldown] = useState(0);
+  const [isCheckingEmail, setIsCheckingEmail] = useState(false);
+  const [emailStatus, setEmailStatus] = useState(null);
 
   const [formData, setFormData] = useState({
     fullName: "",
     email: "",
     password: "",
-    confirmPassword: "",
     otp: "",
   });
+
   const [errors, setErrors] = useState({
     name: "",
     email: "",
     password: "",
-    confirmPassword: "",
     otp: "",
   });
+
+  const debouncedEmail = useDebounce(formData.email, 500);
 
   useEffect(() => {
     let interval;
@@ -52,95 +72,150 @@ const SignupPage = () => {
     return () => clearInterval(interval);
   }, [cooldown]);
 
+  useEffect(() => {
+    const checkEmailAvailability = async () => {
+      console.count("callback");
+      const trimmedEmail = formData.email.trim();
+      if (!trimmedEmail || !validator.isEmail(trimmedEmail)) {
+        setEmailStatus(null);
+        return;
+      }
+
+      setIsCheckingEmail(true);
+      try {
+        const isAvailable = await isEmailAvailable(trimmedEmail);
+        setEmailStatus(isAvailable ? "available" : "taken");
+        setErrors((prev) => ({
+          ...prev,
+          email: isAvailable ? "" : "Email is already registered",
+        }));
+      } catch (error) {
+        console.error("Email check failed:", error);
+        setEmailStatus(null);
+      } finally {
+        setIsCheckingEmail(false);
+      }
+    };
+
+    checkEmailAvailability();
+  }, [debouncedEmail, isEmailAvailable]);
+
   const handleChange = (e) => {
     const { id, value } = e.target;
-
     setFormData((prev) => ({ ...prev, [id]: value }));
-    setErrors((prev) => ({ ...prev, [id]: "" }));
+
+    if (id === "email") {
+      setErrors((prev) => ({ ...prev, email: "" }));
+      setEmailStatus(null);
+    } else {
+      setErrors((prev) => ({ ...prev, [id]: "" }));
+    }
   };
 
   const handleSendotp = async () => {
-    if (!formData.email || !isValidEmail(formData.email)) {
-      setErrors((prev) => ({
-        ...prev,
-        email: !formData.email
-          ? "Email is required before sending otp."
-          : "Invalid email format.",
-      }));
+    const trimmedEmail = formData.email.trim();
+
+    if (!trimmedEmail) {
+      setErrors((prev) => ({ ...prev, email: "Email is required" }));
+      return;
+    }
+
+    if (!validator.isEmail(trimmedEmail)) {
+      setErrors((prev) => ({ ...prev, email: "Invalid email format" }));
+      return;
+    }
+
+    if (emailStatus === "taken") {
       return;
     }
 
     try {
-      const result = await sendSignupOtp(formData.email);
+      const result = await sendSignupOtp(trimmedEmail);
       if (result?.status >= 200) {
         setCooldown(60);
       }
     } catch (error) {
-      // handle error if needed
+      console.error("Error sending OTP:", error);
     }
   };
 
-  const isValidEmail = (email) => {
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    return emailRegex.test(email);
-  };
+  const validateForm = () => {
+    // Create trimmed form data
+    const trimmedData = {
+      fullName: formData.fullName.trim(),
+      email: formData.email.trim(),
+      password: formData.password.trim(),
+      otp: formData.otp.trim(),
+    };
 
-  const isValid = (data) => {
     let valid = true;
     let newErrors = {
       name: "",
       email: "",
       password: "",
-      confirmPassword: "",
       otp: "",
     };
 
-    if (!data.fullName || data.fullName.trim().length < 3) {
-      newErrors.name = "Name must be at least 3 characters.";
+    // Name validation
+    if (!trimmedData.fullName) {
+      newErrors.name = "Name is required";
+      valid = false;
+    } else if (!validator.isLength(trimmedData.fullName, { min: 3 })) {
+      newErrors.name = "Name must be at least 3 characters";
       valid = false;
     }
 
-    if (!data.email) {
-      newErrors.email = "Email is required.";
+    // Email validation
+    if (!trimmedData.email) {
+      newErrors.email = "Email is required";
       valid = false;
-    } else if (!isValidEmail(data.email)) {
-      newErrors.email = "Invalid email format.";
+    } else if (!validator.isEmail(trimmedData.email)) {
+      newErrors.email = "Invalid email format";
       valid = false;
-    }
-
-    if (!data.password) {
-      newErrors.password = "Password is required.";
-      valid = false;
-    } else if (data.password.length < 6) {
-      newErrors.password = "Password must be at least 6 characters.";
+    } else if (emailStatus === "taken") {
+      newErrors.email = "Email is already registered";
       valid = false;
     }
 
-    if (!data.confirmPassword) {
-      newErrors.confirmPassword = "Confirm your password.";
+    // Password validation
+    if (!trimmedData.password) {
+      newErrors.password = "Password is required";
       valid = false;
-    } else if (data.password !== data.confirmPassword) {
-      newErrors.confirmPassword = "Passwords do not match.";
+    } else if (validator.isEmpty(trimmedData.password)) {
+      newErrors.password = "Password cannot be empty";
+      valid = false;
+    } else if (!validator.isLength(trimmedData.password, { min: 6 })) {
+      newErrors.password = "Password must be at least 6 characters";
       valid = false;
     }
 
-    if (!data.otp) {
-      newErrors.otp = "OTP is required.";
+    // OTP validation
+    if (!trimmedData.otp) {
+      newErrors.otp = "OTP is required";
       valid = false;
-    } else if (!/^\d{6}$/.test(data.otp)) {
-      newErrors.otp = "OTP must be 6 digits.";
+    } else if (
+      !validator.isNumeric(trimmedData.otp) ||
+      !validator.isLength(trimmedData.otp, { min: 6, max: 6 })
+    ) {
+      newErrors.otp = "OTP must be 6 digits";
       valid = false;
     }
 
     setErrors(newErrors);
-    return valid;
+    return { valid, trimmedData };
   };
 
-  const handleFormSubmit = (e) => {
+  const handleFormSubmit = async (e) => {
     e.preventDefault();
-    console.log("Form submitted with data:", formData);
-    if (!isValid(formData)) return;
-    signup(formData);
+
+    const { valid, trimmedData } = validateForm();
+    if (!valid) return;
+
+    try {
+      await signup(trimmedData);
+    } catch (error) {
+      console.error("Signup failed:", error);
+    }
   };
 
   return (
@@ -186,22 +261,29 @@ const SignupPage = () => {
                     <Mail className="absolute top-[50%] translate-y-[-50%] left-2 text-muted-foreground size-4" />
                     <Input
                       className={cn(
-                        "pl-8",
-                        errors.email && "ring-2 ring-red-500"
+                        "pl-8 pr-10",
+                        errors.email && "ring-2 ring-red-500",
+                        emailStatus === "available" && ""
                       )}
                       id="email"
-                      type="email"
                       placeholder="Email address"
                       value={formData.email}
                       onChange={handleChange}
                       disabled={isSigningUp}
                     />
-                    {errors.email && (
-                      <p className="text-xs absolute left-2 px-1 bg-background -translate-y-1/2 -bottom-4 text-red-500">
-                        {errors.email}
-                      </p>
-                    )}
+                    <div className="absolute right-2 top-[50%] translate-y-[-50%]">
+                      {isCheckingEmail ? (
+                        <Loader2 className="animate-spin size-4" />
+                      ) : emailStatus === "available" ? (
+                        <Check className="size-4" />
+                      ) : null}
+                    </div>
                   </div>
+                  {errors.email && (
+                    <p className="text-xs absolute left-2 px-1 bg-background -translate-y-1/2 -bottom-4 text-red-500">
+                      {errors.email}
+                    </p>
+                  )}
                 </div>
 
                 {/* Password Field */}
@@ -223,14 +305,14 @@ const SignupPage = () => {
                     <Button
                       type="button"
                       variant="ghost"
-                      className="p-1 h-min absolute top-[50%] translate-y-[-50%] right-2"
+                      className="p-1 text-muted-foreground hover:text-foreground h-full hover:bg-transparent aspect-square absolute top-[50%] translate-y-[-50%] right-0"
                       onClick={() => setShowPassword(!showPassword)}
                       tabIndex={-1}
                     >
                       {showPassword ? (
-                        <Eye className="text-muted-foreground size-4" />
+                        <Eye className="size-4" />
                       ) : (
-                        <EyeClosed className="text-muted-foreground size-4" />
+                        <EyeOff className="size-4" />
                       )}
                     </Button>
                     {errors.password && (
@@ -241,46 +323,7 @@ const SignupPage = () => {
                   </div>
                 </div>
 
-                {/* Confirm Password Field */}
-                <div className="flex flex-col gap-1 relative">
-                  <div className="flex gap-2 relative">
-                    <Lock className="absolute top-[50%] translate-y-[-50%] left-2 text-muted-foreground size-4" />
-                    <Input
-                      className={cn(
-                        "pl-8",
-                        errors.confirmPassword && "ring-2 ring-red-500"
-                      )}
-                      id="confirmPassword"
-                      placeholder="Confirm Password"
-                      type={showConfirmPassword ? "text" : "password"}
-                      value={formData.confirmPassword}
-                      onChange={handleChange}
-                      disabled={isSigningUp}
-                    />
-                    <Button
-                      type="button"
-                      variant="ghost"
-                      className="p-1 h-min absolute top-[50%] translate-y-[-50%] right-2"
-                      onClick={() =>
-                        setShowConfirmPassword(!showConfirmPassword)
-                      }
-                      tabIndex={-1}
-                    >
-                      {showConfirmPassword ? (
-                        <Eye className="text-muted-foreground size-4" />
-                      ) : (
-                        <EyeClosed className="text-muted-foreground size-4" />
-                      )}
-                    </Button>
-                    {errors.confirmPassword && (
-                      <p className="text-xs absolute left-2 px-1 bg-background -translate-y-1/2 -bottom-4 text-red-500">
-                        {errors.confirmPassword}
-                      </p>
-                    )}
-                  </div>
-                </div>
-
-                {/* OTP Input with Hash Icon */}
+                {/* OTP Input */}
                 <div className="flex flex-col gap-1">
                   <div
                     className="grid relative gap-2"
@@ -290,11 +333,12 @@ const SignupPage = () => {
                       maxLength={6}
                       id="otp"
                       value={formData.otp}
-                      onChange={(value) => setFormData((prev) => ({ ...prev, otp: value }))}
+                      onChange={(value) =>
+                        setFormData((prev) => ({ ...prev, otp: value }))
+                      }
                       pattern={REGEXP_ONLY_DIGITS}
                       disabled={false}
                     >
-
                       <InputOTPGroup>
                         <InputOTPSlot index={0} />
                         <InputOTPSlot index={1} />
@@ -312,16 +356,18 @@ const SignupPage = () => {
                       variant="outline"
                       type="button"
                       onClick={handleSendotp}
-                      disabled={cooldown > 0 || isSendingOtp}
+                      disabled={
+                        cooldown > 0 || isSendingOtp || emailStatus === "taken"
+                      }
                     >
                       {isSendingOtp ? (
                         <>
-                          <Loader2 className="animate-spin ml-2" />
+                          <Loader2 className="animate-spin mr-2 size-4" />
                         </>
                       ) : cooldown > 0 ? (
                         `${cooldown}s`
                       ) : (
-                        "Send otp"
+                        "Send OTP"
                       )}
                     </Button>
                     {errors.otp && (
@@ -332,15 +378,31 @@ const SignupPage = () => {
                   </div>
                 </div>
 
-                <Button type="submit" className="w-full" disabled={isSigningUp}>
-                  {isSigningUp ? "Creating..." : "Create Account"}
-                  {isSigningUp && <Loader2 className="animate-spin ml-2" />}
+                <Button
+                  type="submit"
+                  className="w-full"
+                  disabled={isSigningUp || emailStatus === "taken"}
+                >
+                  {isSigningUp ? (
+                    <>
+                      <Loader2 className="animate-spin mr-2 size-4" />
+                      Creating Account...
+                    </>
+                  ) : (
+                    "Create Account"
+                  )}
                 </Button>
               </div>
             </form>
             <GoogleLoginButton className={"mt-4"} />
             <div className="mt-4 text-center text-sm text-muted-foreground">
-              Already have an account? <Link to={"/login"} className="underline font-semibold text-foreground">Login</Link>
+              Already have an account?{" "}
+              <Link
+                to={"/login"}
+                className="underline font-semibold text-foreground"
+              >
+                Login
+              </Link>
             </div>
           </CardContent>
         </Card>

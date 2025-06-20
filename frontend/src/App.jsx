@@ -82,7 +82,6 @@ function App() {
       </ThemeProvider>
     );
   }
-
   return (
     <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
       <TooltipProvider>
@@ -108,7 +107,7 @@ function App() {
             />
             <Route path="/forget-password" element={<ForgetPasswordPage />} />
             <Route path="/oauth/callback" element={<OAuthCallback />} />
-            k
+
             {/* Nested routes inside Dashboard */}
             <Route
               path="/"
