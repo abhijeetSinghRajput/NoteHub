@@ -174,16 +174,6 @@ const ForgotPasswordPage = () => {
               </div>
             )}
 
-            {isCheckingIdentifier && (
-              <Skeleton className="flex gap-2 p-2">
-                <Skeleton className="size-10 rounded-full" />
-                <div className="flex flex-col gap-2">
-                  <Skeleton className="h-4 w-32" />
-                  <Skeleton className="h-3 w-24" />
-                </div>
-              </Skeleton>
-            )}
-
             {/* Identifier Field */}
             <div className="grid relative items-center gap-1">
               <div className="flex gap-2 relative">
