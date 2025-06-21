@@ -4,12 +4,13 @@ import { config } from "dotenv";
 import cookieParser from "cookie-parser";
 import cors from "cors";
 
+import authRoutes from "./routers/auth.router.js";
 import userRoutes from "./routers/user.router.js";
 import passwordRoutes from "./routers/password.router.js";
-import collectionRouter from './routers/collection.router.js';
-import noteRouter from './routers/note.router.js';
-import contributionRouter from './routers/contribution.router.js'
-import ImageRouter from './routers/Image.router.js';
+import collectionRoutes from './routers/collection.router.js';
+import noteRoutes from './routers/note.router.js';
+import contributionRoutes from './routers/contribution.router.js'
+import ImageRoutes from './routers/Image.router.js';
 import './model/Image.model.js';
 
 config();
@@ -31,12 +32,13 @@ app.get('/', (req, res)=>{
 })
 
 //ROUTES
+app.use('/api/auth', authRoutes);
 app.use('/api/user', userRoutes);
 app.use('/api/password', passwordRoutes);
-app.use('/api/collection', collectionRouter);
-app.use('/api/note', noteRouter);
-app.use('/api/contribution', contributionRouter); 
-app.use('/api/images', ImageRouter); 
+app.use('/api/collection', collectionRoutes);
+app.use('/api/note', noteRoutes);
+app.use('/api/contribution', contributionRoutes); 
+app.use('/api/images', ImageRoutes); 
 
 const PORT = process.env.PORT;
 app.listen(PORT, ()=>{

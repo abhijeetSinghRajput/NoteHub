@@ -2,7 +2,7 @@ import multer from 'multer';
 
 const storage = multer.memoryStorage();
 
-const upload = multer({
+export const upload = multer({
   storage,
   limits: { fileSize: 5 * 1024 * 1024 }, // 5MB limit
   fileFilter: (req, file, cb) => {
@@ -14,4 +14,11 @@ const upload = multer({
   },
 });
 
-export default upload;
+export const handlefileUpload = (fieldName) =>{
+  return (req, res, next) => {
+    upload.single(fieldName)(req, res, (err)=>{
+      if(err) return res.status(400).json({message: err.message});
+      next();
+    })
+  }
+}

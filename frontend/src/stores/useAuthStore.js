@@ -87,7 +87,7 @@ export const useAuthStore = create((set, get) => ({
   signup: async (data) => {
     set({ isSigningUp: true });
     try {
-      const res = await axiosInstance.post("/user/signup", data);
+      const res = await axiosInstance.post("/auth/signup", data);
       const { message, user } = res.data;
       set({ authUser: user });
       toast.success(message);
@@ -103,7 +103,7 @@ export const useAuthStore = create((set, get) => ({
   sendSignupOtp: async (email) => {
     set({ isSendingOtp: true });
     try {
-      const response = await axiosInstance.post("/user/send-signup-otp", {
+      const response = await axiosInstance.post("/auth/send-signup-otp", {
         email,
       });
       toast.success(response.data.message || "OTP sent successfully!");
@@ -124,11 +124,12 @@ export const useAuthStore = create((set, get) => ({
   login: async (data) => {
     set({ isLoggingIn: true });
     try {
-      const res = await axiosInstance.post("/user/login", data);
+      const res = await axiosInstance.post("/auth/login", data);
       set({ authUser: res.data });
       toast.success("Log in successful");
     } catch (error) {
       set({ authUser: null });
+      console.log(error);
       toast.error(error.response.data.message || "error while logging in");
     } finally {
       set({ isLoggingIn: false });
@@ -139,7 +140,7 @@ export const useAuthStore = create((set, get) => ({
   googleLogin: async ({ code, codeVerifier, redirectUri }) => {
     set({ isLoggingIn: true });
     try {
-      const res = await axiosInstance.post("user/google-login", {
+      const res = await axiosInstance.post("auth/google-login", {
         code,
         codeVerifier,
         redirectUri,
@@ -159,7 +160,7 @@ export const useAuthStore = create((set, get) => ({
 
   logout: async () => {
     try {
-      const res = await axiosInstance.post("/user/logout");
+      const res = await axiosInstance.post("/auth/logout");
       set({ authUser: null });
       toast.success(res.data.message);
     } catch (error) {
