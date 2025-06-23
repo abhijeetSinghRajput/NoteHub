@@ -3,6 +3,7 @@ import bcrypt from "bcryptjs";
 import { generateToken } from "../utils/jwt.js";
 import { sendOtp, validateOtp } from "../services/otp.service.js";
 import { OAuth2Client } from "google-auth-library";
+import validator from "validator";
 
 export const signup = async (req, res) => {
   let { fullName, email, password: inputPassword, otp } = req.body;
