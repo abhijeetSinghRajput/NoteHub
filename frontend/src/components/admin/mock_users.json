@@ -1,0 +1,1452 @@
+[
+  {
+    "_id": {
+      "$oid": "679d1d7836e2c3f6adf32631"
+    },
+    "fullName": "Abhijeet Singh Rajput",
+    "email": "abhijeet62008@gmail.com",
+    "userName": "abhijeetsingh",
+    "googleId": "114331208927419651459",
+    "avatar": "https://res.cloudinary.com/dhtxrpqna/image/upload/v1750533998/user_profiles/679d1d7836e2c3f6adf32631/file.jpg",
+    "cover": "https://res.cloudinary.com/dhtxrpqna/image/upload/v1750534034/user_covers/679d1d7836e2c3f6adf32631/file.jpg",
+    "hasGoogleAuth": true,
+    "currentStreak": 0,
+    "maxStreak": 0,
+    "lastContributionDate": null,
+    "createdAt": {
+      "$date": "2025-06-16T19:18:56.468Z"
+    },
+    "updatedAt": {
+      "$date": "2025-06-21T19:27:15.842Z"
+    },
+    "isOnline": true,
+    "lastLogin": {
+      "date": "2025-06-24T10:30:45.000Z",
+      "ip": "192.168.1.1",
+      "device": "Chrome on Windows 10"
+    },
+    "notesCount": 24,
+    "collectionsCount": 5
+  },
+  {
+    "_id": {
+      "$oid": "ea54a2476b9743da8c82c348"
+    },
+    "fullName": "Jake",
+    "email": "jake@example.com",
+    "userName": "jake54",
+    "googleId": "997804410802720754858",
+    "avatar": "https://tabler.io/avatars/default/70a23294beb91b4ad5a439e2c6ea5a6d.png",
+    "cover": "https://tabler.io/avatars/default/70a23294beb91b4ad5a439e2c6ea5a6d.png",
+    "hasGoogleAuth": true,
+    "currentStreak": 0,
+    "maxStreak": 0,
+    "lastContributionDate": null,
+    "createdAt": {
+      "$date": "2025-06-16T19:18:56Z"
+    },
+    "updatedAt": {
+      "$date": "2025-06-21T19:27:15Z"
+    },
+    "isOnline": false,
+    "lastLogin": {
+      "date": "2025-06-24T10:30:45Z",
+      "ip": "192.168.1.130",
+      "device": "Firefox on Linux"
+    },
+    "notesCount": 41,
+    "collectionsCount": 7
+  },
+  {
+    "_id": {
+      "$oid": "19d945779ba44df88a2d95bb"
+    },
+    "fullName": "Ryan",
+    "email": "ryan@example.com",
+    "userName": "ryan70",
+    "googleId": "792008508116577354131",
+    "avatar": "https://tabler.io/avatars/default/c6b7069df1a634e3db7ba5e9b923d3a8.png",
+    "cover": "https://tabler.io/avatars/default/c6b7069df1a634e3db7ba5e9b923d3a8.png",
+    "hasGoogleAuth": true,
+    "currentStreak": 0,
+    "maxStreak": 0,
+    "lastContributionDate": null,
+    "createdAt": {
+      "$date": "2025-06-16T19:18:56Z"
+    },
+    "updatedAt": {
+      "$date": "2025-06-21T19:27:15Z"
+    },
+    "isOnline": true,
+    "lastLogin": {
+      "date": "2025-06-24T10:30:45Z",
+      "ip": "192.168.1.8",
+      "device": "Firefox on Linux"
+    },
+    "notesCount": 2,
+    "collectionsCount": 5
+  },
+  {
+    "_id": {
+      "$oid": "e648a0467dac49349172d0d6"
+    },
+    "fullName": "Liam",
+    "email": "liam@example.com",
+    "userName": "liam38",
+    "googleId": "619725327483346840979",
+    "avatar": "https://tabler.io/avatars/default/9d119d757ff7d7b36b9d71b86d973fbe.png",
+    "cover": "https://tabler.io/avatars/default/9d119d757ff7d7b36b9d71b86d973fbe.png",
+    "hasGoogleAuth": true,
+    "currentStreak": 0,
+    "maxStreak": 0,
+    "lastContributionDate": null,
+    "createdAt": {
+      "$date": "2025-06-16T19:18:56Z"
+    },
+    "updatedAt": {
+      "$date": "2025-06-21T19:27:15Z"
+    },
+    "isOnline": false,
+    "lastLogin": {
+      "date": "2025-06-24T10:30:45Z",
+      "ip": "192.168.1.208",
+      "device": "Brave on Android"
+    },
+    "notesCount": 0,
+    "collectionsCount": 2
+  },
+  {
+    "_id": {
+      "$oid": "95a489b473b94025a4aac326"
+    },
+    "fullName": "Emma",
+    "email": "emma@example.com",
+    "userName": "emma71",
+    "googleId": "163180573228108288529",
+    "avatar": "https://tabler.io/avatars/default/b00e1ebc65fc7f2c53c9a9a955a49be5.png",
+    "cover": "https://tabler.io/avatars/default/b00e1ebc65fc7f2c53c9a9a955a49be5.png",
+    "hasGoogleAuth": true,
+    "currentStreak": 0,
+    "maxStreak": 0,
+    "lastContributionDate": null,
+    "createdAt": {
+      "$date": "2025-06-16T19:18:56Z"
+    },
+    "updatedAt": {
+      "$date": "2025-06-21T19:27:15Z"
+    },
+    "isOnline": false,
+    "lastLogin": {
+      "date": "2025-06-24T10:30:45Z",
+      "ip": "192.168.1.73",
+      "device": "Firefox on Linux"
+    },
+    "notesCount": 45,
+    "collectionsCount": 1
+  },
+  {
+    "_id": {
+      "$oid": "b777182eaae44a9f9733c17c"
+    },
+    "fullName": "Noah",
+    "email": "noah@example.com",
+    "userName": "noah76",
+    "googleId": "722009968981746782075",
+    "avatar": "https://tabler.io/avatars/default/321f5bcb6efc56013d67ae101f196eaf.png",
+    "cover": "https://tabler.io/avatars/default/321f5bcb6efc56013d67ae101f196eaf.png",
+    "hasGoogleAuth": true,
+    "currentStreak": 0,
+    "maxStreak": 0,
+    "lastContributionDate": null,
+    "createdAt": {
+      "$date": "2025-06-16T19:18:56Z"
+    },
+    "updatedAt": {
+      "$date": "2025-06-21T19:27:15Z"
+    },
+    "isOnline": false,
+    "lastLogin": {
+      "date": "2025-06-24T10:30:45Z",
+      "ip": "192.168.1.66",
+      "device": "Edge on Windows 11"
+    },
+    "notesCount": 38,
+    "collectionsCount": 1
+  },
+  {
+    "_id": {
+      "$oid": "149f7c4088b04967a37d7a7a"
+    },
+    "fullName": "Olivia",
+    "email": "olivia@example.com",
+    "userName": "olivia78",
+    "googleId": "250504240471708976888",
+    "avatar": "https://tabler.io/avatars/default/d1499909450ba526d5297e3ebc7f6d07.png",
+    "cover": "https://tabler.io/avatars/default/d1499909450ba526d5297e3ebc7f6d07.png",
+    "hasGoogleAuth": true,
+    "currentStreak": 0,
+    "maxStreak": 0,
+    "lastContributionDate": null,
+    "createdAt": {
+      "$date": "2025-06-16T19:18:56Z"
+    },
+    "updatedAt": {
+      "$date": "2025-06-21T19:27:15Z"
+    },
+    "isOnline": false,
+    "lastLogin": {
+      "date": "2025-06-24T10:30:45Z",
+      "ip": "192.168.1.226",
+      "device": "Chrome on Windows 10"
+    },
+    "notesCount": 22,
+    "collectionsCount": 4
+  },
+  {
+    "_id": {
+      "$oid": "8073c52c98384dd38372d2b9"
+    },
+    "fullName": "Ethan",
+    "email": "ethan@example.com",
+    "userName": "ethan49",
+    "googleId": "821863903163072517258",
+    "avatar": "https://tabler.io/avatars/default/bb8c76bcb73cf00e7d4ab920447a365c.png",
+    "cover": "https://tabler.io/avatars/default/bb8c76bcb73cf00e7d4ab920447a365c.png",
+    "hasGoogleAuth": true,
+    "currentStreak": 0,
+    "maxStreak": 0,
+    "lastContributionDate": null,
+    "createdAt": {
+      "$date": "2025-06-16T19:18:56Z"
+    },
+    "updatedAt": {
+      "$date": "2025-06-21T19:27:15Z"
+    },
+    "isOnline": false,
+    "lastLogin": {
+      "date": "2025-06-24T10:30:45Z",
+      "ip": "192.168.1.192",
+      "device": "Brave on Android"
+    },
+    "notesCount": 7,
+    "collectionsCount": 9
+  },
+  {
+    "_id": {
+      "$oid": "e72d0c7c2f9544069bf7ddb0"
+    },
+    "fullName": "Lucas",
+    "email": "lucas@example.com",
+    "userName": "lucas50",
+    "googleId": "571889775761320813853",
+    "avatar": "https://tabler.io/avatars/default/386f22acf2f226c3a9ad7ad66fdce7a6.png",
+    "cover": "https://tabler.io/avatars/default/386f22acf2f226c3a9ad7ad66fdce7a6.png",
+    "hasGoogleAuth": true,
+    "currentStreak": 0,
+    "maxStreak": 0,
+    "lastContributionDate": null,
+    "createdAt": {
+      "$date": "2025-06-16T19:18:56Z"
+    },
+    "updatedAt": {
+      "$date": "2025-06-21T19:27:15Z"
+    },
+    "isOnline": false,
+    "lastLogin": {
+      "date": "2025-06-24T10:30:45Z",
+      "ip": "192.168.1.64",
+      "device": "Safari on macOS"
+    },
+    "notesCount": 27,
+    "collectionsCount": 8
+  },
+  {
+    "_id": {
+      "$oid": "25444c1b1130460c82a3fff5"
+    },
+    "fullName": "Ava",
+    "email": "ava@example.com",
+    "userName": "ava66",
+    "googleId": "419753068686379885279",
+    "avatar": "https://tabler.io/avatars/default/50382765fd5648c7876d91cc37b27394.png",
+    "cover": "https://tabler.io/avatars/default/50382765fd5648c7876d91cc37b27394.png",
+    "hasGoogleAuth": true,
+    "currentStreak": 0,
+    "maxStreak": 0,
+    "lastContributionDate": null,
+    "createdAt": {
+      "$date": "2025-06-16T19:18:56Z"
+    },
+    "updatedAt": {
+      "$date": "2025-06-21T19:27:15Z"
+    },
+    "isOnline": false,
+    "lastLogin": {
+      "date": "2025-06-24T10:30:45Z",
+      "ip": "192.168.1.179",
+      "device": "Firefox on Linux"
+    },
+    "notesCount": 24,
+    "collectionsCount": 0
+  },
+  {
+    "_id": {
+      "$oid": "cb1dd754f5544f969e873b1d"
+    },
+    "fullName": "Mason",
+    "email": "mason@example.com",
+    "userName": "mason63",
+    "googleId": "531529357951478131961",
+    "avatar": "https://tabler.io/avatars/default/ed7055b68adec22bfa8a88d441e83e9a.png",
+    "cover": "https://tabler.io/avatars/default/ed7055b68adec22bfa8a88d441e83e9a.png",
+    "hasGoogleAuth": true,
+    "currentStreak": 0,
+    "maxStreak": 0,
+    "lastContributionDate": null,
+    "createdAt": {
+      "$date": "2025-06-16T19:18:56Z"
+    },
+    "updatedAt": {
+      "$date": "2025-06-21T19:27:15Z"
+    },
+    "isOnline": false,
+    "lastLogin": {
+      "date": "2025-06-24T10:30:45Z",
+      "ip": "192.168.1.118",
+      "device": "Chrome on Windows 10"
+    },
+    "notesCount": 35,
+    "collectionsCount": 9
+  },
+  {
+    "_id": {
+      "$oid": "6e100cbedff34c5ab9dcdd47"
+    },
+    "fullName": "Logan",
+    "email": "logan@example.com",
+    "userName": "logan80",
+    "googleId": "767420941529512441161",
+    "avatar": "https://tabler.io/avatars/default/60467e1ae6f97acb8964f5aa617c7ecb.png",
+    "cover": "https://tabler.io/avatars/default/60467e1ae6f97acb8964f5aa617c7ecb.png",
+    "hasGoogleAuth": true,
+    "currentStreak": 0,
+    "maxStreak": 0,
+    "lastContributionDate": null,
+    "createdAt": {
+      "$date": "2025-06-16T19:18:56Z"
+    },
+    "updatedAt": {
+      "$date": "2025-06-21T19:27:15Z"
+    },
+    "isOnline": true,
+    "lastLogin": {
+      "date": "2025-06-24T10:30:45Z",
+      "ip": "192.168.1.111",
+      "device": "Brave on Android"
+    },
+    "notesCount": 6,
+    "collectionsCount": 3
+  },
+  {
+    "_id": {
+      "$oid": "252c07c982ab49bb859e854c"
+    },
+    "fullName": "Oliver",
+    "email": "oliver@example.com",
+    "userName": "oliver59",
+    "googleId": "454668508430177541519",
+    "avatar": "https://tabler.io/avatars/default/40687889cb61a06b242aafb9e02f5204.png",
+    "cover": "https://tabler.io/avatars/default/40687889cb61a06b242aafb9e02f5204.png",
+    "hasGoogleAuth": true,
+    "currentStreak": 0,
+    "maxStreak": 0,
+    "lastContributionDate": null,
+    "createdAt": {
+      "$date": "2025-06-16T19:18:56Z"
+    },
+    "updatedAt": {
+      "$date": "2025-06-21T19:27:15Z"
+    },
+    "isOnline": false,
+    "lastLogin": {
+      "date": "2025-06-24T10:30:45Z",
+      "ip": "192.168.1.154",
+      "device": "Brave on Android"
+    },
+    "notesCount": 22,
+    "collectionsCount": 4
+  },
+  {
+    "_id": {
+      "$oid": "c48787e7d4c64e33b1f89766"
+    },
+    "fullName": "James",
+    "email": "james@example.com",
+    "userName": "james47",
+    "googleId": "698517092771636062098",
+    "avatar": "https://tabler.io/avatars/default/2244af71ad0c25f2cb0a8efa167491fb.png",
+    "cover": "https://tabler.io/avatars/default/2244af71ad0c25f2cb0a8efa167491fb.png",
+    "hasGoogleAuth": true,
+    "currentStreak": 0,
+    "maxStreak": 0,
+    "lastContributionDate": null,
+    "createdAt": {
+      "$date": "2025-06-16T19:18:56Z"
+    },
+    "updatedAt": {
+      "$date": "2025-06-21T19:27:15Z"
+    },
+    "isOnline": false,
+    "lastLogin": {
+      "date": "2025-06-24T10:30:45Z",
+      "ip": "192.168.1.94",
+      "device": "Firefox on Linux"
+    },
+    "notesCount": 4,
+    "collectionsCount": 1
+  },
+  {
+    "_id": {
+      "$oid": "687c8265129f43aab735423b"
+    },
+    "fullName": "Benjamin",
+    "email": "benjamin@example.com",
+    "userName": "benjamin23",
+    "googleId": "552884850592641812720",
+    "avatar": "https://tabler.io/avatars/default/44198079c5211172a61405b5049f3bfb.png",
+    "cover": "https://tabler.io/avatars/default/44198079c5211172a61405b5049f3bfb.png",
+    "hasGoogleAuth": true,
+    "currentStreak": 0,
+    "maxStreak": 0,
+    "lastContributionDate": null,
+    "createdAt": {
+      "$date": "2025-06-16T19:18:56Z"
+    },
+    "updatedAt": {
+      "$date": "2025-06-21T19:27:15Z"
+    },
+    "isOnline": false,
+    "lastLogin": {
+      "date": "2025-06-24T10:30:45Z",
+      "ip": "192.168.1.92",
+      "device": "Chrome on Windows 10"
+    },
+    "notesCount": 9,
+    "collectionsCount": 1
+  },
+  {
+    "_id": {
+      "$oid": "084bfd03bec34846a2919aa7"
+    },
+    "fullName": "Isabella",
+    "email": "isabella@example.com",
+    "userName": "isabella57",
+    "googleId": "920310138322739614055",
+    "avatar": "https://tabler.io/avatars/default/cae99bb14b21ec41ecf03b58f59ff292.png",
+    "cover": "https://tabler.io/avatars/default/cae99bb14b21ec41ecf03b58f59ff292.png",
+    "hasGoogleAuth": true,
+    "currentStreak": 0,
+    "maxStreak": 0,
+    "lastContributionDate": null,
+    "createdAt": {
+      "$date": "2025-06-16T19:18:56Z"
+    },
+    "updatedAt": {
+      "$date": "2025-06-21T19:27:15Z"
+    },
+    "isOnline": true,
+    "lastLogin": {
+      "date": "2025-06-24T10:30:45Z",
+      "ip": "192.168.1.15",
+      "device": "Firefox on Linux"
+    },
+    "notesCount": 1,
+    "collectionsCount": 2
+  },
+  {
+    "_id": {
+      "$oid": "df9ec1b974e340de9b940437"
+    },
+    "fullName": "Sophia",
+    "email": "sophia@example.com",
+    "userName": "sophia55",
+    "googleId": "840071038398842758128",
+    "avatar": "https://tabler.io/avatars/default/06d29f74c2f85239efe3f9ade1b96da7.png",
+    "cover": "https://tabler.io/avatars/default/06d29f74c2f85239efe3f9ade1b96da7.png",
+    "hasGoogleAuth": true,
+    "currentStreak": 0,
+    "maxStreak": 0,
+    "lastContributionDate": null,
+    "createdAt": {
+      "$date": "2025-06-16T19:18:56Z"
+    },
+    "updatedAt": {
+      "$date": "2025-06-21T19:27:15Z"
+    },
+    "isOnline": false,
+    "lastLogin": {
+      "date": "2025-06-24T10:30:45Z",
+      "ip": "192.168.1.166",
+      "device": "Safari on macOS"
+    },
+    "notesCount": 44,
+    "collectionsCount": 2
+  },
+  {
+    "_id": {
+      "$oid": "b89802108fb64014a0c5f7be"
+    },
+    "fullName": "Henry",
+    "email": "henry@example.com",
+    "userName": "henry72",
+    "googleId": "609713287191330713398",
+    "avatar": "https://tabler.io/avatars/default/2fafd2ca0fa23ca91ec778674c26081a.png",
+    "cover": "https://tabler.io/avatars/default/2fafd2ca0fa23ca91ec778674c26081a.png",
+    "hasGoogleAuth": true,
+    "currentStreak": 0,
+    "maxStreak": 0,
+    "lastContributionDate": null,
+    "createdAt": {
+      "$date": "2025-06-16T19:18:56Z"
+    },
+    "updatedAt": {
+      "$date": "2025-06-21T19:27:15Z"
+    },
+    "isOnline": false,
+    "lastLogin": {
+      "date": "2025-06-24T10:30:45Z",
+      "ip": "192.168.1.123",
+      "device": "Safari on macOS"
+    },
+    "notesCount": 10,
+    "collectionsCount": 2
+  },
+  {
+    "_id": {
+      "$oid": "80b63df6ef2c4538a54154ce"
+    },
+    "fullName": "Alexander",
+    "email": "alexander@example.com",
+    "userName": "alexander35",
+    "googleId": "308382169094359377521",
+    "avatar": "https://tabler.io/avatars/default/119d9abaee7a1e987571f0fe776bd1a5.png",
+    "cover": "https://tabler.io/avatars/default/119d9abaee7a1e987571f0fe776bd1a5.png",
+    "hasGoogleAuth": true,
+    "currentStreak": 0,
+    "maxStreak": 0,
+    "lastContributionDate": null,
+    "createdAt": {
+      "$date": "2025-06-16T19:18:56Z"
+    },
+    "updatedAt": {
+      "$date": "2025-06-21T19:27:15Z"
+    },
+    "isOnline": true,
+    "lastLogin": {
+      "date": "2025-06-24T10:30:45Z",
+      "ip": "192.168.1.235",
+      "device": "Safari on macOS"
+    },
+    "notesCount": 33,
+    "collectionsCount": 8
+  },
+  {
+    "_id": {
+      "$oid": "4ee0411357ac4ca9924570a9"
+    },
+    "fullName": "Mia",
+    "email": "mia@example.com",
+    "userName": "mia53",
+    "googleId": "657915519136418795413",
+    "avatar": "https://tabler.io/avatars/default/7d24c27f40be0d43618f6d49e26a3288.png",
+    "cover": "https://tabler.io/avatars/default/7d24c27f40be0d43618f6d49e26a3288.png",
+    "hasGoogleAuth": true,
+    "currentStreak": 0,
+    "maxStreak": 0,
+    "lastContributionDate": null,
+    "createdAt": {
+      "$date": "2025-06-16T19:18:56Z"
+    },
+    "updatedAt": {
+      "$date": "2025-06-21T19:27:15Z"
+    },
+    "isOnline": true,
+    "lastLogin": {
+      "date": "2025-06-24T10:30:45Z",
+      "ip": "192.168.1.12",
+      "device": "Firefox on Linux"
+    },
+    "notesCount": 7,
+    "collectionsCount": 10
+  },
+  {
+    "_id": {
+      "$oid": "64f5c00eb00b42f2aa4f9ad8"
+    },
+    "fullName": "Charlotte",
+    "email": "charlotte@example.com",
+    "userName": "charlotte73",
+    "googleId": "691511072362336543077",
+    "avatar": "https://tabler.io/avatars/default/bb3d2a58ea153b635a4951d82affb4db.png",
+    "cover": "https://tabler.io/avatars/default/bb3d2a58ea153b635a4951d82affb4db.png",
+    "hasGoogleAuth": true,
+    "currentStreak": 0,
+    "maxStreak": 0,
+    "lastContributionDate": null,
+    "createdAt": {
+      "$date": "2025-06-16T19:18:56Z"
+    },
+    "updatedAt": {
+      "$date": "2025-06-21T19:27:15Z"
+    },
+    "isOnline": false,
+    "lastLogin": {
+      "date": "2025-06-24T10:30:45Z",
+      "ip": "192.168.1.252",
+      "device": "Chrome on Windows 10"
+    },
+    "notesCount": 44,
+    "collectionsCount": 1
+  },
+  {
+    "_id": {
+      "$oid": "8fdc28734b314fc38a821b21"
+    },
+    "fullName": "Amelia",
+    "email": "amelia@example.com",
+    "userName": "amelia54",
+    "googleId": "260939620184439162543",
+    "avatar": "https://tabler.io/avatars/default/ee7173cf2acfcb909ead7a23f3e01493.png",
+    "cover": "https://tabler.io/avatars/default/ee7173cf2acfcb909ead7a23f3e01493.png",
+    "hasGoogleAuth": true,
+    "currentStreak": 0,
+    "maxStreak": 0,
+    "lastContributionDate": null,
+    "createdAt": {
+      "$date": "2025-06-16T19:18:56Z"
+    },
+    "updatedAt": {
+      "$date": "2025-06-21T19:27:15Z"
+    },
+    "isOnline": true,
+    "lastLogin": {
+      "date": "2025-06-24T10:30:45Z",
+      "ip": "192.168.1.141",
+      "device": "Edge on Windows 11"
+    },
+    "notesCount": 43,
+    "collectionsCount": 3
+  },
+  {
+    "_id": {
+      "$oid": "9f58e88ed8d14ea390dc3def"
+    },
+    "fullName": "Arjun",
+    "email": "arjun@example.com",
+    "userName": "arjun59",
+    "googleId": "947641408255294173789",
+    "avatar": "https://tabler.io/avatars/default/6bde7f630b3933ee1b92b0ec2df665c2.png",
+    "cover": "https://tabler.io/avatars/default/6bde7f630b3933ee1b92b0ec2df665c2.png",
+    "hasGoogleAuth": true,
+    "currentStreak": 0,
+    "maxStreak": 0,
+    "lastContributionDate": null,
+    "createdAt": {
+      "$date": "2025-06-16T19:18:56Z"
+    },
+    "updatedAt": {
+      "$date": "2025-06-21T19:27:15Z"
+    },
+    "isOnline": true,
+    "lastLogin": {
+      "date": "2025-06-24T10:30:45Z",
+      "ip": "192.168.1.204",
+      "device": "Firefox on Linux"
+    },
+    "notesCount": 45,
+    "collectionsCount": 1
+  },
+  {
+    "_id": {
+      "$oid": "d5ae70718f0148fea5d8f81b"
+    },
+    "fullName": "Harper",
+    "email": "harper@example.com",
+    "userName": "harper17",
+    "googleId": "489684690757795975433",
+    "avatar": "https://tabler.io/avatars/default/5c9a412b4e80d08303731bca471d3b63.png",
+    "cover": "https://tabler.io/avatars/default/5c9a412b4e80d08303731bca471d3b63.png",
+    "hasGoogleAuth": true,
+    "currentStreak": 0,
+    "maxStreak": 0,
+    "lastContributionDate": null,
+    "createdAt": {
+      "$date": "2025-06-16T19:18:56Z"
+    },
+    "updatedAt": {
+      "$date": "2025-06-21T19:27:15Z"
+    },
+    "isOnline": true,
+    "lastLogin": {
+      "date": "2025-06-24T10:30:45Z",
+      "ip": "192.168.1.175",
+      "device": "Firefox on Linux"
+    },
+    "notesCount": 38,
+    "collectionsCount": 9
+  },
+  {
+    "_id": {
+      "$oid": "72df5f4c18464d05bf3c53b6"
+    },
+    "fullName": "Daniel",
+    "email": "daniel@example.com",
+    "userName": "daniel49",
+    "googleId": "782608452997275347914",
+    "avatar": "https://tabler.io/avatars/default/6ade325cd4c136112f25e63f888eb7de.png",
+    "cover": "https://tabler.io/avatars/default/6ade325cd4c136112f25e63f888eb7de.png",
+    "hasGoogleAuth": true,
+    "currentStreak": 0,
+    "maxStreak": 0,
+    "lastContributionDate": null,
+    "createdAt": {
+      "$date": "2025-06-16T19:18:56Z"
+    },
+    "updatedAt": {
+      "$date": "2025-06-21T19:27:15Z"
+    },
+    "isOnline": false,
+    "lastLogin": {
+      "date": "2025-06-24T10:30:45Z",
+      "ip": "192.168.1.80",
+      "device": "Safari on macOS"
+    },
+    "notesCount": 28,
+    "collectionsCount": 1
+  },
+  {
+    "_id": {
+      "$oid": "2d58482f44494d58b9dbddd7"
+    },
+    "fullName": "Evelyn",
+    "email": "evelyn@example.com",
+    "userName": "evelyn74",
+    "googleId": "752034509699714678471",
+    "avatar": "https://tabler.io/avatars/default/944c5ba154e0489274504f38d01bcfaf.png",
+    "cover": "https://tabler.io/avatars/default/944c5ba154e0489274504f38d01bcfaf.png",
+    "hasGoogleAuth": true,
+    "currentStreak": 0,
+    "maxStreak": 0,
+    "lastContributionDate": null,
+    "createdAt": {
+      "$date": "2025-06-16T19:18:56Z"
+    },
+    "updatedAt": {
+      "$date": "2025-06-21T19:27:15Z"
+    },
+    "isOnline": false,
+    "lastLogin": {
+      "date": "2025-06-24T10:30:45Z",
+      "ip": "192.168.1.221",
+      "device": "Safari on macOS"
+    },
+    "notesCount": 11,
+    "collectionsCount": 8
+  },
+  {
+    "_id": {
+      "$oid": "4e0a6b5650f9466b90670e47"
+    },
+    "fullName": "Abigail",
+    "email": "abigail@example.com",
+    "userName": "abigail61",
+    "googleId": "403909309337518388285",
+    "avatar": "https://tabler.io/avatars/default/1a3318330cf1734feb84887e9453fb1b.png",
+    "cover": "https://tabler.io/avatars/default/1a3318330cf1734feb84887e9453fb1b.png",
+    "hasGoogleAuth": true,
+    "currentStreak": 0,
+    "maxStreak": 0,
+    "lastContributionDate": null,
+    "createdAt": {
+      "$date": "2025-06-16T19:18:56Z"
+    },
+    "updatedAt": {
+      "$date": "2025-06-21T19:27:15Z"
+    },
+    "isOnline": true,
+    "lastLogin": {
+      "date": "2025-06-24T10:30:45Z",
+      "ip": "192.168.1.141",
+      "device": "Safari on macOS"
+    },
+    "notesCount": 12,
+    "collectionsCount": 2
+  },
+  {
+    "_id": {
+      "$oid": "c18c35369d40482dbfe63823"
+    },
+    "fullName": "Michael",
+    "email": "michael@example.com",
+    "userName": "michael85",
+    "googleId": "450159233733930942345",
+    "avatar": "https://tabler.io/avatars/default/9854663aec5741bbbe84290b6edc0aed.png",
+    "cover": "https://tabler.io/avatars/default/9854663aec5741bbbe84290b6edc0aed.png",
+    "hasGoogleAuth": true,
+    "currentStreak": 0,
+    "maxStreak": 0,
+    "lastContributionDate": null,
+    "createdAt": {
+      "$date": "2025-06-16T19:18:56Z"
+    },
+    "updatedAt": {
+      "$date": "2025-06-21T19:27:15Z"
+    },
+    "isOnline": false,
+    "lastLogin": {
+      "date": "2025-06-24T10:30:45Z",
+      "ip": "192.168.1.115",
+      "device": "Firefox on Linux"
+    },
+    "notesCount": 7,
+    "collectionsCount": 7
+  },
+  {
+    "_id": {
+      "$oid": "213913160fa64784955cf0cb"
+    },
+    "fullName": "Emily",
+    "email": "emily@example.com",
+    "userName": "emily72",
+    "googleId": "559412241816548838744",
+    "avatar": "https://tabler.io/avatars/default/78529e2ec8eb4a2eb2fb961e04915b0a.png",
+    "cover": "https://tabler.io/avatars/default/78529e2ec8eb4a2eb2fb961e04915b0a.png",
+    "hasGoogleAuth": true,
+    "currentStreak": 0,
+    "maxStreak": 0,
+    "lastContributionDate": null,
+    "createdAt": {
+      "$date": "2025-06-16T19:18:56Z"
+    },
+    "updatedAt": {
+      "$date": "2025-06-21T19:27:15Z"
+    },
+    "isOnline": true,
+    "lastLogin": {
+      "date": "2025-06-24T10:30:45Z",
+      "ip": "192.168.1.203",
+      "device": "Edge on Windows 11"
+    },
+    "notesCount": 50,
+    "collectionsCount": 1
+  },
+  {
+    "_id": {
+      "$oid": "b0f9e8ca89294e6bbe3aa302"
+    },
+    "fullName": "Jackson",
+    "email": "jackson@example.com",
+    "userName": "jackson33",
+    "googleId": "837601029044105124234",
+    "avatar": "https://tabler.io/avatars/default/c33237da3438494d1abc67166196484e.png",
+    "cover": "https://tabler.io/avatars/default/c33237da3438494d1abc67166196484e.png",
+    "hasGoogleAuth": true,
+    "currentStreak": 0,
+    "maxStreak": 0,
+    "lastContributionDate": null,
+    "createdAt": {
+      "$date": "2025-06-16T19:18:56Z"
+    },
+    "updatedAt": {
+      "$date": "2025-06-21T19:27:15Z"
+    },
+    "isOnline": true,
+    "lastLogin": {
+      "date": "2025-06-24T10:30:45Z",
+      "ip": "192.168.1.173",
+      "device": "Safari on macOS"
+    },
+    "notesCount": 31,
+    "collectionsCount": 6
+  },
+  {
+    "_id": {
+      "$oid": "a5b44ae772b04f6c9eba44e8"
+    },
+    "fullName": "Samuel",
+    "email": "samuel@example.com",
+    "userName": "samuel59",
+    "googleId": "543762257814286670187",
+    "avatar": "https://tabler.io/avatars/default/8654c911c90383bb42a6cdddd66014c5.png",
+    "cover": "https://tabler.io/avatars/default/8654c911c90383bb42a6cdddd66014c5.png",
+    "hasGoogleAuth": true,
+    "currentStreak": 0,
+    "maxStreak": 0,
+    "lastContributionDate": null,
+    "createdAt": {
+      "$date": "2025-06-16T19:18:56Z"
+    },
+    "updatedAt": {
+      "$date": "2025-06-21T19:27:15Z"
+    },
+    "isOnline": false,
+    "lastLogin": {
+      "date": "2025-06-24T10:30:45Z",
+      "ip": "192.168.1.103",
+      "device": "Firefox on Linux"
+    },
+    "notesCount": 8,
+    "collectionsCount": 0
+  },
+  {
+    "_id": {
+      "$oid": "ddbc247a25c447ed921f7ea6"
+    },
+    "fullName": "Scarlett",
+    "email": "scarlett@example.com",
+    "userName": "scarlett67",
+    "googleId": "934652959421359220495",
+    "avatar": "https://tabler.io/avatars/default/44f647f9e3c4767d3b83e89e67917f41.png",
+    "cover": "https://tabler.io/avatars/default/44f647f9e3c4767d3b83e89e67917f41.png",
+    "hasGoogleAuth": true,
+    "currentStreak": 0,
+    "maxStreak": 0,
+    "lastContributionDate": null,
+    "createdAt": {
+      "$date": "2025-06-16T19:18:56Z"
+    },
+    "updatedAt": {
+      "$date": "2025-06-21T19:27:15Z"
+    },
+    "isOnline": true,
+    "lastLogin": {
+      "date": "2025-06-24T10:30:45Z",
+      "ip": "192.168.1.65",
+      "device": "Firefox on Linux"
+    },
+    "notesCount": 22,
+    "collectionsCount": 10
+  },
+  {
+    "_id": {
+      "$oid": "d54e719d794e42578c5f1faa"
+    },
+    "fullName": "Lily",
+    "email": "lily@example.com",
+    "userName": "lily56",
+    "googleId": "729238606160112342286",
+    "avatar": "https://tabler.io/avatars/default/6ffe2b7df2b99ba5cc2c65692dd0d568.png",
+    "cover": "https://tabler.io/avatars/default/6ffe2b7df2b99ba5cc2c65692dd0d568.png",
+    "hasGoogleAuth": true,
+    "currentStreak": 0,
+    "maxStreak": 0,
+    "lastContributionDate": null,
+    "createdAt": {
+      "$date": "2025-06-16T19:18:56Z"
+    },
+    "updatedAt": {
+      "$date": "2025-06-21T19:27:15Z"
+    },
+    "isOnline": true,
+    "lastLogin": {
+      "date": "2025-06-24T10:30:45Z",
+      "ip": "192.168.1.192",
+      "device": "Brave on Android"
+    },
+    "notesCount": 40,
+    "collectionsCount": 9
+  },
+  {
+    "_id": {
+      "$oid": "07408c8bf27541cc8b8f8cb2"
+    },
+    "fullName": "David",
+    "email": "david@example.com",
+    "userName": "david26",
+    "googleId": "121457204924073240563",
+    "avatar": "https://tabler.io/avatars/default/b8c1cb5042e9b54e27d18d6ecfb46087.png",
+    "cover": "https://tabler.io/avatars/default/b8c1cb5042e9b54e27d18d6ecfb46087.png",
+    "hasGoogleAuth": true,
+    "currentStreak": 0,
+    "maxStreak": 0,
+    "lastContributionDate": null,
+    "createdAt": {
+      "$date": "2025-06-16T19:18:56Z"
+    },
+    "updatedAt": {
+      "$date": "2025-06-21T19:27:15Z"
+    },
+    "isOnline": true,
+    "lastLogin": {
+      "date": "2025-06-24T10:30:45Z",
+      "ip": "192.168.1.106",
+      "device": "Brave on Android"
+    },
+    "notesCount": 30,
+    "collectionsCount": 10
+  },
+  {
+    "_id": {
+      "$oid": "f566710dbda644f4bdf1d721"
+    },
+    "fullName": "Chloe",
+    "email": "chloe@example.com",
+    "userName": "chloe71",
+    "googleId": "529772027346416426314",
+    "avatar": "https://tabler.io/avatars/default/644dfc35027924a6e5dfbcad653be697.png",
+    "cover": "https://tabler.io/avatars/default/644dfc35027924a6e5dfbcad653be697.png",
+    "hasGoogleAuth": true,
+    "currentStreak": 0,
+    "maxStreak": 0,
+    "lastContributionDate": null,
+    "createdAt": {
+      "$date": "2025-06-16T19:18:56Z"
+    },
+    "updatedAt": {
+      "$date": "2025-06-21T19:27:15Z"
+    },
+    "isOnline": false,
+    "lastLogin": {
+      "date": "2025-06-24T10:30:45Z",
+      "ip": "192.168.1.178",
+      "device": "Safari on macOS"
+    },
+    "notesCount": 19,
+    "collectionsCount": 3
+  },
+  {
+    "_id": {
+      "$oid": "a8092f751a114837b373ba9a"
+    },
+    "fullName": "Matthew",
+    "email": "matthew@example.com",
+    "userName": "matthew73",
+    "googleId": "370516822034457471041",
+    "avatar": "https://tabler.io/avatars/default/baa928fef9b0f2e838263dd88eefc707.png",
+    "cover": "https://tabler.io/avatars/default/baa928fef9b0f2e838263dd88eefc707.png",
+    "hasGoogleAuth": true,
+    "currentStreak": 0,
+    "maxStreak": 0,
+    "lastContributionDate": null,
+    "createdAt": {
+      "$date": "2025-06-16T19:18:56Z"
+    },
+    "updatedAt": {
+      "$date": "2025-06-21T19:27:15Z"
+    },
+    "isOnline": false,
+    "lastLogin": {
+      "date": "2025-06-24T10:30:45Z",
+      "ip": "192.168.1.17",
+      "device": "Safari on macOS"
+    },
+    "notesCount": 8,
+    "collectionsCount": 1
+  },
+  {
+    "_id": {
+      "$oid": "c3ca1fce95364fdba0b2e450"
+    },
+    "fullName": "Zoe",
+    "email": "zoe@example.com",
+    "userName": "zoe73",
+    "googleId": "118918995730031341457",
+    "avatar": "https://tabler.io/avatars/default/466989c631bca15c46ae9c1e62269a5a.png",
+    "cover": "https://tabler.io/avatars/default/466989c631bca15c46ae9c1e62269a5a.png",
+    "hasGoogleAuth": true,
+    "currentStreak": 0,
+    "maxStreak": 0,
+    "lastContributionDate": null,
+    "createdAt": {
+      "$date": "2025-06-16T19:18:56Z"
+    },
+    "updatedAt": {
+      "$date": "2025-06-21T19:27:15Z"
+    },
+    "isOnline": false,
+    "lastLogin": {
+      "date": "2025-06-24T10:30:45Z",
+      "ip": "192.168.1.233",
+      "device": "Chrome on Windows 10"
+    },
+    "notesCount": 19,
+    "collectionsCount": 0
+  },
+  {
+    "_id": {
+      "$oid": "9c1fe48d9ccf44809efcc9d9"
+    },
+    "fullName": "Madison",
+    "email": "madison@example.com",
+    "userName": "madison10",
+    "googleId": "963271705143178579885",
+    "avatar": "https://tabler.io/avatars/default/94f5ac7e7b78495be7df7e5ca427fd5c.png",
+    "cover": "https://tabler.io/avatars/default/94f5ac7e7b78495be7df7e5ca427fd5c.png",
+    "hasGoogleAuth": true,
+    "currentStreak": 0,
+    "maxStreak": 0,
+    "lastContributionDate": null,
+    "createdAt": {
+      "$date": "2025-06-16T19:18:56Z"
+    },
+    "updatedAt": {
+      "$date": "2025-06-21T19:27:15Z"
+    },
+    "isOnline": false,
+    "lastLogin": {
+      "date": "2025-06-24T10:30:45Z",
+      "ip": "192.168.1.70",
+      "device": "Brave on Android"
+    },
+    "notesCount": 24,
+    "collectionsCount": 9
+  },
+  {
+    "_id": {
+      "$oid": "535ceac72a5e4a3d8cb4a788"
+    },
+    "fullName": "Avery",
+    "email": "avery@example.com",
+    "userName": "avery33",
+    "googleId": "894573147483338811054",
+    "avatar": "https://tabler.io/avatars/default/8940e8ea369def14e82f05a5fee994b9.png",
+    "cover": "https://tabler.io/avatars/default/8940e8ea369def14e82f05a5fee994b9.png",
+    "hasGoogleAuth": true,
+    "currentStreak": 0,
+    "maxStreak": 0,
+    "lastContributionDate": null,
+    "createdAt": {
+      "$date": "2025-06-16T19:18:56Z"
+    },
+    "updatedAt": {
+      "$date": "2025-06-21T19:27:15Z"
+    },
+    "isOnline": true,
+    "lastLogin": {
+      "date": "2025-06-24T10:30:45Z",
+      "ip": "192.168.1.36",
+      "device": "Chrome on Windows 10"
+    },
+    "notesCount": 18,
+    "collectionsCount": 10
+  },
+  {
+    "_id": {
+      "$oid": "d60815980dfa45a39bbd4661"
+    },
+    "fullName": "Isaiah",
+    "email": "isaiah@example.com",
+    "userName": "isaiah17",
+    "googleId": "786942841139754426956",
+    "avatar": "https://tabler.io/avatars/default/0450249b131eec36dc8333b7cf847bc4.png",
+    "cover": "https://tabler.io/avatars/default/0450249b131eec36dc8333b7cf847bc4.png",
+    "hasGoogleAuth": true,
+    "currentStreak": 0,
+    "maxStreak": 0,
+    "lastContributionDate": null,
+    "createdAt": {
+      "$date": "2025-06-16T19:18:56Z"
+    },
+    "updatedAt": {
+      "$date": "2025-06-21T19:27:15Z"
+    },
+    "isOnline": true,
+    "lastLogin": {
+      "date": "2025-06-24T10:30:45Z",
+      "ip": "192.168.1.174",
+      "device": "Edge on Windows 11"
+    },
+    "notesCount": 4,
+    "collectionsCount": 1
+  },
+  {
+    "_id": {
+      "$oid": "6157f6086a7443a0be6bde57"
+    },
+    "fullName": "Dahlia",
+    "email": "dahlia@example.com",
+    "userName": "dahlia93",
+    "googleId": "557730507749016319142",
+    "avatar": "https://tabler.io/avatars/default/706e8643277a95c3f80005f70cf53cb9.png",
+    "cover": "https://tabler.io/avatars/default/706e8643277a95c3f80005f70cf53cb9.png",
+    "hasGoogleAuth": true,
+    "currentStreak": 0,
+    "maxStreak": 0,
+    "lastContributionDate": null,
+    "createdAt": {
+      "$date": "2025-06-16T19:18:56Z"
+    },
+    "updatedAt": {
+      "$date": "2025-06-21T19:27:15Z"
+    },
+    "isOnline": false,
+    "lastLogin": {
+      "date": "2025-06-24T10:30:45Z",
+      "ip": "192.168.1.185",
+      "device": "Firefox on Linux"
+    },
+    "notesCount": 10,
+    "collectionsCount": 0
+  },
+  {
+    "_id": {
+      "$oid": "8ab9d04a5a944782a405d3ab"
+    },
+    "fullName": "Gwen",
+    "email": "gwen@example.com",
+    "userName": "gwen26",
+    "googleId": "608077924509153688128",
+    "avatar": "https://tabler.io/avatars/default/a2d4e522bd8e359b60d4e40a6c50fa6e.png",
+    "cover": "https://tabler.io/avatars/default/a2d4e522bd8e359b60d4e40a6c50fa6e.png",
+    "hasGoogleAuth": true,
+    "currentStreak": 0,
+    "maxStreak": 0,
+    "lastContributionDate": null,
+    "createdAt": {
+      "$date": "2025-06-16T19:18:56Z"
+    },
+    "updatedAt": {
+      "$date": "2025-06-21T19:27:15Z"
+    },
+    "isOnline": false,
+    "lastLogin": {
+      "date": "2025-06-24T10:30:45Z",
+      "ip": "192.168.1.160",
+      "device": "Safari on macOS"
+    },
+    "notesCount": 28,
+    "collectionsCount": 4
+  },
+  {
+    "_id": {
+      "$oid": "0389be88f8bc4e36918f50b3"
+    },
+    "fullName": "Christopher",
+    "email": "christopher@example.com",
+    "userName": "christopher18",
+    "googleId": "104602924126265614669",
+    "avatar": "https://tabler.io/avatars/default/d36865e08723cc1b764e084873e53662.png",
+    "cover": "https://tabler.io/avatars/default/d36865e08723cc1b764e084873e53662.png",
+    "hasGoogleAuth": true,
+    "currentStreak": 0,
+    "maxStreak": 0,
+    "lastContributionDate": null,
+    "createdAt": {
+      "$date": "2025-06-16T19:18:56Z"
+    },
+    "updatedAt": {
+      "$date": "2025-06-21T19:27:15Z"
+    },
+    "isOnline": false,
+    "lastLogin": {
+      "date": "2025-06-24T10:30:45Z",
+      "ip": "192.168.1.235",
+      "device": "Safari on macOS"
+    },
+    "notesCount": 43,
+    "collectionsCount": 6
+  },
+  {
+    "_id": {
+      "$oid": "e68c2246c825417c8a0ca8c4"
+    },
+    "fullName": "Victoria",
+    "email": "victoria@example.com",
+    "userName": "victoria32",
+    "googleId": "265505673399540080649",
+    "avatar": "https://tabler.io/avatars/default/c0e1c0e6224c14a140748d8cef481883.png",
+    "cover": "https://tabler.io/avatars/default/c0e1c0e6224c14a140748d8cef481883.png",
+    "hasGoogleAuth": true,
+    "currentStreak": 0,
+    "maxStreak": 0,
+    "lastContributionDate": null,
+    "createdAt": {
+      "$date": "2025-06-16T19:18:56Z"
+    },
+    "updatedAt": {
+      "$date": "2025-06-21T19:27:15Z"
+    },
+    "isOnline": true,
+    "lastLogin": {
+      "date": "2025-06-24T10:30:45Z",
+      "ip": "192.168.1.180",
+      "device": "Edge on Windows 11"
+    },
+    "notesCount": 14,
+    "collectionsCount": 7
+  },
+  {
+    "_id": {
+      "$oid": "a7ae7d71c9d44541a574ab6d"
+    },
+    "fullName": "Grace",
+    "email": "grace@example.com",
+    "userName": "grace49",
+    "googleId": "332100256904258341808",
+    "avatar": "https://tabler.io/avatars/default/4dfaa7ded74ac66557b5940f7290c840.png",
+    "cover": "https://tabler.io/avatars/default/4dfaa7ded74ac66557b5940f7290c840.png",
+    "hasGoogleAuth": true,
+    "currentStreak": 0,
+    "maxStreak": 0,
+    "lastContributionDate": null,
+    "createdAt": {
+      "$date": "2025-06-16T19:18:56Z"
+    },
+    "updatedAt": {
+      "$date": "2025-06-21T19:27:15Z"
+    },
+    "isOnline": true,
+    "lastLogin": {
+      "date": "2025-06-24T10:30:45Z",
+      "ip": "192.168.1.87",
+      "device": "Brave on Android"
+    },
+    "notesCount": 22,
+    "collectionsCount": 0
+  },
+  {
+    "_id": {
+      "$oid": "3476c245165a427ca05710dd"
+    },
+    "fullName": "Owen",
+    "email": "owen@example.com",
+    "userName": "owen31",
+    "googleId": "889415338226002814340",
+    "avatar": "https://tabler.io/avatars/default/439620a6c05132c82d67fc1593a7e19a.png",
+    "cover": "https://tabler.io/avatars/default/439620a6c05132c82d67fc1593a7e19a.png",
+    "hasGoogleAuth": true,
+    "currentStreak": 0,
+    "maxStreak": 0,
+    "lastContributionDate": null,
+    "createdAt": {
+      "$date": "2025-06-16T19:18:56Z"
+    },
+    "updatedAt": {
+      "$date": "2025-06-21T19:27:15Z"
+    },
+    "isOnline": false,
+    "lastLogin": {
+      "date": "2025-06-24T10:30:45Z",
+      "ip": "192.168.1.214",
+      "device": "Safari on macOS"
+    },
+    "notesCount": 4,
+    "collectionsCount": 10
+  },
+  {
+    "_id": {
+      "$oid": "9283a5eb40894da0a1488f99"
+    },
+    "fullName": "Hannah",
+    "email": "hannah@example.com",
+    "userName": "hannah29",
+    "googleId": "658437657143298805342",
+    "avatar": "https://tabler.io/avatars/default/4a8eb80a6f610949b28dd91f45e7d6e2.png",
+    "cover": "https://tabler.io/avatars/default/4a8eb80a6f610949b28dd91f45e7d6e2.png",
+    "hasGoogleAuth": true,
+    "currentStreak": 0,
+    "maxStreak": 0,
+    "lastContributionDate": null,
+    "createdAt": {
+      "$date": "2025-06-16T19:18:56Z"
+    },
+    "updatedAt": {
+      "$date": "2025-06-21T19:27:15Z"
+    },
+    "isOnline": true,
+    "lastLogin": {
+      "date": "2025-06-24T10:30:45Z",
+      "ip": "192.168.1.41",
+      "device": "Edge on Windows 11"
+    },
+    "notesCount": 16,
+    "collectionsCount": 6
+  },
+  {
+    "_id": {
+      "$oid": "ba76e2fbb7254133b9483d0b"
+    },
+    "fullName": "Addison",
+    "email": "addison@example.com",
+    "userName": "addison35",
+    "googleId": "932005350795666041756",
+    "avatar": "https://tabler.io/avatars/default/4184423b57c070204a1942282818dc0c.png",
+    "cover": "https://tabler.io/avatars/default/4184423b57c070204a1942282818dc0c.png",
+    "hasGoogleAuth": true,
+    "currentStreak": 0,
+    "maxStreak": 0,
+    "lastContributionDate": null,
+    "createdAt": {
+      "$date": "2025-06-16T19:18:56Z"
+    },
+    "updatedAt": {
+      "$date": "2025-06-21T19:27:15Z"
+    },
+    "isOnline": false,
+    "lastLogin": {
+      "date": "2025-06-24T10:30:45Z",
+      "ip": "192.168.1.175",
+      "device": "Firefox on Linux"
+    },
+    "notesCount": 10,
+    "collectionsCount": 0
+  },
+  {
+    "_id": {
+      "$oid": "57530f61f5854057ac66f334"
+    },
+    "fullName": "Natalie",
+    "email": "natalie@example.com",
+    "userName": "natalie90",
+    "googleId": "166167890032932723326",
+    "avatar": "https://tabler.io/avatars/default/b89db8099e05245d0f3e19be6beeafca.png",
+    "cover": "https://tabler.io/avatars/default/b89db8099e05245d0f3e19be6beeafca.png",
+    "hasGoogleAuth": true,
+    "currentStreak": 0,
+    "maxStreak": 0,
+    "lastContributionDate": null,
+    "createdAt": {
+      "$date": "2025-06-16T19:18:56Z"
+    },
+    "updatedAt": {
+      "$date": "2025-06-21T19:27:15Z"
+    },
+    "isOnline": true,
+    "lastLogin": {
+      "date": "2025-06-24T10:30:45Z",
+      "ip": "192.168.1.65",
+      "device": "Safari on macOS"
+    },
+    "notesCount": 48,
+    "collectionsCount": 1
+  },
+  {
+    "_id": {
+      "$oid": "6efd388a785b460681a95a66"
+    },
+    "fullName": "Ella",
+    "email": "ella@example.com",
+    "userName": "ella28",
+    "googleId": "703181712112400306265",
+    "avatar": "https://tabler.io/avatars/default/c29e12118b27e54e8883db0b98c610df.png",
+    "cover": "https://tabler.io/avatars/default/c29e12118b27e54e8883db0b98c610df.png",
+    "hasGoogleAuth": true,
+    "currentStreak": 0,
+    "maxStreak": 0,
+    "lastContributionDate": null,
+    "createdAt": {
+      "$date": "2025-06-16T19:18:56Z"
+    },
+    "updatedAt": {
+      "$date": "2025-06-21T19:27:15Z"
+    },
+    "isOnline": false,
+    "lastLogin": {
+      "date": "2025-06-24T10:30:45Z",
+      "ip": "192.168.1.236",
+      "device": "Brave on Android"
+    },
+    "notesCount": 27,
+    "collectionsCount": 1
+  }
+]

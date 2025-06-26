@@ -14,7 +14,7 @@ import LoginPage from "./pages/LoginPage";
 import SettingsPage from "./pages/SettingsPage";
 import EmailVerificationPage from "./pages/EmailVerificationPage";
 
-import { Loader } from "lucide-react";
+import { Loader, UserPen } from "lucide-react";
 import Dashboard from "./pages/dashboard";
 import ForgetPasswordPage from "./pages/ForgetPasswordPage";
 import { TooltipProvider } from "@radix-ui/react-tooltip";
@@ -28,6 +28,11 @@ import Personalization from "./pages/Settings/Personalization";
 import Security from "./pages/Settings/Security";
 import PhotoAndCover from "./pages/Settings/PhotoAndCover";
 import OAuthCallback from "./pages/OAuthCallback";
+import { AdminLayout } from "./components/admin/AdminLayout";
+import UsersPage from "./pages/admin/User";
+import CommunicationPage from "./pages/admin/communication";
+import ReportsPage from "./pages/admin/reports";
+import TrashPage from "./pages/admin/trash";
 
 function App() {
   const { authUser, checkAuth, isCheckingAuth } = useAuthStore();
@@ -126,6 +131,14 @@ function App() {
                 <Route path="security" element={<Security />} />
                 <Route path="photo-and-cover" element={<PhotoAndCover />} />
               </Route>
+            </Route>
+
+            <Route path="/admin" element={<AdminLayout />}>
+              <Route index element={<UsersPage />} />
+              <Route path="users" element={<UsersPage />} />
+              <Route path="communication" element={<CommunicationPage />} />
+              <Route path="reports" element={<ReportsPage />} />
+              <Route path="trash" element={<TrashPage />} />
             </Route>
 
             <Route path="*" element={<NotFoundPage />} />
