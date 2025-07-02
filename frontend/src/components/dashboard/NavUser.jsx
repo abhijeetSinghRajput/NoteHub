@@ -65,7 +65,7 @@ const NavUser = () => {
             </SidebarMenuButton>
           </DropdownMenuTrigger>
           <DropdownMenuContent
-            className="w-[--radix-dropdown-menu-trigger-width] min-w-56 rounded-lg"
+            className="w-[--radix-dropdown-menu-trigger-width] min-w-56"
             side={isMobile ? "bottom" : "right"}
             align="end"
             sideOffset={4}
@@ -100,7 +100,7 @@ const NavUser = () => {
             {authUser?.hasGoogleAuth && (
               <>
                 <DropdownMenuGroup>
-                  <DropdownMenuItem className="hover:bg-background focus:bg-background">
+                  <DropdownMenuItem>
                     <img
                       className="size-5"
                       src="/google-logo.svg"
@@ -123,10 +123,12 @@ const NavUser = () => {
                   Settings
                 </DropdownMenuItem>
               </Link>
-              <DropdownMenuItem>
-                <Bell />
-                Notifications
-              </DropdownMenuItem>
+              <Link to="/notifications">
+                <DropdownMenuItem>
+                  <Bell />
+                  Notifications
+                </DropdownMenuItem>
+              </Link>
             </DropdownMenuGroup>
             <DropdownMenuSeparator />
             <DropdownMenuItem onClick={logout}>

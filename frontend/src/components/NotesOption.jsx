@@ -1,114 +1,105 @@
 import React from 'react';
-import { Separator } from './ui/separator';
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import {
+  DropdownMenu,
+  DropdownMenuTrigger,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuSub,
+  DropdownMenuSubTrigger,
+  DropdownMenuSubContent,
+} from './ui/dropdown-menu';
 import { Button } from './ui/button';
 import { useIsMobile } from '@/hooks/use-mobile';
-import { EllipsisVertical, Folder, FolderOutput, Pencil, Trash2 } from 'lucide-react';
-import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from './ui/command';
+import {
+  EllipsisVertical,
+  Folder,
+  FolderOutput,
+  Pencil,
+  Trash2,
+} from 'lucide-react';
+import {
+  Command,
+  CommandEmpty,
+  CommandGroup,
+  CommandInput,
+  CommandItem,
+  CommandList,
+} from './ui/command';
 import { useNoteStore } from '@/stores/useNoteStore';
 
-const NotesOption = ({ trigger, note, onRenameStart }) => {
-    const { isMobile } = useIsMobile();
-    const { moveTo, deleteNote, collections } = useNoteStore();
-    const [open, setOpen] = React.useState(false);
-    const [moveOpen, setMoveOpen] = React.useState(false);
+const NotesOption = ({ trigger, note, setIsRenaming }) => {
+  const { collections, moveTo, deleteNote } = useNoteStore();
+  const { isMobile } = useIsMobile();
 
-    const handleMove = React.useCallback(async (collectionId) => {
-        await moveTo({
-            collectionId,
-            noteId: note._id,
-        });
-        setMoveOpen(false);
-        setOpen(false);
-    }, [moveTo, note._id]);
+  const handleMove = async (collectionId) => {
+    await moveTo({ collectionId, noteId: note._id });
+  };
 
-    const handleDelete = React.useCallback(() => {
-        deleteNote(note._id);
-        setOpen(false);
-    }, [deleteNote, note._id]);
+  const handleDelete = () => {
+    deleteNote(note._id);
+  };
 
-    const handleRename = React.useCallback(() => {
-        onRenameStart();
-        setOpen(false);
-    }, [onRenameStart]);
 
-    return (
-        <Popover open={open} onOpenChange={setOpen}>
-            <PopoverTrigger asChild>
-                <Button 
-                    variant="ghost" 
-                    className="flex-shrink-0 p-1 size-6 text-muted-foreground hover:text-foreground"
-                >
-                    {trigger}
-                </Button>
-            </PopoverTrigger>
-            <PopoverContent
-                className="w-48 rounded-lg p-1"
-                side={isMobile ? "bottom" : "right"}
-                align="start"
-                onOpenAutoFocus={(e) => e.preventDefault()}
-            >
-                <Button
-                    variant="ghost"
-                    className="font-normal p-2 h-auto w-full justify-start gap-2"
-                    onClick={handleRename}
-                >
-                    <Pencil className="size-4 text-muted-foreground" />
-                    <span>Rename</span>
-                </Button>
+  return (
+    <DropdownMenu>
+      <DropdownMenuTrigger asChild>
+        <Button
+          variant="ghost"
+          className="flex-shrink-0 p-1 size-6 text-muted-foreground hover:text-foreground"
+        >
+          {trigger}
+        </Button>
+      </DropdownMenuTrigger>
 
-                <Popover open={moveOpen} onOpenChange={setMoveOpen}>
-                    <PopoverTrigger asChild>
-                        <Button
-                            variant="ghost"
-                            className="font-normal p-2 h-auto w-full justify-start gap-2"
-                        >
-                            <FolderOutput className="size-4 text-muted-foreground" />
-                            <span>Move to</span>
-                        </Button>
-                    </PopoverTrigger>
-                    <PopoverContent 
-                        className="p-0 w-48" 
-                        side={isMobile ? "bottom" : "right"}
-                        align="start"
-                    >
-                        <Command>
-                            <CommandInput placeholder="Search collections..." />
-                            <CommandList>
-                                <CommandEmpty>No collections found</CommandEmpty>
-                                <CommandGroup>
-                                    {collections
-                                        .filter(c => c._id !== note.collectionId)
-                                        .map((collection) => (
-                                            <CommandItem
-                                                key={collection._id}
-                                                value={collection.name}
-                                                onSelect={() => handleMove(collection._id)}
-                                                className="gap-2"
-                                            >
-                                                <Folder className="size-4 text-muted-foreground" />
-                                                {collection.name}
-                                            </CommandItem>
-                                        ))}
-                                </CommandGroup>
-                            </CommandList>
-                        </Command>
-                    </PopoverContent>
-                </Popover>
+      <DropdownMenuContent side={isMobile ? 'bottom' : 'right'} align="start" className="w-48">
+        <DropdownMenuItem onClick={()=>setIsRenaming(true)} className="gap-2">
+          <Pencil className="size-4 text-muted-foreground" />
+          Rename
+        </DropdownMenuItem>
 
-                <Separator orientation="horizontal" className="my-1" />
+        <DropdownMenuSub>
+          <DropdownMenuSubTrigger className="gap-2">
+            <FolderOutput className="size-4 text-muted-foreground" />
+            Move to
+          </DropdownMenuSubTrigger>
+          <DropdownMenuSubContent className="p-0">
+            <Command>
+              <CommandInput placeholder="Search collections..." />
+              <CommandList>
+                <CommandEmpty>No collections found</CommandEmpty>
+                <CommandGroup>
+                  {collections
+                    .filter((c) => c._id !== note.collectionId)
+                    .map((collection) => (
+                      <CommandItem
+                        key={collection._id}
+                        value={collection.name}
+                        onSelect={() => handleMove(collection._id)}
+                        className="gap-2"
+                      >
+                        <Folder className="size-4 text-muted-foreground" />
+                        {collection.name}
+                      </CommandItem>
+                    ))}
+                </CommandGroup>
+              </CommandList>
+            </Command>
+          </DropdownMenuSubContent>
+        </DropdownMenuSub>
 
-                <Button
-                    variant="ghost"
-                    className="font-normal p-2 h-auto w-full justify-start gap-2 text-red-500 hover:bg-red-400/20 hover:text-red-500"
-                    onClick={handleDelete}
-                >
-                    <Trash2 className="size-4" />
-                    <span>Delete Note</span>
-                </Button>
-            </PopoverContent>
-        </Popover>
-    );
+        <DropdownMenuSeparator />
+
+        <DropdownMenuItem
+          onClick={handleDelete}
+          className="gap-2 text-red-500 focus:bg-red-400/20 focus:text-red-500"
+        >
+          <Trash2 className="size-4" />
+          Delete Note
+        </DropdownMenuItem>
+      </DropdownMenuContent>
+    </DropdownMenu>
+  );
 };
 
 export default NotesOption;

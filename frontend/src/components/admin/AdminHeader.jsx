@@ -12,12 +12,7 @@ import {
   BreadcrumbPage,
   BreadcrumbSeparator,
 } from "../ui/breadcrumb";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@radix-ui/react-dropdown-menu";
+
 import {
   AlertCircle,
   ChevronDown,
@@ -25,6 +20,7 @@ import {
   Trash2,
   Users,
 } from "lucide-react";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "../ui/dropdown-menu";
 
 const navs = [
   {
@@ -53,7 +49,6 @@ const AdminHeader = () => {
   const location = useLocation();
   const pathnames = ["", ...location.pathname.split("/").filter((x) => x)];
   const isActivePath = (path) => {
-    console.log(location.pathname, path);
     return location.pathname.startsWith(path);
   };
 
@@ -74,7 +69,7 @@ const AdminHeader = () => {
                   <span className="sr-only">Toggle menu</span>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent
-                  className="dropdown-menu-content space-y-1"
+                  className="space-y-1"
                   align="start"
                 >
                   {pathnames.map((name, i) => {
@@ -86,7 +81,7 @@ const AdminHeader = () => {
                         .join("/");
                     if (i < pathnames.length - 1) {
                       return (
-                        <DropdownMenuItem style={{padding: 0}}>
+                        <DropdownMenuItem key={name} style={{padding: 0}}>
                           <Link className="w-full px-2 py-1.5" to={route}>{name || "notehub"}</Link>
                         </DropdownMenuItem>
                       );
@@ -106,7 +101,7 @@ const AdminHeader = () => {
                   .join("/");
               if (i < pathnames.length - 1)
                 return (
-                  <div className="hidden sm:flex items-center gap-2">
+                  <div key={i} className="hidden sm:flex items-center gap-2">
                     <BreadcrumbItem>
                       <BreadcrumbLink>
                         <Link to={route}>{name || "notehub"}</Link>
@@ -125,12 +120,13 @@ const AdminHeader = () => {
                         <span className="sr-only">Toggle menu</span>
                       </DropdownMenuTrigger>
                       <DropdownMenuContent
-                        className="dropdown-menu-content space-y-1"
+                        className="space-y-1"
                         align="start"
                       >
                         {navs.map(({ name, path, Icon }) => {
                           return (
                             <DropdownMenuItem
+                              key={name}
                               className={`${isActivePath(path) && "bg-accent"}`}
                               style={{padding: 0}}
                             >

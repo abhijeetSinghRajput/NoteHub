@@ -609,12 +609,12 @@
   }
 }
 
-.dropdown-menu-content{
+div[role=menu]{
   @apply bg-popover text-popover-foreground rounded-md p-1 shadow-md overflow-y-auto overflow-x-hidden border min-w-[8rem] z-50
 
 }
-.dropdown-menu-content div[role=menuitem]{
-  @apply relative flex cursor-default items-center gap-2 rounded-sm px-2 py-1.5 text-sm outline-none select-none focus:bg-accent focus:text-accent-foreground
+div[role=menuitem]{
+  @apply relative flex cursor-pointer items-center gap-2 rounded-sm px-2 py-1.5 text-sm outline-none select-none hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground
 }
 .button {
   @apply inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 bg-primary text-primary-foreground shadow hover:bg-primary/90 h-9 px-4 py-2;

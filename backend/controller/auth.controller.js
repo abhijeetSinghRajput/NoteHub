@@ -1,9 +1,27 @@
 import User from "../model/user.model.js";
 import bcrypt from "bcryptjs";
-import { generateToken } from "../utils/jwt.js";
+import { clearCookie, setCookie } from "../utils/jwt.js";
 import { sendOtp, validateOtp } from "../services/otp.service.js";
 import { OAuth2Client } from "google-auth-library";
 import validator from "validator";
+import {
+  createLoginRecord,
+  getActiveSessions,
+  logoutAllSessions,
+  revokeToken,
+  updateLogoutRecord,
+} from "../services/loginRecord.service.js";
+import LoginRecord from "../model/loginRecord.model.js";
+
+// common response functions
+const sendAuthResponse = async (req, res, user, authMethod) => {
+  const loginRecord = await createLoginRecord(req, res, user._id, authMethod);
+  const { password, ...userWithoutPassword } = user.toObject();
+  return res.status(200).json({
+    user: userWithoutPassword,
+    sessionId: loginRecord._id,
+  });
+};
 
 export const signup = async (req, res) => {
   let { fullName, email, password: inputPassword, otp } = req.body;
@@ -57,12 +75,7 @@ export const signup = async (req, res) => {
       password: hashedPassword,
     });
 
-    generateToken(newUser._id, res);
-    const { password, ...userWithoutPassword } = newUser.toObject();
-    res.status(201).json({
-      user: userWithoutPassword,
-      message: "Registered successfully.",
-    });
+    return sendAuthResponse(req, res, newUser, "email");
   } catch (error) {
     console.error("error in signup controller: \n", error);
     res.status(500).json({ message: "Internal server error." });
@@ -104,27 +117,18 @@ export const login = async (req, res) => {
     }
 
     const user = await User.findOne({
-      $or: [
-        { email: identifier.toLowerCase() }, // emails are case-insensitive
-        {
-          userName: identifier,
-        },
-      ],
+      $or: [{ email: identifier.toLowerCase() }, { userName: identifier }],
     }).select("+password");
 
-    // null password means it's a oauth user with no password
-    if (!user || !user.password) { 
-      return res.status(400).json({ message: "Invalid credentials provided." });
+    // Verify credentials
+    if (
+      !user ||
+      !user.password ||
+      !(await bcrypt.compare(password, user.password))
+    ) {
+      return res.status(401).json({ message: "Invalid credentials" });
     }
-
-    const isMatched = await bcrypt.compare(password, user.password);
-    if (!isMatched) {
-      return res.status(400).json({ message: "Invalid credentials provided." });
-    }
-
-    generateToken(user._id, res);
-    const { password: _, ...userWithoutPassword } = user.toObject();
-    res.status(200).json(userWithoutPassword);
+    return sendAuthResponse(req, res, user, "email");
   } catch (error) {
     console.error("error in login controller: ", error);
     res.status(500).json({ message: "Internal server error" });
@@ -145,7 +149,7 @@ export const googleLogin = async (req, res) => {
   }
 
   if (redirectUri !== process.env.GOOGLE_REDIRECT_URI) {
-    return res.status(400).json({ 
+    return res.status(400).json({
       message: "Redirect URI mismatch",
     });
   }
@@ -154,53 +158,54 @@ export const googleLogin = async (req, res) => {
     // Create token endpoint URL with all parameters
     const tokenEndpoint = `https://oauth2.googleapis.com/token`;
     const params = new URLSearchParams();
-    params.append('code', code);
-    params.append('client_id', process.env.GOOGLE_CLIENT_ID);
-    params.append('client_secret', process.env.GOOGLE_CLIENT_SECRET);
-    params.append('redirect_uri', redirectUri);
-    params.append('grant_type', 'authorization_code');
-    params.append('code_verifier', codeVerifier);
+    params.append("code", code);
+    params.append("client_id", process.env.GOOGLE_CLIENT_ID);
+    params.append("client_secret", process.env.GOOGLE_CLIENT_SECRET);
+    params.append("redirect_uri", redirectUri);
+    params.append("grant_type", "authorization_code");
+    params.append("code_verifier", codeVerifier);
 
     // Make direct HTTP request to token endpoint
     const tokenResponse = await fetch(tokenEndpoint, {
-      method: 'POST',
+      method: "POST",
       headers: {
-        'Content-Type': 'application/x-www-form-urlencoded'
+        "Content-Type": "application/x-www-form-urlencoded",
       },
-      body: params
+      body: params,
     });
 
     const tokens = await tokenResponse.json();
 
     if (!tokenResponse.ok) {
-      console.error('Google token exchange error:', tokens);
+      console.error("Google token exchange error:", tokens);
       return res.status(400).json({ message: "Invalid authorization code." });
     }
 
     // Verify ID token using the library
     const ticket = await client.verifyIdToken({
       idToken: tokens.id_token,
-      audience: process.env.GOOGLE_CLIENT_ID
+      audience: process.env.GOOGLE_CLIENT_ID,
     });
 
     const payload = ticket.getPayload();
     if (!payload?.email_verified) {
       return res.status(403).json({
-        message: 'Google email not verified. Please verify your email with Google first.'
+        message:
+          "Google email not verified. Please verify your email with Google first.",
       });
     }
 
     const { email, sub: googleId, name: fullName, picture } = payload;
-    const avatar = picture.replace(/=s96-c$/, '=s400-c');
+    const avatar = picture.replace(/=s96-c$/, "=s400-c");
     const normalizedEmail = validator.normalizeEmail(email);
 
     // Find or create user (aligned with your signup flow)
     let user = await User.findOne({ email: normalizedEmail });
-    
+
     if (!user) {
       // Create new user (like in signup)
       user = await User.create({
-        fullName: validator.escape(fullName || ''),
+        fullName: validator.escape(fullName || ""),
         email: normalizedEmail,
         googleId,
         avatar,
@@ -218,26 +223,93 @@ export const googleLogin = async (req, res) => {
     }
 
     // Generate token and send response (aligned with login/signup)
-    generateToken(user._id, res);
-    const { password, ...userWithoutPassword } = user.toObject();
-    
-    res.status(200).json({
-      user: userWithoutPassword,
-      message: "Google authentication successful.",
-    });
-    
+    return sendAuthResponse(req, res, user, "google");
   } catch (error) {
     console.error("Error in Google login controller: ", error);
     res.status(500).json({ message: "Internal server error." });
   }
 };
 
-export const logout = (req, res) => {
+export const getSessions = async (req, res) => {
   try {
-    res.clearCookie("jwt");
+    const { userId } = req.query; 
+
+    if (!userId) {
+      return res.status(400).json({ message: "Missing userId in query parameters" });
+    }
+
+    const sessions = await getActiveSessions(userId);
+    res.status(200).json(sessions);
+  } catch (error) {
+    console.error("Get sessions error:", error);
+    res.status(500).json({ message: "Internal server error" });
+  }
+};
+
+
+// Controller: getLoginHistory.js
+export const getLoginHistory = async (req, res) => {
+  const { userId, limit = 10 } = req.query; 
+
+  if (!userId) {
+    return res.status(400).json({ message: "userId query parameter is required" });
+  }
+
+  try {
+    const records = await LoginRecord.find({ userId })
+      .sort({ loginTime: -1 })
+      .limit(Number(limit));
+
+    res.status(200).json(records);
+  } catch (error) {
+    console.error("Error in getting Login History:\n", error);
+    res.status(500).json({ message: "Internal server error" });
+  }
+};
+
+
+export const logout = async (req, res) => {
+  try {
+    const { jwt: token, sessionId } = req.cookies;
+
+    // Revoke token if exists
+    if (token) {
+      await revokeToken(token);
+    }
+
+    // Update session record if session ID exists
+    if (sessionId) {
+      await updateLogoutRecord(sessionId);
+    }
+
+    // Clear cookies
+    clearCookie(res, "jwt");
+    clearCookie(res, "sessionId");
+
     res.status(200).json({ message: "Logged out successfully" });
   } catch (error) {
-    console.error("error in logout controller: ", error);
+    console.error("Logout error:", error);
+    res.status(500).json({ message: "Internal server error" });
+  }
+};
+
+export const logoutAll = async (req, res) => {
+  try {
+    const { userId } = req.body; // todo req.user
+
+    // Revoke all active sessions
+    const result = await logoutAllSessions(userId);
+
+    // Clear current session cookies
+    clearCookie(res, "jwt");
+    clearCookie(res, "sessionId");
+
+    res.status(200).json({
+      message: "All sessions logged out",
+      revokedCount: result.modifiedCount,
+    });
+  } catch (error) {
+    console.error("Logout all error:", error);
     res.status(500).json({ message: "Internal server error" });
   }
 };

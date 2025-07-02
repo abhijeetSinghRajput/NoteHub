@@ -9,6 +9,7 @@ import {
     updateEmail,
     checkAuth,
     getUser,
+    getAllUsers,
     isEmailAvailable,
 } from "../controller/user.controller.js";
 import { protectRoute } from "../middleware/protectRoute.middleware.js";
@@ -27,6 +28,7 @@ router.put("/update-email", protectRoute, updateEmail);
 
 router.get("/me", protectRoute, checkAuth);
 router.get("/:identifier", getUser);
+router.get("/", getAllUsers);
 router.get("/check-email/:email", isEmailAvailable);
 
 export default router;

@@ -52,6 +52,7 @@ export const checkAuth = async (req, res) => {
   }
 };
 
+
 export const getUser = async (req, res) => {
   const { identifier } = req.params;
   try {
@@ -65,10 +66,80 @@ export const getUser = async (req, res) => {
     if (!user) {
       return res.status(404).json({ message: "User not found" });
     }
-    const { password, ...userWithoutPassword } = user.toObject();
-    res.status(200).json(userWithoutPassword);
+    res.status(200).json(user);
   } catch (error) {
     console.error("Error in getUser controller: ", error);
+    res.status(500).json({ message: "Internal server error" });
+  }
+};
+
+export const getAllUsers = async (req, res) => {
+  try {
+    // Parse query parameters
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 10;
+    const search = req.query.search || '';
+    const filter = req.query.filter || 'all';
+    
+    // Build the base query
+    let query = {};
+    
+    // Apply search filter
+    if (search) {
+      query.$or = [
+        { fullName: { $regex: search, $options: 'i' } },
+        { email: { $regex: search, $options: 'i' } },
+        { userName: { $regex: search, $options: 'i' } }
+      ];
+    }
+    
+    // Apply additional filters
+    switch (filter) {
+      case 'online':
+        query.isOnline = true;
+        break;
+      case 'oauth':
+        query.hasGoogleAuth = true;
+        break;
+      // 'all' case doesn't need additional filtering
+    }
+    
+    // Get total count of matching users
+    const totalUsers = await User.countDocuments(query);
+    const totalPages = Math.ceil(totalUsers / limit);
+    
+    // Calculate skip value
+    const skip = (page - 1) * limit;
+    
+    // Fetch users with pagination
+    const users = await User.find(query, { password: 0 })
+      .sort({ createdAt: -1 })
+      .skip(skip)
+      .limit(limit);
+    
+    // Get counts for each filter type
+    const allUsersCount = await User.countDocuments();
+    const onlineUsersCount = await User.countDocuments({ isOnline: true });
+    const oauthUsersCount = await User.countDocuments({ hasGoogleAuth: true });
+    
+    res.status(200).json({
+      users,
+      pagination: {
+        currentPage: page,
+        totalPages,
+        totalUsers,
+        usersPerPage: limit,
+        hasNextPage: page < totalPages,
+        hasPreviousPage: page > 1
+      },
+      counts: {
+        all: allUsersCount,
+        online: onlineUsersCount,
+        oauth: oauthUsersCount
+      }
+    });
+  } catch (error) {
+    console.error("Error in getAllUsers controller: ", error);
     res.status(500).json({ message: "Internal server error" });
   }
 };

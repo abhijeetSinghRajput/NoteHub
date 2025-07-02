@@ -1,6 +1,8 @@
 import { create } from "zustand";
 import { axiosInstance } from "../lib/axios";
 import { toast } from "sonner";
+import { io } from "socket.io-client";
+const BASE_URL = "http://localhost:3001";
 
 export const useAuthStore = create((set, get) => ({
   authUser: null,
@@ -15,6 +17,9 @@ export const useAuthStore = create((set, get) => ({
   isRemovingCover: false,
   isSendingOtp: false,
   isResettingPassword: false,
+  sessionId: null,
+  socket: null,
+  onlineUsers: [],
 
   requestResetPasswordOtp: async (identifier) => {
     set({ isSendingOtp: true });
@@ -72,13 +77,62 @@ export const useAuthStore = create((set, get) => ({
       return null;
     }
   },
+  getAllUsers: async (page = 1, limit = 10, search = "", filter = "all") => {
+    try {
+      const response = await axiosInstance.get("/user", {
+        params: { page, limit, search, filter },
+      });
+      return response.data;
+    } catch (error) {
+      console.error("Error fetching users:", error);
+      return {
+        users: [],
+        pagination: {
+          currentPage: 1,
+          totalPages: 1,
+          totalUsers: 0,
+          usersPerPage: limit,
+          hasNextPage: false,
+          hasPreviousPage: false,
+        },
+        counts: {
+          all: 0,
+          online: 0,
+          oauth: 0,
+        },
+      };
+    }
+  },
+  searchUsers: async (query) => {
+    try {
+      const response = await axiosInstance.get(`/search/users`, {
+        params: { query },
+      });
+      return response.data;
+    } catch (error) {
+      return [];
+    }
+  },
+  searchNotes: async (query) => {
+    try {
+      const response = await axiosInstance.get(`/search/notes`, {
+        params: { query },
+      });
+      return response.data;
+    } catch (error) {
+      return [];
+    }
+  },
+
   checkAuth: async () => {
     set({ isCheckingAuth: true });
     try {
       const res = await axiosInstance.get("/user/me");
       set({ authUser: res.data });
+      get().connectSocket();
     } catch (error) {
       set({ authUser: null });
+      console.log(console.log(error));
     } finally {
       set({ isCheckingAuth: false });
     }
@@ -91,6 +145,7 @@ export const useAuthStore = create((set, get) => ({
       const { message, user } = res.data;
       set({ authUser: user });
       toast.success(message);
+      get().connectSocket();
       return { success: true };
     } catch (error) {
       toast.error(error.response.data.message);
@@ -125,7 +180,9 @@ export const useAuthStore = create((set, get) => ({
     set({ isLoggingIn: true });
     try {
       const res = await axiosInstance.post("/auth/login", data);
-      set({ authUser: res.data });
+      const { user, sessionId } = res.data;
+      set({ authUser: user, sessionId });
+      get().connectSocket();
       toast.success("Log in successful");
     } catch (error) {
       set({ authUser: null });
@@ -147,6 +204,7 @@ export const useAuthStore = create((set, get) => ({
       });
       set({ authUser: res.data.user });
       console.log(res.data.user);
+      get().connectSocket();
       toast.success("Log in successful");
       return true;
     } catch (error) {
@@ -162,6 +220,7 @@ export const useAuthStore = create((set, get) => ({
     try {
       const res = await axiosInstance.post("/auth/logout");
       set({ authUser: null });
+      get().disconnectSocket();
       toast.success(res.data.message);
     } catch (error) {
       set({ authUser: null });
@@ -300,5 +359,27 @@ export const useAuthStore = create((set, get) => ({
       console.log(error.response.data.message);
       set({ emailStatus: "" });
     }
+  },
+
+  connectSocket: () => {
+    const { authUser } = get();
+    if (!authUser || get().socket?.connected) return;
+
+    const socket = io(BASE_URL, {
+      withCredentials: true,
+    });
+
+    socket.connect();
+    set({ socket });
+
+    socket.on("online-users", (onlineUsers) => {
+      set({ onlineUsers });
+      console.log(get().onlineUsers)
+    });
+  },
+
+  disconnectSocket: () => {
+    const { socket } = get();
+    if (socket?.connected) socket.disconnect();
   },
 }));
