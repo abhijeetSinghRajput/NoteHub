@@ -81,7 +81,7 @@ const LoginPage = () => {
                       disabled={isLoggingIn}
                     />
                     {errors.identifier && (
-                      <p className="text-xs absolute left-2 px-1 bg-background -translate-y-1/2 -bottom-4 text-red-500">
+                      <p className="text-xs absolute left-2 px-1 bg-card -translate-y-1/2 -bottom-4 text-red-500">
                         {errors.identifier}
                       </p>
                     )}
@@ -118,7 +118,7 @@ const LoginPage = () => {
                       )}
                     </Button>
                     {errors.password && (
-                      <p className="text-xs absolute left-2 px-1 bg-background -translate-y-1/2 -bottom-4 text-red-500">
+                      <p className="text-xs absolute left-2 px-1 bg-card -translate-y-1/2 -bottom-4 text-red-500">
                         {errors.password}
                       </p>
                     )}

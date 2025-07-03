@@ -248,7 +248,7 @@ const SignupPage = () => {
                       disabled={isSigningUp}
                     />
                     {errors.name && (
-                      <p className="text-xs absolute left-2 px-1 bg-background -translate-y-1/2 -bottom-4 text-red-500">
+                      <p className="text-xs absolute left-2 px-1 bg-card -translate-y-1/2 -bottom-4 text-red-500">
                         {errors.name}
                       </p>
                     )}
@@ -280,7 +280,7 @@ const SignupPage = () => {
                     </div>
                   </div>
                   {errors.email && (
-                    <p className="text-xs absolute left-2 px-1 bg-background -translate-y-1/2 -bottom-4 text-red-500">
+                    <p className="text-xs absolute left-2 px-1 bg-card -translate-y-1/2 -bottom-4 text-red-500">
                       {errors.email}
                     </p>
                   )}
@@ -316,7 +316,7 @@ const SignupPage = () => {
                       )}
                     </Button>
                     {errors.password && (
-                      <p className="text-xs absolute left-2 px-1 bg-background -translate-y-1/2 -bottom-4 text-red-500">
+                      <p className="text-xs absolute left-2 px-1 bg-card -translate-y-1/2 -bottom-4 text-red-500">
                         {errors.password}
                       </p>
                     )}

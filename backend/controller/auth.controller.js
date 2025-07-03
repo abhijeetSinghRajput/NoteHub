@@ -9,7 +9,6 @@ import {
   getActiveSessions,
   logoutAllSessions,
   revokeToken,
-  updateLogoutRecord,
 } from "../services/loginRecord.service.js";
 import LoginRecord from "../model/loginRecord.model.js";
 
@@ -270,26 +269,20 @@ export const getLoginHistory = async (req, res) => {
 
 export const logout = async (req, res) => {
   try {
-    const { jwt: token, sessionId } = req.cookies;
-
-    // Revoke token if exists
-    if (token) {
-      await revokeToken(token);
-    }
-
-    // Update session record if session ID exists
-    if (sessionId) {
-      await updateLogoutRecord(sessionId);
-    }
-
-    // Clear cookies
+    const { jwt: token } = req.cookies || {};
     clearCookie(res, "jwt");
-    clearCookie(res, "sessionId");
 
+    if (!token) {
+      return res.status(200).json({ message: "Logged out successfully" });
+    }
+
+    await revokeToken(token);
     res.status(200).json({ message: "Logged out successfully" });
   } catch (error) {
     console.error("Logout error:", error);
-    res.status(500).json({ message: "Internal server error" });
+    const statusCode = error.statusCode || 500;
+    const message = statusCode >= 500 ? "Internal server error" : error.message;
+    res.status(statusCode).json({ message });
   }
 };
 
