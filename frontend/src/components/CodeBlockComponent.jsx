@@ -1,5 +1,5 @@
 import React, { useRef, useState } from 'react';
-import { Check, ChevronsUpDown, CodeSquare, Copy, CopyCheck, CopyIcon } from "lucide-react";
+import { Check, ChevronsUpDown, Copy, CopyCheck } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import {
@@ -24,29 +24,29 @@ export default ({ node: { attrs: { language: defaultLanguage } }, updateAttribut
   const [copied, setCopied] = useState(false);
   const codeRef = useRef(null);
 
-  const handleCopy = async ()=>{
+  const handleCopy = async () => {
     const codeContent = codeRef.current.textContent;
     await navigator.clipboard.writeText(codeContent);
     setCopied(true);
-    setTimeout(()=>setCopied(false), 3000);
-  }
+    setTimeout(() => setCopied(false), 3000);
+  };
 
   return (
-    <NodeViewWrapper className="code-block">
-      <header className='bg-[#09090b] rounded-t-2xl absolute left-0 top-0 w-full flex items-center justify-between py-2 px-4 border border-b-[#27272a]'>
+    <NodeViewWrapper className="code-block relative rounded-2xl overflow-hidden">
+      <header className='bg-[#222222] rounded-t-lg w-full flex items-center justify-between py-2 px-4'>
         <Popover open={open} onOpenChange={setOpen}>
           <PopoverTrigger asChild>
             <Button
               variant="outline"
               role="combobox"
               aria-expanded={open}
-              className="min-w-32 justify-between"
+              className="min-w-32 justify-between h-7 border-[#3a3a3a] bg-[#2f2f2f] text-[#fafafa] hover:bg-[#484848] hover:text-[#fafafa]"
               contentEditable={false}
             >
               {value
                 ? languages.find((language) => language === value)
                 : "Select Language..."}
-              <ChevronsUpDown className="opacity-50" />
+              <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
             </Button>
           </PopoverTrigger>
           <PopoverContent className="w-[200px] p-0">
@@ -68,7 +68,7 @@ export default ({ node: { attrs: { language: defaultLanguage } }, updateAttribut
                       {lang}
                       <Check
                         className={cn(
-                          "ml-auto",
+                          "ml-auto h-4 w-4",
                           value === lang ? "opacity-100" : "opacity-0"
                         )}
                       />
@@ -80,19 +80,28 @@ export default ({ node: { attrs: { language: defaultLanguage } }, updateAttribut
           </PopoverContent>
         </Popover>
 
-        <div className='flex gap-2'>
-          <Button variant="ghost" size="sm" disabled={copied} onClick={handleCopy}>
-            {copied ? <CopyCheck/>  : <Copy/>}
-            <span>Copy</span>
-          </Button>
-        </div>
-
+        <Button 
+          variant="ghost" 
+          size="icon" 
+          onClick={handleCopy}
+          disabled={copied}
+          className="gap-2 size-7 text-[#fafafa] hover:bg-[#484848] hover:text-[#fafafa]"
+        >
+          {copied ? <CopyCheck className="h-4 w-4" /> : <Copy className="h-4 w-4" />}
+        </Button>
       </header>
 
-      <pre ref={codeRef}>
-        <NodeViewContent as="code"/>
+      <pre 
+        ref={codeRef} 
+        className="p-4 overflow-x-auto bg-[#09090b]"
+        style={{ 
+          tabSize: 4,
+          whiteSpace: 'pre',
+          fontFamily: 'monospace'
+        }}
+      >
+        <NodeViewContent as="code" className={`language-${value}`} />
       </pre>
     </NodeViewWrapper>
   );
 };
-

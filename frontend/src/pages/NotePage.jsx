@@ -1,27 +1,28 @@
-import { Button } from '@/components/ui/button';
-import { useNoteStore } from '@/stores/useNoteStore';
-import { Copy, CopyCheck, Download, Pencil, X } from 'lucide-react';
-import React, { useEffect, useState } from 'react'
-import { useParams } from 'react-router-dom'
-import parse from 'html-react-parser';
-import NoteSkeleton from '@/components/sekeletons/NoteSkeleton';
-import { useNavigate } from 'react-router-dom';
-import hljs from 'highlight.js';
-import { createRoot } from 'react-dom/client';
-import { toast } from 'sonner';
-import katex from 'katex'
-import 'katex/dist/katex.min.css';
+import { Button } from "@/components/ui/button";
+import { useNoteStore } from "@/stores/useNoteStore";
+import { Copy, CopyCheck, Download, Pencil, X } from "lucide-react";
+import React, { useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
+import parse from "html-react-parser";
+import NoteSkeleton from "@/components/sekeletons/NoteSkeleton";
+import { useNavigate } from "react-router-dom";
+import hljs from "highlight.js";
+import { createRoot } from "react-dom/client";
+import { toast } from "sonner";
+import katex from "katex";
+import "katex/dist/katex.min.css";
 import {
   Dialog,
   DialogContent,
   DialogHeader,
   DialogTitle,
-} from "@/components/ui/dialog"
+} from "@/components/ui/dialog";
 
 const NotePage = () => {
   const { id } = useParams();
-  const { getNoteContent, isContentLoading, noteNotFound, setNoteNotFound } = useNoteStore();
-  const [content, setContent] = useState('');
+  const { getNoteContent, isContentLoading, noteNotFound, setNoteNotFound } =
+    useNoteStore();
+  const [content, setContent] = useState("");
   const [selectedImage, setSelectedImage] = useState(null);
   const navigate = useNavigate();
 
@@ -29,7 +30,7 @@ const NotePage = () => {
     const fetchData = async () => {
       if (id) {
         let noteContent = await getNoteContent(id);
-        setContent(noteContent || '');
+        setContent(noteContent || "");
       }
     };
 
@@ -39,37 +40,42 @@ const NotePage = () => {
   useEffect(() => {
     if (content) {
       // Apply syntax highlighting
-      document.querySelectorAll('pre code').forEach((block) => {
+      document.querySelectorAll("pre code").forEach((block) => {
         hljs.highlightElement(block);
       });
 
       // Render KaTeX
-      document.querySelectorAll('span[data-latex]').forEach((element) => {
+      document.querySelectorAll("span[data-latex]").forEach((element) => {
         try {
-          const latex = element.getAttribute('data-latex');
-          const isBlock = element.getAttribute('data-display') === 'yes';
+          const latex = element.getAttribute("data-latex");
+          const isBlock = element.getAttribute("data-display") === "yes";
           katex.render(latex, element, {
             displayMode: isBlock,
             throwOnError: false,
           });
         } catch (error) {
-          console.error('KaTeX render error:', error);
+          console.error("KaTeX render error:", error);
         }
       });
 
       // Add header with copy button to each pre tag
-      document.querySelectorAll('pre').forEach((pre) => {
-        if (!pre.querySelector('.pre-header')) {
-          const codeElement = pre.querySelector('code');
-          const languageClass = Array.from(codeElement.classList).find(cls => cls.startsWith('language-'));
-          const language = languageClass ? languageClass.replace('language-', '') : 'unknown';
+      document.querySelectorAll(".pre-wrapper").forEach((pre) => {
+        if (!pre.querySelector(".pre-header")) {
+          const codeElement = pre.querySelector("code");
+          const languageClass = Array.from(codeElement.classList).find((cls) =>
+            cls.startsWith("language-")
+          );
+          const language = languageClass
+            ? languageClass.replace("language-", "")
+            : "unknown";
 
-          const header = document.createElement('header');
-          header.className = 'pre-header absolute top-0 left-0 w-full bg-[#09090b] rounded-t-md flex items-center justify-between p-2 border border-b-[#27272a]';
+          const header = document.createElement("header");
+          header.className =
+            "pre-header text-[#fafafa] border-b border-[#2f2f2f] top-0 left-0 w-full bg-[#222222] rounded-t-md flex items-center justify-between py-2 px-4";
           header.innerHTML = `<span>${language}</span>`;
           pre.insertBefore(header, pre.firstChild);
 
-          const buttonContainer = document.createElement('div');
+          const buttonContainer = document.createElement("div");
           header.appendChild(buttonContainer);
 
           const CopyButton = () => {
@@ -78,14 +84,24 @@ const NotePage = () => {
             const handleCopy = async () => {
               const codeContent = codeElement.innerText;
               await navigator.clipboard.writeText(codeContent);
-              toast.success('Content copied to clipboard!');
+              toast.success("Content copied to clipboard!");
               setCopied(true);
               setTimeout(() => setCopied(false), 3000);
             };
 
             return (
-              <Button variant="ghost" size="icon" onClick={handleCopy} disabled={copied}>
-                {copied ? <CopyCheck /> : <Copy />}
+              <Button
+                variant="ghost"
+                size="icon"
+                onClick={handleCopy}
+                disabled={copied}
+                className="gap-2 size-7 text-[#fafafa] hover:bg-[#484848] hover:text-[#fafafa]"
+              >
+                {copied ? (
+                  <CopyCheck className="h-4 w-4" />
+                ) : (
+                  <Copy className="h-4 w-4" />
+                )}
               </Button>
             );
           };
@@ -96,15 +112,15 @@ const NotePage = () => {
       });
 
       // Add image click handlers
-      const images = [...document.querySelectorAll('.tiptap img')];
+      const images = [...document.querySelectorAll(".tiptap img")];
       images.forEach((img) => {
-        img.style.cursor = 'pointer';
-        img.addEventListener('click', () => setSelectedImage(img.src));
+        img.style.cursor = "pointer";
+        img.addEventListener("click", () => setSelectedImage(img.src));
       });
 
       return () => {
-        images.forEach(img => {
-          img.removeEventListener('click', () => setSelectedImage(img.src));
+        images.forEach((img) => {
+          img.removeEventListener("click", () => setSelectedImage(img.src));
         });
       };
     }
@@ -114,7 +130,7 @@ const NotePage = () => {
     return <NoteSkeleton />;
   }
 
-  if (content === '') {
+  if (content === "") {
     return (
       <div className="w-full h-full flex flex-col items-center justify-center text-muted-foreground">
         <Button
@@ -126,7 +142,7 @@ const NotePage = () => {
           <Pencil /> Write
         </Button>
         <img
-          className='size-[200px] mx-auto mt-4 grayscale-[100] opacity-50'
+          className="size-[200px] mx-auto mt-4 grayscale-[100] opacity-50"
           src="/empty-note-state.svg"
           alt=""
         />
@@ -137,22 +153,28 @@ const NotePage = () => {
 
   if (noteNotFound) {
     return (
-      <div className='w-full h-full flex items-center justify-center'>
-        <img src='/404-not-found.svg' className='p-4 rounded-lg max-w-[500px]'></img>
+      <div className="w-full h-full flex items-center justify-center">
+        <img
+          src="/404-not-found.svg"
+          className="p-4 rounded-lg max-w-[500px]"
+        ></img>
       </div>
     );
   }
 
   return (
-    <div className={`tiptap ${!content.trim() ? 'empty' : ''}`}>
-      <div className='max-w-screen-md m-auto'>
-        <Dialog open={!!selectedImage} onOpenChange={(open) => !open && setSelectedImage(null)}>
+    <div className={`tiptap ${!content.trim() ? "empty" : ""}`}>
+      <div className="max-w-screen-md m-auto">
+        <Dialog
+          open={!!selectedImage}
+          onOpenChange={(open) => !open && setSelectedImage(null)}
+        >
           <DialogContent className="overflow-hidden p-0 sm:max-w-[90vw] sm:max-h-[90vh] w-max">
             <div className="flex items-center justify-center">
               {selectedImage && (
-                <img 
-                  src={selectedImage} 
-                  alt="Preview" 
+                <img
+                  src={selectedImage}
+                  alt="Preview"
                   className="max-w-full max-h-[70vh] object-contain"
                 />
               )}
@@ -172,6 +194,6 @@ const NotePage = () => {
       </div>
     </div>
   );
-}
+};
 
 export default NotePage;

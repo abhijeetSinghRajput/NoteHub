@@ -31,6 +31,8 @@
     "@react-oauth/google": "^0.12.2",
     "@tiptap/extension-code-block-lowlight": "^2.11.3",
     "@tiptap/extension-color": "^2.11.3",
+    "@tiptap/extension-dropcursor": "^2.24.1",
+    "@tiptap/extension-gapcursor": "^2.24.1",
     "@tiptap/extension-heading": "^2.11.3",
     "@tiptap/extension-highlight": "^2.11.3",
     "@tiptap/extension-image": "^2.11.5",

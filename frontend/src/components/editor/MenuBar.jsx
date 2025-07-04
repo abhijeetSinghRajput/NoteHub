@@ -57,6 +57,7 @@ export const MenuBar = ({ noteId }) => {
 
     const handleContentSave = async () => {
         let content = editor.getHTML()
+            .replace(/[^\S\r\n]/g, ' ')
             .replace(/<table/g, '<div class="tableWrapper"><table')
             .replace(/<\/table>/g, '</table></div>')
             .replace(/<pre/g, "<div class='relative pre-wrapper'><pre")

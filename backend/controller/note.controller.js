@@ -3,14 +3,19 @@ import Note from "../model/note.model.js";
 import { addContribution } from "../services/contribution.service.js";
 
 export const createNote = async (req, res) => {
-    const { name, collectionId } = req.body;
+    const { name, collectionId, content = "" } = req.body;
     const { user } = req;
     if (!user) {
         return res.status(401).json({ message: "Unauthorized: user not found" });
     }
 
     try {
-        const note = await Note.create({ name, collectionId, userId: user._id });
+        const note = await Note.create({ 
+            name, 
+            content,
+            collectionId, 
+            userId: user._id 
+        });
         res.status(201).json({ message: "note created successfully", note })
     } catch (error) {
         console.log("Error in createNote controller\n", error);

@@ -142,7 +142,6 @@ const NoteCard = ({ note, collectionName }) => {
               }
               note={note}
               setIsRenaming={setIsRenaming}
-              // onRenameStart={handleRenameStart}
             />
           </div>
         </div>

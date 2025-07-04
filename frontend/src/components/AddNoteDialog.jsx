@@ -43,6 +43,7 @@ const AddNoteDialog = ({ trigger }) => {
         const noteId = await createNote({
             name: noteName,
             collectionId: selectedCollection._id,
+            content: `<h1>${noteName}</h1>`
         })
 
         setNoteName('');

@@ -46,7 +46,8 @@ const CollectionsOption = ({
 
         const noteId = await createNote({
             name: noteName,
-            collectionId: collection._id
+            collectionId: collection._id,
+            content: `<h1>${noteName}</h1>`
         });
         setNoteName('');
         navigate(`/note/${noteId}/editor`);

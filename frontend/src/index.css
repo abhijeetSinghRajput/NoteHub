@@ -650,6 +650,29 @@ div[role=menuitem]{
   @apply hidden;
 }
 
+.ProseMirror {
+  white-space: pre-wrap;
+}
+.ProseMirror code{
+  tab-size: 4;
+  -moz-tab-size: 4;
+}
+.tiptap {
+  tab-size: 4;
+}
+.tiptap .pre-wrapper{
+  @apply rounded-2xl overflow-hidden;
+}
+.tiptap pre {
+  white-space: pre;
+  overflow-x: auto;
+  tab-size: 4;
+}
+
+.tiptap {
+  white-space: pre-wrap;
+}
+
 div:has(> .tiptap.ProseMirror) {
   flex: 1;
   overflow-y: auto;
@@ -786,7 +809,7 @@ div:has(> .tiptap.ProseMirror) {
     @apply bg-accent text-sm py-[2.4px] px-[4.8px] rounded whitespace-pre-wrap;
   }
   pre {
-    @apply bg-[#171717] text-[#e6edf3] dark:text-primary border rounded-2xl my-2 p-4 pt-16 overflow-x-auto;
+    @apply bg-[#171717] text-[#e6edf3] dark:text-primary p-4 overflow-x-auto;
 
     header {
       @apply rounded-t-2xl py-2 px-4;

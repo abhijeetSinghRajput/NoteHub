@@ -32,15 +32,15 @@ const NoteItem = ({ note }) => {
     const inputRef = useRef(null);
     const { selectedNote, setselectedNote, renameNote } = useNoteStore();
 
-    const handleRenameStart = () => {
-        setIsNoteRenaming(true);
-        setTimeout(() => {
-            if (inputRef.current) {
-                inputRef.current.focus();
-                inputRef.current.select();
-            }
-        }, 0);
-    };
+    useEffect(() => {
+        if (isNoteRenaming && inputRef.current) {
+          const timeout = setTimeout(() => {
+            inputRef.current.focus();
+            inputRef.current.select();
+          }, 0);
+          return () => clearTimeout(timeout);
+        }
+      }, [isNoteRenaming]);
 
     const handleSaveRename = () => {
         const newName = inputRef.current?.value.trim();
@@ -98,8 +98,8 @@ const NoteItem = ({ note }) => {
                                 trigger={
                                     <EllipsisVertical className="size-4" />
                                 }
+                                setIsRenaming={setIsNoteRenaming}
                                 note={note}
-                                onRenameStart={handleRenameStart}
                             />
                         </div>
                     )}
