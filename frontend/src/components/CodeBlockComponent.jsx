@@ -33,14 +33,14 @@ export default ({ node: { attrs: { language: defaultLanguage } }, updateAttribut
 
   return (
     <NodeViewWrapper className="code-block relative rounded-2xl overflow-hidden">
-      <header className='bg-[#222222] rounded-t-lg w-full flex items-center justify-between py-2 px-4'>
+      <header className='bg-input/50 rounded-t-lg w-full flex items-center justify-between py-2 px-4'>
         <Popover open={open} onOpenChange={setOpen}>
           <PopoverTrigger asChild>
             <Button
               variant="outline"
               role="combobox"
               aria-expanded={open}
-              className="min-w-32 justify-between h-7 border-[#3a3a3a] bg-[#2f2f2f] text-[#fafafa] hover:bg-[#484848] hover:text-[#fafafa]"
+              className="min-w-32 justify-between h-7 bg-input/50"
               contentEditable={false}
             >
               {value
@@ -85,7 +85,7 @@ export default ({ node: { attrs: { language: defaultLanguage } }, updateAttribut
           size="icon" 
           onClick={handleCopy}
           disabled={copied}
-          className="gap-2 size-7 text-[#fafafa] hover:bg-[#484848] hover:text-[#fafafa]"
+          className="gap-2 size-7"
         >
           {copied ? <CopyCheck className="h-4 w-4" /> : <Copy className="h-4 w-4" />}
         </Button>

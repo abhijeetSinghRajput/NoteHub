@@ -71,7 +71,7 @@ const NotePage = () => {
 
           const header = document.createElement("header");
           header.className =
-            "pre-header text-[#fafafa] border-b border-[#2f2f2f] top-0 left-0 w-full bg-[#222222] rounded-t-md flex items-center justify-between py-2 px-4";
+            "pre-header bg-input/50 rounded-t-lg w-full flex items-center justify-between py-2 px-4";
           header.innerHTML = `<span>${language}</span>`;
           pre.insertBefore(header, pre.firstChild);
 
@@ -95,7 +95,7 @@ const NotePage = () => {
                 size="icon"
                 onClick={handleCopy}
                 disabled={copied}
-                className="gap-2 size-7 text-[#fafafa] hover:bg-[#484848] hover:text-[#fafafa]"
+                className="gap-2 size-7"
               >
                 {copied ? (
                   <CopyCheck className="h-4 w-4" />
