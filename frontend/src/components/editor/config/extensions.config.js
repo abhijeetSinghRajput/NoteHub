@@ -24,6 +24,7 @@ import { MathExtension } from "@aarkue/tiptap-math-extension";
 import { Extension } from "@tiptap/core";
 import { dropCursor } from "@tiptap/pm/dropcursor";
 import { gapCursor } from "@tiptap/pm/gapcursor";
+import Link from "@tiptap/extension-link";
 
 const lowlight = createLowlight(all);
 
@@ -31,14 +32,14 @@ const CustomCodeBlock = CodeBlockLowlight.extend({
   addNodeView() {
     return ReactNodeViewRenderer(CodeBlockComponent);
   },
-  
+
   addKeyboardShortcuts() {
     return {
       Tab: () => {
         return this.editor.commands.insertContent("    "); // 4 spaces
-      }
+      },
     };
-  }
+  },
 }).configure({ lowlight });
 
 const TabExtension = Extension.create({
@@ -51,11 +52,11 @@ const TabExtension = Extension.create({
           editor.commands.sinkListItem("listItem");
           return true;
         }
-        
+
         if (editor.isActive("codeBlock")) {
           return false; // Let CustomCodeBlock handle it
         }
-        
+
         editor.commands.insertContent("    "); // 4 spaces for regular text
         return true;
       },
@@ -66,9 +67,9 @@ const TabExtension = Extension.create({
           return true;
         }
         return false;
-      }
+      },
     };
-  }
+  },
 });
 
 const AutoPairExtension = Extension.create({
@@ -81,7 +82,7 @@ const AutoPairExtension = Extension.create({
       "(": ")",
       '"': '"',
       "'": "'",
-      "`": "`"
+      "`": "`",
     };
 
     const shortcuts = {};
@@ -102,7 +103,7 @@ const AutoPairExtension = Extension.create({
     });
 
     return shortcuts;
-  }
+  },
 });
 
 export const extensions = [
@@ -152,4 +153,14 @@ export const extensions = [
   AutoPairExtension,
   dropCursor(),
   gapCursor(),
+  Link.configure({
+    openOnClick: false,
+    autolink: true,
+    linkOnPaste: true,
+    HTMLAttributes: {
+      target: "_blank",
+      rel: "noopener noreferrer",
+    },
+    validate: href => /^https?:\/\//.test(href),
+  }),
 ];

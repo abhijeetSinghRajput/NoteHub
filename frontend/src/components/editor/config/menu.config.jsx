@@ -14,6 +14,7 @@ import {
     HeadingIcon,
     Indent,
     Italic,
+    LinkIcon,
     List,
     ListChecks,
     ListOrdered,
@@ -56,12 +57,6 @@ export const FORMATTING_BUTTONS = [
     },
 ]
 
-const onClickHandler = () => {
-
-}
-const disabledHandler = () => {
-
-}
 
 export const LIST_BUTTONS = [
     {
@@ -133,6 +128,7 @@ export const CONTROL_BUTTONS = [
         tooltip: 'Ctrl + Y',
     },
 ]
+
 export const ALIGNMENT_BUTTONS = [
     {
         name: 'left',

@@ -10,12 +10,12 @@ import Tiptap from "./components/editor/Tiptap";
 import HomePage from "./pages/HomePage";
 import SignUpPage from "./pages/SignUpPage";
 import ProfilePage from "./pages/ProfilePage";
-import LoginPage from "./pages/LoginPage";
+import LogInPage from "./pages/LogInPage";
 import SettingsPage from "./pages/SettingsPage";
 import EmailVerificationPage from "./pages/EmailVerificationPage";
 
-import { Loader, UserPen } from "lucide-react";
-import Dashboard from "./pages/dashboard";
+import { Loader } from "lucide-react";
+import Dashboard from "./pages/Dashboard";
 import ForgetPasswordPage from "./pages/ForgetPasswordPage";
 import { TooltipProvider } from "@radix-ui/react-tooltip";
 import NotePage from "./pages/NotePage";
@@ -109,7 +109,7 @@ function App() {
             />
             <Route
               path="/login"
-              element={!authUser ? <LoginPage /> : <Navigate to="/" />}
+              element={!authUser ? <LogInPage /> : <Navigate to="/" />}
             />
             <Route path="/forget-password" element={<ForgetPasswordPage />} />
             <Route path="/oauth/callback" element={<OAuthCallback />} />

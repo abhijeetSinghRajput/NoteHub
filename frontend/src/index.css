@@ -988,7 +988,7 @@ div:has(> .tiptap.ProseMirror) {
   }
 
   a {
-    @apply text-blue-400 no-underline hover:underline;
+    @apply dark:text-[#7ab7ff] dark:hover:text-[#5e83b3] text-[#2964aa] hover:text-[#749ac8] no-underline;
   }
 
   ul {

@@ -20,7 +20,7 @@ const loginSchema = z.object({
   password: z.string().min(1, "Password is required"),
 });
 
-const LoginPage = () => {
+const LogInPage = () => {
   const { isLoggingIn, login } = useAuthStore();
   const [showPassword, setShowPassword] = useState(false);
   const [formData, setFormData] = useState({
@@ -160,4 +160,4 @@ const LoginPage = () => {
   );
 };
 
-export default LoginPage;
+export default LogInPage;
