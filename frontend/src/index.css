@@ -1010,6 +1010,10 @@ div:has(> .tiptap.ProseMirror) {
     @apply mt-0;
   }
 
+  p code {
+    @apply bg-accent;
+  }
+  
   code {
     @apply text-sm py-[2.4px] px-[4.8px] rounded whitespace-pre-wrap;
   }
